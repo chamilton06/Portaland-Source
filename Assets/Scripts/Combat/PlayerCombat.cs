@@ -2,29 +2,35 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public float attackRange = 2.5f;
-    public int damage = 10;
-    public float attackCooldown = 0.8f;
+    public WeaponStats equippedWeapon;
+
+    public bool weaponEquipped = true;
+    public bool inventoryOpen = false;
+
     private float nextAttackTime = 0f;
+
     void Update()
     {
+        if (!weaponEquipped || inventoryOpen|| equippedWeapon == null)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
         {
-            
-            nextAttackTime = Time.time + attackCooldown;
-        
-        {
+            nextAttackTime = Time.time + equippedWeapon.attackCooldown;
+
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, attackRange))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.attackRange))
             {
-               Health targetHealth = hit.collider.GetComponentInParent<Health>();
+                Health targetHealth = hit.collider.GetComponentInParent<Health>();
 
-if (targetHealth != null)
-{
-    targetHealth.TakeDamage(damage);
-}
+                if (targetHealth != null)
+                {
+                    targetHealth.TakeDamage(equippedWeapon.damage);
+                }
             }
         }
-    }}
+    }
 }
