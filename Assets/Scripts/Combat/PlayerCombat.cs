@@ -13,7 +13,7 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        if (!weaponEquipped || inventoryOpen|| equippedWeapon == null)
+        if (!weaponEquipped || inventoryOpen|| equippedWeapon == null || swinging)
         {
             return;
         }
@@ -21,10 +21,9 @@ public class PlayerCombat : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + equippedWeapon.attackCooldown;
-            if (!swinging)
-            {
-                StartCoroutine(SwingWeapon());
-            }
+            
+            StartCoroutine(SwingWeapon());
+            
 
             RaycastHit hit;
 
