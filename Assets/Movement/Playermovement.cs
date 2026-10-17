@@ -1,138 +1,164 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
-// RIGIDBODY VERSION
-// Walk (WASD/arrows), Sprint (Left Shift), Jump (Space), Crouch (C toggle), Eat (E).
-// Input is read in Update, physics is applied in FixedUpdate.
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(PlayerStats))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Speeds")]
-    public float walkSpeed = 4f;
-    public float sprintSpeed = 8f;
-    public float crouchSpeed = 2f;
-    public float turnSpeed = 10f;
+    [Header("Movement")]
+    public float walkSpeed = 5f;
+    public float sprintSpeed = 9f;
+    public float crouchSpeed = 2.5f;
 
-    [Header("Jump")]
+    [Header("Jumping")]
     public float jumpHeight = 1.5f;
+    public float gravity = -20f;
+    [Tooltip("Multiplies forward speed when jumping while sprinting (longer jumps).")]
+    public float sprintJumpSpeedBoost = 1.15f;
+    [Tooltip("Multiplies jump force when jumping while sprinting (slightly higher jumps).")]
+    public float sprintJumpHeightBoost = 1.1f;
+    [Tooltip("How much you can steer while in the air.")]
+    public float airControl = 6f;
 
-    [Header("Ground Check")]
-    public LayerMask groundMask = ~0;          // "Everything" by default
-    public float groundCheckDistance = 0.15f;
-
-    [Header("Crouch")]
-    public float standingHeight = 2f;
+    [Header("Crouching")]
+    public float standHeight = 2f;
     public float crouchHeight = 1f;
-    public Transform body;   
+    [Tooltip("How fast the capsule shrinks/grows when crouching.")]
+    public float crouchTransitionSpeed = 4f;
+    [Tooltip("Off = hold to crouch, On = press to toggle.")]
+    public bool toggleCrouch = false;
 
-    // Read by the UI to show what the player is doing
-    public string CurrentState { get; private set; } = "Idle";
+    [Header("Keys")]
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode jumpKey = KeyCode.Space;
 
-    private Rigidbody rb;
-    private CapsuleCollider col;
-    private PlayerStats stats;
+    // read-only state
+    public bool IsGrounded { get; private set; }
+    public bool IsSprinting { get; private set; }
+    public bool IsCrouching { get; private set; }
 
-    private Vector3 moveDir;
-    private float currentSpeed;
-    private bool jumpRequested;
-    private bool isCrouching;
-    private bool isGrounded;
+    CharacterController controller;
+    float verticalVelocity;
+    Vector3 airVelocity;      // horizontal momentum carried into the air
+    float airSpeedCap;        // max horizontal speed while airborne
+    bool crouchToggled;
+    float baseScaleY;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        col = GetComponent<CapsuleCollider>();
-        stats = GetComponent<PlayerStats>();
-
-        rb.freezeRotation = true;                                   // stop it falling over
-        rb.interpolation = RigidbodyInterpolation.Interpolate;      // smooth camera follow
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        controller = GetComponent<CharacterController>();
+        baseScaleY = transform.localScale.y;
     }
 
     void Update()
     {
-        isGrounded = CheckGrounded();
+        IsGrounded = controller.isGrounded;
 
-        // --- Input ---
+        // keep the player pressed onto the ground so isGrounded stays reliable
+        if (IsGrounded && verticalVelocity < 0f)
+            verticalVelocity = -2f;
+
+        // inpt
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
-        moveDir = new Vector3(x, 0f, z).normalized;
-        bool moving = moveDir.sqrMagnitude > 0.01f;
+        Vector3 input = transform.right * x + transform.forward * z;
+        if (input.sqrMagnitude > 1f) input.Normalize(); // no faster diagonals
 
-        if (Input.GetKeyDown(KeyCode.C)) SetCrouch(!isCrouching);
-        if (Input.GetKeyDown(KeyCode.E)) stats.Eat();
-        if (Input.GetButtonDown("Jump")) jumpRequested = true;
+        HandleCrouch();
 
-        // --- Sprint ---
-        bool sprinting = Input.GetKey(KeyCode.LeftShift) && moving && isGrounded
-                         && !isCrouching && !stats.IsExhausted && !stats.IsStarving;
+        // sprint
+        // only sprint on the ground, moving forward, and not crouched.
+        // in the air we keep whatever state we took off with.
+        if (IsGrounded)
+            IsSprinting = Input.GetKey(sprintKey) && z > 0f && !IsCrouching;
 
-        currentSpeed = isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed);
-        if (stats.IsStarving) currentSpeed *= 0.5f;   // starving = slow
-        if (sprinting) stats.DrainStamina(stats.staminaDrainPerSecond * Time.deltaTime);
+        float speed = IsCrouching ? crouchSpeed : (IsSprinting ? sprintSpeed : walkSpeed);
 
-        // --- State for UI ---
-        if (!isGrounded) CurrentState = "Jumping";
-        else if (isCrouching) CurrentState = moving ? "Crouch Walking" : "Crouching";
-        else if (sprinting) CurrentState = "Sprinting";
-        else if (moving) CurrentState = "Walking";
-        else CurrentState = "Idle";
-    }
+        // horz
+        Vector3 horizontal;
 
-    void FixedUpdate()
-    {
-        // --- Horizontal movement (keep current vertical speed for gravity/jumps) ---
-        Vector3 v = moveDir * currentSpeed;
-        rb.velocity = new Vector3(v.x, rb.velocity.y, v.z);
-
-        // --- Face the move direction ---
-        if (moveDir.sqrMagnitude > 0.01f)
+        if (IsGrounded)
         {
-            Quaternion target = Quaternion.LookRotation(moveDir);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, target, turnSpeed * Time.fixedDeltaTime));
-        }
+            horizontal = input * speed;
 
-        // --- Jump ---
-        if (jumpRequested)
-        {
-            if (isGrounded && !isCrouching && stats.HasStamina(stats.jumpStaminaCost))
+            //jmp sprint
+            if (Input.GetKeyDown(jumpKey) && !IsCrouching)
             {
-                float jumpVelocity = Mathf.Sqrt(2f * Mathf.Abs(Physics.gravity.y) * jumpHeight);
-                rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
-                stats.DrainStamina(stats.jumpStaminaCost);
+                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+                if (IsSprinting)
+                {
+                    verticalVelocity *= sprintJumpHeightBoost;
+                    horizontal *= sprintJumpSpeedBoost;
+                }
             }
-            jumpRequested = false;
+
+            
+            airVelocity = horizontal;
+            airSpeedCap = Mathf.Max(horizontal.magnitude, walkSpeed);
         }
-    }
-
-    bool CheckGrounded()
-    {
-        // Cast a small sphere down from the middle of the capsule to just below the feet
-        Vector3 origin = transform.position + col.center;
-        float radius = col.radius * 0.9f;
-        float distance = col.height / 2f - col.radius + groundCheckDistance;
-        return Physics.SphereCast(origin, radius, Vector3.down, out _, distance,
-                                  groundMask, QueryTriggerInteraction.Ignore);
-    }
-
-    void SetCrouch(bool crouch)
-    {
-        isCrouching = crouch;
-        float h = crouch ? crouchHeight : standingHeight;
-
-        // Shrink the collider but keep the feet on the ground
-        col.height = h;
-        col.center = new Vector3(0f, -(standingHeight - h) / 2f, 0f);
-
-        // Squash the visible capsule so you can SEE the crouch
-        if (body != null)
+        else
         {
-            body.localScale = new Vector3(1f, h / standingHeight, 1f);
-            body.localPosition = new Vector3(0f, -(standingHeight - h) / 2f, 0f);
+            
+            airVelocity += input * airControl * Time.deltaTime;
+            airVelocity = Vector3.ClampMagnitude(airVelocity, airSpeedCap);
+            horizontal = airVelocity;
         }
+
+        // gravity
+        verticalVelocity += gravity * Time.deltaTime;
+
+        Vector3 move = horizontal + Vector3.up * verticalVelocity;
+        controller.Move(move * Time.deltaTime);
+    }
+
+    void HandleCrouch()
+    {
+        bool wantsCrouch;
+        if (toggleCrouch)
+        {
+            if (Input.GetKeyDown(crouchKey)) crouchToggled = !crouchToggled;
+            wantsCrouch = crouchToggled;
+        }
+        else
+        {
+            wantsCrouch = Input.GetKey(crouchKey);
+        }
+
+        // don't stand up into a ceiling
+        if (!wantsCrouch && IsCrouching && !CanStandUp())
+            wantsCrouch = true;
+
+        IsCrouching = wantsCrouch;
+
+        // shrink/grow the capsule (visual + collider together)
+        float targetScaleY = IsCrouching ? baseScaleY * (crouchHeight / standHeight) : baseScaleY;
+        float currentScaleY = transform.localScale.y;
+        float nextScaleY = Mathf.MoveTowards(currentScaleY, targetScaleY,
+                                             crouchTransitionSpeed * baseScaleY * Time.deltaTime);
+
+        if (!Mathf.Approximately(nextScaleY, currentScaleY))
+        {
+            float heightChange = (nextScaleY - currentScaleY) * controller.height;
+            Vector3 s = transform.localScale;
+            transform.localScale = new Vector3(s.x, nextScaleY, s.z);
+
+            // scaling happens around the centre, so lift the player when standing
+            // up so the bottom of the capsule doesn't sink into the floor.
+            if (heightChange > 0f)
+                controller.Move(Vector3.up * heightChange * 0.5f);
+        }
+    }
+
+    bool CanStandUp()
+    {
+        float radius = controller.radius * Mathf.Max(transform.localScale.x, transform.localScale.z);
+        float currentHeight = controller.height * transform.localScale.y;
+        float fullHeight = controller.height * baseScaleY;
+
+        Vector3 top = transform.position + Vector3.up * (currentHeight * 0.5f - radius);
+        float distance = (fullHeight - currentHeight) + controller.skinWidth;
+
+        return !Physics.SphereCast(top, radius * 0.95f, Vector3.up, out _, distance,
+                                   ~0, QueryTriggerInteraction.Ignore);
     }
 }
