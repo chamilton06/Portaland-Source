@@ -16,6 +16,7 @@ public class CameraFollow : MonoBehaviour
     public float minPitch = -35f;     // how far you can look up (camera dips lower)
     public float maxPitch = 30f;      // how far you can look down (camera rises higher)
     public bool invertY = false;
+    public bool canLook = true;       // turned off while inventory is open
 
     public float lookHeight = 1f;     // point on the player the camera aims at
 
@@ -31,9 +32,13 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null) return;
 
-        float mouseY = Input.GetAxis("Mouse Y") * verticalSensitivity;
-        pitch += invertY ? mouseY : -mouseY;
-        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        // mouse up/down tilts the camera around the player
+        if (canLook)
+        {
+            float mouseY = Input.GetAxis("Mouse Y") * verticalSensitivity;
+            pitch += invertY ? mouseY : -mouseY;
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        }
 
         currentYaw = Mathf.LerpAngle(currentYaw, target.eulerAngles.y, rotateSpeed * Time.deltaTime);
         Quaternion rotation = Quaternion.Euler(pitch, currentYaw, 0f);

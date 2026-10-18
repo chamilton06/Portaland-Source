@@ -1,51 +1,51 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+// wasd move, shift sprint, space jump, ctrl crouch
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
+    // movement
     public float walkSpeed = 5f;
     public float sprintSpeed = 9f;
     public float crouchSpeed = 2.5f;
 
-    [Header("Jumping")]
+    // jumping
     public float jumpHeight = 1.5f;
     public float gravity = -20f;
-    [Tooltip("Multiplies forward speed when jumping while sprinting (longer jumps).")]
-    public float sprintJumpSpeedBoost = 1.15f;
-    [Tooltip("Multiplies jump force when jumping while sprinting (slightly higher jumps).")]
-    public float sprintJumpHeightBoost = 1.1f;
-    [Tooltip("How much you can steer while in the air.")]
-    public float airControl = 6f;
+    public float sprintJumpSpeedBoost = 1.15f;   // longer jump when sprinting
+    public float sprintJumpHeightBoost = 1.1f;   // bit higher jump when sprinting
+    public float airControl = 6f;                // steering in the air
 
-    [Header("Crouching")]
+    // crouching
     public float standHeight = 2f;
     public float crouchHeight = 1f;
-    [Tooltip("How fast the capsule shrinks/grows when crouching.")]
-    public float crouchTransitionSpeed = 4f;
-    [Tooltip("Off = hold to crouch, On = press to toggle.")]
-    public bool toggleCrouch = false;
+    public float crouchTransitionSpeed = 4f;     // how fast capsule shrinks/grows
+    public bool toggleCrouch = false;            // off = hold, on = press to toggle
 
-    [Header("Keys")]
+    // keys
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
     public KeyCode jumpKey = KeyCode.Space;
 
-    // read-only state
+    // state for other scripts to read
     public bool IsGrounded { get; private set; }
     public bool IsSprinting { get; private set; }
     public bool IsCrouching { get; private set; }
 
-    CharacterController controller;
-    float verticalVelocity;
-    Vector3 airVelocity;      // horizontal momentum carried into the air
-    float airSpeedCap;        // max horizontal speed while airborne
-    bool crouchToggled;
-    float baseScaleY;
+    private CharacterController controller;
+    private PlayerStats stats;        // limits sprint/jump by stamina
+    private float verticalVelocity;
+    private Vector3 airVelocity;      // momentum kept in the air
+    private float airSpeedCap;        // max speed in the air
+    private bool crouchToggled;
+    private float baseScaleY;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        stats = GetComponent<PlayerStats>();
         baseScaleY = transform.localScale.y;
     }
 
@@ -53,11 +53,11 @@ public class PlayerMovement : MonoBehaviour
     {
         IsGrounded = controller.isGrounded;
 
-        // keep the player pressed onto the ground so isGrounded stays reliable
+        // keep player pushed to ground so grounded check works
         if (IsGrounded && verticalVelocity < 0f)
             verticalVelocity = -2f;
 
-        // inpt
+        // input
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
         Vector3 input = transform.right * x + transform.forward * z;
@@ -65,26 +65,28 @@ public class PlayerMovement : MonoBehaviour
 
         HandleCrouch();
 
-        // sprint
-        // only sprint on the ground, moving forward, and not crouched.
-        // in the air we keep whatever state we took off with.
+        // sprint only on ground, moving forward, not crouched
+        // in the air keep the state from takeoff
         if (IsGrounded)
-            IsSprinting = Input.GetKey(sprintKey) && z > 0f && !IsCrouching;
+            IsSprinting = Input.GetKey(sprintKey) && z > 0f && !IsCrouching
+                          && (stats == null || stats.CanSprint());
 
         float speed = IsCrouching ? crouchSpeed : (IsSprinting ? sprintSpeed : walkSpeed);
 
-        // horz
+        // horizontal movement
         Vector3 horizontal;
 
         if (IsGrounded)
         {
             horizontal = input * speed;
 
-            //jmp sprint
-            if (Input.GetKeyDown(jumpKey) && !IsCrouching)
+            // jump, uses stamina
+            if (Input.GetKeyDown(jumpKey) && !IsCrouching
+                && (stats == null || stats.TryUseJumpStamina()))
             {
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 
+                // sprint jump
                 if (IsSprinting)
                 {
                     verticalVelocity *= sprintJumpHeightBoost;
@@ -92,13 +94,13 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
-            
+            // save momentum in case we leave the ground
             airVelocity = horizontal;
             airSpeedCap = Mathf.Max(horizontal.magnitude, walkSpeed);
         }
         else
         {
-            
+            // in the air, keep momentum, little steering, no speeding up
             airVelocity += input * airControl * Time.deltaTime;
             airVelocity = Vector3.ClampMagnitude(airVelocity, airSpeedCap);
             horizontal = airVelocity;
@@ -124,13 +126,13 @@ public class PlayerMovement : MonoBehaviour
             wantsCrouch = Input.GetKey(crouchKey);
         }
 
-        // don't stand up into a ceiling
+        // dont stand up into a ceiling
         if (!wantsCrouch && IsCrouching && !CanStandUp())
             wantsCrouch = true;
 
         IsCrouching = wantsCrouch;
 
-        // shrink/grow the capsule (visual + collider together)
+        // shrink/grow capsule
         float targetScaleY = IsCrouching ? baseScaleY * (crouchHeight / standHeight) : baseScaleY;
         float currentScaleY = transform.localScale.y;
         float nextScaleY = Mathf.MoveTowards(currentScaleY, targetScaleY,
@@ -142,13 +144,13 @@ public class PlayerMovement : MonoBehaviour
             Vector3 s = transform.localScale;
             transform.localScale = new Vector3(s.x, nextScaleY, s.z);
 
-            // scaling happens around the centre, so lift the player when standing
-            // up so the bottom of the capsule doesn't sink into the floor.
+            // lift player when standing so they dont sink into floor
             if (heightChange > 0f)
                 controller.Move(Vector3.up * heightChange * 0.5f);
         }
     }
 
+    // checks if theres space above to stand
     bool CanStandUp()
     {
         float radius = controller.radius * Mathf.Max(transform.localScale.x, transform.localScale.z);
