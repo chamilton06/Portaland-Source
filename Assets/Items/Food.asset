@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0ffb2e033c97046995f085979fd9ee, type: 3}
+  m_Name: Food
+  m_EditorClassIdentifier: 
+  itemName: Food
+  icon: {fileID: 0}
+  maxStackSize: 0
+  shortDescription: Food restores 5 health, 10 hunger.
+  weight: 0
+  maxDurability: 0
+  journalEntry: {fileID: 11400000, guid: bc1c02f7f4572544fb731d9c2bb7bae5, type: 2}
+  itemPrefab: {fileID: 8779750530940511242, guid: 08256e93b9afa45d8b54f925655c50d8, type: 3}
+  handItemPrefab: {fileID: 0}
+  healthRestore: 5
+  hungerRestore: 10
