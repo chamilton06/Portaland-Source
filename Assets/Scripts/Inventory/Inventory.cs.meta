@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7278d9886d356b54daa8ff328ac9aafc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - testItem: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  - testItem2: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+  - hotbarObject: {instanceID: 0}
+  - inventorySlotParent: {instanceID: 0}
+  - playerCombat: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
