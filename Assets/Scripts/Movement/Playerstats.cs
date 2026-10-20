@@ -22,6 +22,8 @@ public class PlayerStats : MonoBehaviour
 
     // health
     public float starveDamage = 1f;        // per sec when hunger is 0
+    public float safeFallSpeed = 14f;      // landing any faster than this hurts
+    public float lethalFallSpeed = 20f;    // landing this fast removes kills the player
 
     // debug
     public KeyCode debugEatKey = KeyCode.F;
@@ -99,6 +101,14 @@ public class PlayerStats : MonoBehaviour
         {
             Eat(debugEatAmount);
         }
+    }
+
+    // triggered when player falls
+    public void ApplyFallDamage (float impactSpeed)
+    {
+        if (impactSpeed <= safeFallSpeed) return;   // don't trigger if the player is at a safe height
+        float t = Mathf.InverseLerp(safeFallSpeed, lethalFallSpeed, impactSpeed);
+        TakeDamage(t * maxHealth);
     }
 
     public bool CanSprint()

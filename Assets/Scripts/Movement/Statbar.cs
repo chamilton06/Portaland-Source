@@ -15,8 +15,6 @@ public class StatBar : MonoBehaviour
     public Color fullColor = Color.green;
     public Color lowColor = Color.red;
 
-    private float shownFill = 1f;
-
     void Start()
     {
         if (fillImage.sprite == null)
@@ -40,8 +38,7 @@ public class StatBar : MonoBehaviour
         float target = GetPercent();
 
         // slide smoothly to new value
-        shownFill = Mathf.Lerp(shownFill, target, smoothSpeed * Time.deltaTime);
-        fillImage.fillAmount = shownFill;
+        fillImage.fillAmount = target;
 
         // goes red as it empties
         fillImage.color = Color.Lerp(lowColor, fullColor, target);
