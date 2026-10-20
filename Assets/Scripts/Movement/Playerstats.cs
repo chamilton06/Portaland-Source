@@ -108,7 +108,7 @@ public class PlayerStats : MonoBehaviour
         {
             Eat(debugEatAmount);
         }
-        if (Input.GetKeyDown(debugHalfHealth))
+        if (Input.GetKeyDown(debugQuarterHealth))
         {
             hunger *= 0.75f;
         }
