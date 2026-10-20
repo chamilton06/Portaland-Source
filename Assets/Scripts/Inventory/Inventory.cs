@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public ItemSO testItem;
+    public Item testItem;
     public GameObject hotbarObject;
     public GameObject inventorySlotParent;
 
@@ -24,9 +24,16 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A)){
             AddItem(testItem, 1);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1)){
+            PlayerCombat playerCombat = FindObjectOfType<PlayerCombat>();
+            if(hotbarSlots[0].GetItem() is Equipment equipment)
+            {
+                //equipment.weaponStats;
+            }
+        }
     }
 
-    public void AddItem(ItemSO item, int amount = 1){
+    public void AddItem(Item item, int amount = 1){
         int remaining = amount;
         foreach (Slot slot in allSlots){
             if (slot.HasItem() && slot.GetItem() == item && slot.GetAmount() < item.maxStackSize){

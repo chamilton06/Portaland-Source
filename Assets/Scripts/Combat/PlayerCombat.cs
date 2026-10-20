@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public WeaponStats equippedWeapon;
+    public Weapon equippedWeapon;
 
     public bool weaponEquipped = true;
     public bool inventoryOpen = false;
@@ -20,20 +20,20 @@ public class PlayerCombat : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
         {
-            nextAttackTime = Time.time + equippedWeapon.attackCooldown;
+            nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
             
             StartCoroutine(SwingWeapon());
             
 
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.attackRange))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.stats.attackRange))
             {
                 Health targetHealth = hit.collider.GetComponentInParent<Health>();
 
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(equippedWeapon.damage);
+                    targetHealth.TakeDamage(equippedWeapon.stats.damage);
                 }
             }
         }
@@ -42,7 +42,7 @@ public class PlayerCombat : MonoBehaviour
 {
     swinging = true;
 
-    Transform weapon = equippedWeapon.transform;
+    Transform weapon = equippedWeapon.weaponPrefab.transform;
     Quaternion startRotation = weapon.localRotation;
     Quaternion swingRotation = startRotation * Quaternion.Euler(60f, 0f, -40f);
 

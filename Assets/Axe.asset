@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0b573701a5436641904040f647b8250, type: 3}
+  m_Script: {fileID: 11500000, guid: 2162be16952539a46acca00b275b32c3, type: 3}
   m_Name: Axe
   m_EditorClassIdentifier: 
-  itemName: Axe
-  icon: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
-  maxStackSize: 1
+  itemName: 
+  icon: {fileID: 0}
+  maxStackSize: 0
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
+  weaponStats: {fileID: 0}
