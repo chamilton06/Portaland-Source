@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public float sprintJumpSpeedBoost = 1.15f;   // longer jump when sprinting
     public float sprintJumpHeightBoost = 1.1f;   // bit higher jump when sprinting
     public float airControl = 6f;                // steering in the air
+    private bool wasGrounded;
 
     // crouching
     public float standHeight = 2f;
@@ -56,6 +57,10 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         IsGrounded = controller.isGrounded;
+
+        if (IsGrounded && !wasGrounded && stats != null)
+            stats.ApplyFallDamage(-verticalVelocity);
+        wasGrounded = IsGrounded;
 
         // keep player pushed to ground so grounded check works
         if (IsGrounded && verticalVelocity < 0f)
