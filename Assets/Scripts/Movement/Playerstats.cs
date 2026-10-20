@@ -1,3 +1,11 @@
+// ============================================================================
+// PlayerStats.cs
+// Tracks the player's hunger, stamina, and health. Drains hunger over time
+// (faster when sprinting), spends and regenerates stamina, applies starvation
+// and fall damage, regenerates health while well fed, and fires onDeath.
+// Exposes 0-1 percentages for the UI bars.
+// ============================================================================
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +13,10 @@ using UnityEngine.Events;
 
 public class PlayerStats : MonoBehaviour
 {
+    // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
+
     public float maxHunger = 100f;
     public float maxStamina = 100f;
     public float maxHealth = 100f;
@@ -27,11 +39,17 @@ public class PlayerStats : MonoBehaviour
     public float healthRegen = 2f;         // per sec while well fed
     public float regenHungerThreshold = 90f;    // min hunger level necessary for regen
 
-    // debug
-    public KeyCode debugEatKey = KeyCode.F;     // debug key to restore hunger
-    public KeyCode debugQuarterHealth = KeyCode.P; // debug key to drain half of hunger
+    // ------------------------------------------------------------------------
+    // Debug
+    // ------------------------------------------------------------------------
+
+    public KeyCode debugEatKey = KeyCode.F;     // restores hunger
+    public KeyCode debugQuarterHealth = KeyCode.P; // cuts hunger by 25%
     public float debugEatAmount = 25f;
 
+    // ------------------------------------------------------------------------
+    // State & Events
+    // ------------------------------------------------------------------------
     public UnityEvent onDeath = new UnityEvent();
 
     private float hunger;
@@ -43,6 +61,11 @@ public class PlayerStats : MonoBehaviour
 
     private PlayerMovement movement;
 
+    // ------------------------------------------------------------------------
+    // Unity Callbacks
+    // ------------------------------------------------------------------------
+
+    // Fills all stats to max and caches PlayerMovement.
     void Start()
     {
         hunger = maxHunger;
@@ -51,6 +74,7 @@ public class PlayerStats : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
     }
 
+    // Drains hunger, spends/regenerates stamina, applies starvation or health regen, handles debug keys.
     void Update()
     {
         if (dead)
@@ -114,6 +138,10 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    // ------------------------------------------------------------------------
+    // Damage & Death
+    // ------------------------------------------------------------------------
+
     // player takes damage when they fall
     public void ApplyFallDamage (float impactSpeed)
     {
@@ -122,11 +150,57 @@ public class PlayerStats : MonoBehaviour
         TakeDamage(t * maxHealth);
     }
 
+    // Reduces health and triggers Die at zero. Ignored if dead or damage is zero.
+    public void TakeDamage(float damage)
+    {
+        if (dead || damage <= 0f)   //already dead or no damage, stop
+        {
+            return;
+        }
+
+        health = Mathf.Max(0f, health - damage);
+
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    // Marks the player dead, disables movement, and fires onDeath.
+    void Die()
+    {
+        dead = true;
+        Debug.Log(gameObject.name + " died");
+
+        if (movement != null)
+        {
+            movement.enabled = false;
+        }
+
+        onDeath.Invoke();
+    }
+
+    // ------------------------------------------------------------------------
+    // Hunger & Stamina
+    // ------------------------------------------------------------------------
+
+    // Restores hunger, capped at max.
+    public void Eat(float amount)
+    {
+        if (dead)
+        {
+            return;
+        }
+        hunger = Mathf.Min(maxHunger, hunger + amount);
+    }
+
+    // Returns true if the player is allowed to start/continue sprinting.
     public bool CanSprint()
     {
         return !dead && !exhausted && stamina > 0f;
     }
 
+    // Spends the jump's stamina cost if available.
     public bool TryUseJumpStamina()
     {
         return TryUseStamina(jumpStaminaCost);
@@ -145,61 +219,15 @@ public class PlayerStats : MonoBehaviour
         return true;
     }
 
-    public void Eat(float amount)
-    {
-        if (dead)
-        {
-            return;
-        }
-        hunger = Mathf.Min(maxHunger, hunger + amount);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        if (dead || damage <= 0f)   //already dead or no damage, stop
-        {
-            return;
-        }
-
-        health = Mathf.Max(0f, health - damage);
-
-        if (health <= 0f)
-        {
-            Die();
-        }
-    }
-
-    void Die()
-    {
-        dead = true;
-        Debug.Log(gameObject.name + " died");
-
-        if (movement != null)
-        {
-            movement.enabled = false;
-        }
-
-        onDeath.Invoke();
-    }
+    // ------------------------------------------------------------------------
+    // UI & Status Queries
+    // ------------------------------------------------------------------------
 
     // 0 to 1 values for ui bars
-    public float GetHungerPercent()
-    {
-        return hunger / maxHunger;
-    }
+    public float GetHungerPercent() { return hunger / maxHunger; }
+    public float GetStaminaPercent() { return stamina / maxStamina; }
+    public float GetHealthPercent() { return health / maxHealth; }
 
-    public float GetStaminaPercent()
-    {
-        return stamina / maxStamina;
-    }
-
-    public float GetHealthPercent()
-    {
-        return health / maxHealth;
-    }
-
-    public bool IsDead()
-    {
-        return dead;
-    }
+    // Returns true once the player has died.
+    public bool IsDead() { return dead; }
 }

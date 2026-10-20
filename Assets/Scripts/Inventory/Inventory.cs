@@ -1,20 +1,43 @@
+// ============================================================================
+// Inventory.cs
+// Manages the player's inventory and hotbar: toggles the inventory UI,
+// adds items into stacks and empty slots, and equips weapons from hotbar
+// slots via PlayerCombat.
+// ============================================================================
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public Item testItem;
-    public Item testItem2;
+    // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
 
     public GameObject hotbarObject;
     public GameObject inventorySlotParent;
-    public PlayerCombat playerCombat;
+    public PlayerCombat playerCombat;           // Falls back to GetComponent in Awake if unset
 
+    // ------------------------------------------------------------------------
+    // Test Items (debug only)
+    // ------------------------------------------------------------------------
+
+    public Item testItem;
+    public Item testItem2;
+
+    // ------------------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------------------
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
     private List<Slot> allSlots = new List<Slot>();
 
+    // ------------------------------------------------------------------------
+    // Unity Callbacks
+    // ------------------------------------------------------------------------
+
+    // Finds PlayerCombat and collects all slot references.
     private void Awake(){
         if (playerCombat == null)
         {
@@ -27,7 +50,7 @@ public class Inventory : MonoBehaviour
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
     }
 
-    // Update is called once per frame
+    // Handles Tab (toggle inventory), E/R (spawn test items), and 1-6 (equip hotbar weapon).
     [System.Obsolete]
     void Update()
     {
@@ -101,6 +124,11 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    // ------------------------------------------------------------------------
+    // Public API
+    // ------------------------------------------------------------------------
+
+    // Adds items by filling existing stacks first, then empty slots. Logs if space runs out.
     public void AddItem(Item item, int amount = 1){
         int remaining = amount;
         foreach (Slot slot in allSlots){
