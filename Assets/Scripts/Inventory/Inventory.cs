@@ -7,28 +7,34 @@ public class Inventory : MonoBehaviour
     public Item testItem;
     public GameObject hotbarObject;
     public GameObject inventorySlotParent;
+    public PlayerCombat playerCombat;
 
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
     private List<Slot> allSlots = new List<Slot>();
 
     private void Awake(){
+        if (playerCombat == null)
+        {
+            playerCombat = GetComponent<PlayerCombat>();
+        }
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>());
         hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<Slot>());
         allSlots.AddRange(inventorySlots);
         allSlots.AddRange(hotbarSlots);
     }
+
     // Update is called once per frame
+    [System.Obsolete]
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.A)){
             AddItem(testItem, 1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1)){
-            PlayerCombat playerCombat = FindObjectOfType<PlayerCombat>();
-            if(hotbarSlots[0].GetItem() is Equipment equipment)
+            if (hotbarSlots[0].GetItem() is Weapon weapon)
             {
-                //equipment.weaponStats;
+                playerCombat.SetEquippedWeapon(weapon);
             }
         }
     }

@@ -11,6 +11,12 @@ public class PlayerCombat : MonoBehaviour
     private float nextAttackTime = 0f;
     private bool swinging = false;
 
+
+    public void SetEquippedWeapon(Weapon weapon)
+    {
+        equippedWeapon = weapon;
+        weaponEquipped = equippedWeapon != null;
+    }
     void Update()
     {
         if (!weaponEquipped || inventoryOpen|| equippedWeapon == null || swinging)
@@ -24,7 +30,6 @@ public class PlayerCombat : MonoBehaviour
             
             StartCoroutine(SwingWeapon());
             
-
             RaycastHit hit;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.stats.attackRange))
@@ -40,6 +45,7 @@ public class PlayerCombat : MonoBehaviour
     }
     IEnumerator SwingWeapon()
 {
+    
     swinging = true;
 
     Transform weapon = equippedWeapon.weaponPrefab.transform;
