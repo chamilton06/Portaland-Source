@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerCombat : MonoBehaviour
 {
     public Weapon equippedWeapon;
+    public Transform weaponPivot; // Live scene pivot containing the visible weapon model
     public bool weaponEquipped = true;
     public bool inventoryOpen = false;
 
@@ -45,9 +46,15 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator SwingWeapon()
     {
+        if (weaponPivot == null)
+        {
+            Debug.LogWarning("Assign Weapon Pivot on PlayerCombat.", this);
+            yield break;
+        }
+
         swinging = true;
 
-        Transform weapon = equippedWeapon.weaponPrefab.transform;
+        Transform weapon = weaponPivot;
         Quaternion startRotation = weapon.localRotation;
         Quaternion swingRotation = startRotation * Quaternion.Euler(60f, 0f, -40f);
 
@@ -78,3 +85,4 @@ public class PlayerCombat : MonoBehaviour
         swinging = false;
     }
 }
+
