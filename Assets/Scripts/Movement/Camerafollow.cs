@@ -1,11 +1,23 @@
+// ============================================================================
+// CameraFollow.cs
+// Third-person camera that stays behind the player and turns with them.
+// Mouse up/down tilts the camera; looking is disabled while the inventory
+// is open.
+// ============================================================================
+
 using UnityEngine;
 
 // third person camera, stays behind the player and turns with them
 // mouse up/down tilts the camera
 public class CameraFollow : MonoBehaviour
 {
+    // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
+
     public Transform target;
     public Vector3 offset = new Vector3(0f, 6f, -8f); // behind/above the player
+    public float lookHeight = 1f;     // point on the player the camera aims at
 
     // smoothing, lower = slower camera
     public float followSpeed = 6f;    // catching up in position
@@ -17,14 +29,21 @@ public class CameraFollow : MonoBehaviour
     public float maxPitch = 30f;      // how far down you can look
     public bool invertY = false;
 
-    public float lookHeight = 1f;     // point on the player the camera aims at
-    public bool canLook = true;       // off while inventory is open
+    // ------------------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------------------
 
+    public bool canLook = true;       // off while inventory is open
     private PlayerCombat combat;      // inventory sets inventoryOpen on this
 
     private float currentYaw;
     private float pitch;
 
+    // ------------------------------------------------------------------------
+    // Unity Callbacks
+    // ------------------------------------------------------------------------
+
+    // Initializes yaw from the target and caches its PlayerCombat.
     void Start()
     {
         if (target != null)
@@ -34,6 +53,7 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
+    // Applies mouse tilt, then smoothly follows and aims at the player.
     void LateUpdate()
     {
         if (target == null) return;

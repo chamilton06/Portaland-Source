@@ -1,23 +1,46 @@
+// ============================================================================
+// Health.cs
+// Tracks hit points for any damageable object (player, enemies). Handles
+// damage, death, and spawning an optional drop on death, and fires onDeath
+// so other scripts can react.
+// ============================================================================
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 public class Health : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
+
     public int maxHealth = 100;
+
+    public GameObject dropPrefab; //Item spawned when this object dies (e.g. enemy hunger drop).
+
+    // ------------------------------------------------------------------------
+    // State & Events
+    // ------------------------------------------------------------------------
+
     private int currentHealth;
     public UnityEvent onDeath = new UnityEvent();
 
-    // enemy hunger drop
-    public GameObject dropPrefab;
+    // ------------------------------------------------------------------------
+    // Unity Callbacks
+    // ------------------------------------------------------------------------
 
+    // Initializes health to maximum.
     void Start()
     {
         currentHealth = maxHealth;
     }
 
-    // Update is called once per frame
+    // ------------------------------------------------------------------------
+    // Damage Handling
+    // ------------------------------------------------------------------------
+
+    // Applies damage, and on reaching zero spawns the drop and fires onDeath.
     public void TakeDamage(int damage)
     {
         if (currentHealth <= 0 || damage <= 0)  // already dead or no damage, stop

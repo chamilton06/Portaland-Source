@@ -1,3 +1,11 @@
+// ============================================================================
+// PlayerMovement.cs
+// First-person-style character movement: WASD move, Shift sprint, Space jump,
+// Ctrl crouch. Handles ground and air acceleration, sprint jumps, fall damage,
+// and crouching with a ceiling check. Sprint and jump are limited by stamina
+// via PlayerStats.
+// ============================================================================
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +14,10 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
+
     // movement
     public float walkSpeed = 5f;
     public float sprintSpeed = 9f;
@@ -21,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     public float sprintJumpSpeedBoost = 1.15f;   // longer jump when sprinting
     public float sprintJumpHeightBoost = 1.1f;   // bit higher jump when sprinting
     public float airControl = 6f;                // steering in the air
-    private bool wasGrounded;
 
     // crouching
     public float standHeight = 2f;
@@ -34,6 +45,10 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode crouchKey = KeyCode.LeftControl;
     public KeyCode jumpKey = KeyCode.Space;
 
+    // ------------------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------------------
+
     // state for other scripts to read
     public bool IsGrounded { get; private set; }
     public bool IsSprinting { get; private set; }
@@ -44,9 +59,15 @@ public class PlayerMovement : MonoBehaviour
     private float verticalVelocity;
     private Vector3 airVelocity;      // momentum kept in the air
     private float airSpeedCap;        // max speed in the air
+    private bool wasGrounded;
     private bool crouchToggled;
     private float baseScaleY;
 
+    // ------------------------------------------------------------------------
+    // Unity Callbacks
+    // ------------------------------------------------------------------------
+
+    // Caches the CharacterController and PlayerStats and records the starting height scale.
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -54,8 +75,10 @@ public class PlayerMovement : MonoBehaviour
         baseScaleY = transform.localScale.y;
     }
 
+    // Reads input and applies movement, jumping, gravity, and fall damage each frame.
     void Update()
     {
+        // --- Ground check & fall damage ---
         IsGrounded = controller.isGrounded;
 
         if (IsGrounded && !wasGrounded && stats != null)
@@ -66,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         if (IsGrounded && verticalVelocity < 0f)
             verticalVelocity = -2f;
 
-        // input
+        // --- Input ---
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
         Vector3 input = transform.right * x + transform.forward * z;
@@ -82,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
         float speed = IsCrouching ? crouchSpeed : (IsSprinting ? sprintSpeed : walkSpeed);
 
-        // horizontal movement
+        // --- Horizontal movement (ground / air) ---
         Vector3 horizontal;
 
         if (IsGrounded)
@@ -116,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
             horizontal = airVelocity;
         }
 
-        // gravity
+        // --- Gravity & apply movement ---
         float g = gravity;
         if (verticalVelocity < 0f) g *= 1.5f;
         else if (!Input.GetKey(jumpKey)) g *= 2f;
@@ -126,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
 
         var flags = controller.Move(move * Time.deltaTime);
 
+        // --- Collision responses ---
         // hit head on ceiling
         if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
             verticalVelocity = 0f;
@@ -135,6 +159,11 @@ public class PlayerMovement : MonoBehaviour
             airVelocity = Vector3.ProjectOnPlane(controller.velocity, Vector3.up);
     }
 
+    // ------------------------------------------------------------------------
+    // Crouching
+    // ------------------------------------------------------------------------
+
+    // Updates crouch state from input and smoothly resizes the capsule.
     void HandleCrouch()
     {
         bool wantsCrouch;
