@@ -40,8 +40,7 @@ public class StatBar : MonoBehaviour
         float target = GetPercent();
 
         // slide smoothly to new value
-        shownFill = Mathf.Lerp(shownFill, target, smoothSpeed * Time.deltaTime);
-        fillImage.fillAmount = shownFill;
+        fillImage.fillAmount = target;
 
         // goes red as it empties
         fillImage.color = Color.Lerp(lowColor, fullColor, target);
