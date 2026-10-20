@@ -14,6 +14,7 @@ public class PlayerCombat : MonoBehaviour
     // Configuration
     // ------------------------------------------------------------------------
     public Weapon equippedWeapon;
+    public Transform weaponPivot; // Live scene pivot containing the visible weapon model
     public bool weaponEquipped = true;
     public bool inventoryOpen = false;  // Set by the inventory UI; blocks attacks while open
 
@@ -73,10 +74,15 @@ public class PlayerCombat : MonoBehaviour
     // Rotates the weapon through a quick swing and back, blocking attacks until it finishes.
     IEnumerator SwingWeapon()
     {
-    
+        if (weaponPivot == null)
+        {
+            Debug.LogWarning("Assign Weapon Pivot on PlayerCombat.", this);
+            yield break;
+        }
+
         swinging = true;
 
-        Transform weapon = equippedWeapon.weaponPrefab.transform;
+        Transform weapon = weaponPivot;
         Quaternion startRotation = weapon.localRotation;
         Quaternion swingRotation = startRotation * Quaternion.Euler(60f, 0f, -40f);
 
