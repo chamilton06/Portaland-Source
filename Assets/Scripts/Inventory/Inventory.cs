@@ -37,10 +37,10 @@ public class Inventory : MonoBehaviour
             playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
         }
 
-        if (Input.GetKeyDown(KeyCode.A)){ //Spawn axe
+        if (Input.GetKeyDown(KeyCode.E)){ //Spawn axe
             AddItem(testItem, 1);
         }
-        if (Input.GetKeyDown(KeyCode.S)){ //Spawn sword
+        if (Input.GetKeyDown(KeyCode.R)){ //Spawn sword
             AddItem(testItem2, 1);
         }
 

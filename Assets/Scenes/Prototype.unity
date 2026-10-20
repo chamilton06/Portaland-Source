@@ -2075,6 +2075,7 @@ GameObject:
   - component: {fileID: 684481423}
   - component: {fileID: 684481422}
   - component: {fileID: 684481421}
+  - component: {fileID: 684481428}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2242,6 +2243,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &684481428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684481420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ad81b4497f4402b9e2334f90c3ed32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equippedWeapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  weaponEquipped: 1
+  inventoryOpen: 0
 --- !u!1 &692627892
 GameObject:
   m_ObjectHideFlags: 0
@@ -4301,7 +4317,7 @@ RectTransform:
   m_GameObject: {fileID: 1477222689}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.9595919, y: 1.9595919, z: 1.9595919}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 164840396}
@@ -4310,7 +4326,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -575.7551, y: -863.6328}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1477222691
 MonoBehaviour:
@@ -4328,7 +4344,7 @@ MonoBehaviour:
   testItem2: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
   hotbarObject: {fileID: 180895644}
   inventorySlotParent: {fileID: 1305688820}
-  playerCombat: {fileID: 0}
+  playerCombat: {fileID: 777991163}
 --- !u!1001 &1502087390
 PrefabInstance:
   m_ObjectHideFlags: 0
