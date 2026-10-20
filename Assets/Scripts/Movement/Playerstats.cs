@@ -107,7 +107,6 @@ public class PlayerStats : MonoBehaviour
     public void ApplyFallDamage (float impactSpeed)
     {
         if (impactSpeed <= safeFallSpeed) return;   // don't trigger if the player is at a safe height
-        Debug.Log("Fall impact: " + impactSpeed);
         float t = Mathf.InverseLerp(safeFallSpeed, lethalFallSpeed, impactSpeed);
         TakeDamage(t * maxHealth);
     }

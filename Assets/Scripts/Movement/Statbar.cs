@@ -15,8 +15,6 @@ public class StatBar : MonoBehaviour
     public Color fullColor = Color.green;
     public Color lowColor = Color.red;
 
-    private float shownFill = 1f;
-
     void Start()
     {
         if (fillImage.sprite == null)
