@@ -6323,6 +6323,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8593970610589965956, guid: 8b05ab3988e5d43b491669ca8ff2d1be, type: 3}
+      propertyPath: dropPrefab
+      value: 
+      objectReference: {fileID: 8779750530940511242, guid: 08256e93b9afa45d8b54f925655c50d8, type: 3}
     - target: {fileID: 9192102642459302526, guid: 8b05ab3988e5d43b491669ca8ff2d1be, type: 3}
       propertyPath: m_Name
       value: TrainingDummy

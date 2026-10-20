@@ -22,11 +22,14 @@ public class PlayerStats : MonoBehaviour
 
     // health
     public float starveDamage = 1f;        // per sec when hunger is 0
-    public float safeFallSpeed = 14f;      // landing any faster than this hurts
+    public float safeFallSpeed = 10f;      // landing any faster than this hurts
     public float lethalFallSpeed = 20f;    // landing this fast removes kills the player
+    public float healthRegen = 2f;         // per sec while well fed
+    public float regenHungerThreshold = 90f;    // min hunger level necessary for regen
 
     // debug
-    public KeyCode debugEatKey = KeyCode.F;
+    public KeyCode debugEatKey = KeyCode.F;     // debug key to restore hunger
+    public KeyCode debugQuarterHealth = KeyCode.P; // debug key to drain half of hunger
     public float debugEatAmount = 25f;
 
     public UnityEvent onDeath = new UnityEvent();
@@ -90,10 +93,14 @@ public class PlayerStats : MonoBehaviour
             exhausted = false;
         }
 
-        // health, starving
+        // health, starving or regenerating
         if (hunger <= 0f)
         {
             TakeDamage(starveDamage * Time.deltaTime);
+        }
+        else if (hunger > regenHungerThreshold && health < maxHealth)
+        {
+            health = Mathf.Min(maxHealth, health + healthRegen * Time.deltaTime);
         }
 
         // debug refill
@@ -101,9 +108,13 @@ public class PlayerStats : MonoBehaviour
         {
             Eat(debugEatAmount);
         }
+        if (Input.GetKeyDown(debugQuarterHealth))
+        {
+            hunger *= 0.75f;
+        }
     }
 
-    // triggered when player falls
+    // player takes damage when they fall
     public void ApplyFallDamage (float impactSpeed)
     {
         if (impactSpeed <= safeFallSpeed) return;   // don't trigger if the player is at a safe height

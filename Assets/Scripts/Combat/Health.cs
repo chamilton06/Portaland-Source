@@ -8,6 +8,10 @@ public class Health : MonoBehaviour
     public int maxHealth = 100;
     private int currentHealth;
     public UnityEvent onDeath = new UnityEvent();
+
+    // enemy hunger drop
+    public GameObject dropPrefab;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -16,7 +20,7 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     public void TakeDamage(int damage)
     {
-        if (currentHealth <= 0 || damage <= 0)  //if already dead OR the damage is zero or negative, stop
+        if (currentHealth <= 0 || damage <= 0)  // already dead or no damage, stop
         {
             return;
         }
@@ -28,10 +32,10 @@ public class Health : MonoBehaviour
         if (currentHealth <= 0)
         {
             Debug.Log(gameObject.name + " died");
-             onDeath.Invoke();
+            Debug.Log("Drop prefab: " + (dropPrefab != null ? dropPrefab.name : "NONE"));
+            if (dropPrefab != null)
+                Instantiate(dropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            onDeath.Invoke();
         }
-        
     }
-
-    
 }
