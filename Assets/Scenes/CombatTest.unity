@@ -3292,9 +3292,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7278d9886d356b54daa8ff328ac9aafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testItem: {fileID: 0}
+  testItem: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  testItem2: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
   hotbarObject: {fileID: 251338934}
   inventorySlotParent: {fileID: 1184441709}
+  playerCombat: {fileID: 164728741}
 --- !u!1001 &1492408859
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4273,7 +4275,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3079598078203230605, guid: ee997e3f3c074e242ac635aa12d59388, type: 3}
       propertyPath: m_Name
-      value: Axe
+      value: PlaceholderAxe2
       objectReference: {fileID: 0}
     - target: {fileID: 5984127641129684386, guid: ee997e3f3c074e242ac635aa12d59388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4328,6 +4330,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1184441710}
     m_Modifications:
+    - target: {fileID: 3269519638103658535, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3269519638103658535, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3269519638103658535, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3269519638103658535, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7606021603123054448, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -13,5 +13,5 @@ public class Item : ScriptableObject
 
 public class Equipment : Item
 {
-    public string fart = "fart";
+    // This will be used in future for armour or other equipment types. For now, it is just a placeholder.
 }

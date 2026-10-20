@@ -5,6 +5,8 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public Item testItem;
+    public Item testItem2;
+
     public GameObject hotbarObject;
     public GameObject inventorySlotParent;
     public PlayerCombat playerCombat;
@@ -18,23 +20,83 @@ public class Inventory : MonoBehaviour
         {
             playerCombat = GetComponent<PlayerCombat>();
         }
-        inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>());
-        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<Slot>());
+        inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
+        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<Slot>(true));
         allSlots.AddRange(inventorySlots);
         allSlots.AddRange(hotbarSlots);
+        playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
     }
 
     // Update is called once per frame
     [System.Obsolete]
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A)){
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            inventorySlotParent.SetActive(!inventorySlotParent.activeSelf);
+            playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A)){ //Spawn axe
             AddItem(testItem, 1);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1)){
+        if (Input.GetKeyDown(KeyCode.S)){ //Spawn sword
+            AddItem(testItem2, 1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)){  //Equip weapon in hotbar slot 1
             if (hotbarSlots[0].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
+            }
+            else
+            {
+                playerCombat.SetEquippedWeapon(null);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)){  //Equip weapon in hotbar slot 2
+            if (hotbarSlots[1].GetItem() is Weapon weapon)
+            {
+                playerCombat.SetEquippedWeapon(weapon);
+            }
+            else {
+                playerCombat.SetEquippedWeapon(null);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)){  //Equip weapon in hotbar slot 3
+            if (hotbarSlots[2].GetItem() is Weapon weapon)
+            {
+                playerCombat.SetEquippedWeapon(weapon);
+            }
+            else {
+                playerCombat.SetEquippedWeapon(null);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)){  //Equip weapon in hotbar slot 4
+            if (hotbarSlots[3].GetItem() is Weapon weapon)
+            {
+                playerCombat.SetEquippedWeapon(weapon);
+            }
+            else {
+                playerCombat.SetEquippedWeapon(null);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5)){  //Equip weapon in hotbar slot 5
+            if (hotbarSlots[4].GetItem() is Weapon weapon)
+            {
+                playerCombat.SetEquippedWeapon(weapon);
+            }
+            else {
+                playerCombat.SetEquippedWeapon(null);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6)){  //Equip weapon in hotbar slot 6
+            if (hotbarSlots[5].GetItem() is Weapon weapon)
+            {
+                playerCombat.SetEquippedWeapon(weapon);
+            }
+            else {
+                playerCombat.SetEquippedWeapon(null);
             }
         }
     }
