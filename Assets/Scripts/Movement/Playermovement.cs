@@ -11,6 +11,10 @@ public class PlayerMovement : MonoBehaviour
     public float sprintSpeed = 9f;
     public float crouchSpeed = 2.5f;
 
+    // acceleration
+    public float groundAccel = 60f;
+    public float groundDecel = 80f;
+
     // jumping
     public float jumpHeight = 1.5f;
     public float gravity = -20f;
@@ -78,7 +82,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsGrounded)
         {
-            horizontal = input * speed;
+            // Horizontal changes with acceleration/deceleration
+            horizontal = Vector3.MoveTowards(airVelocity, input * speed, groundAccel * Time.deltaTime);
 
             // jump, uses stamina
             if (Input.GetKeyDown(jumpKey) && !IsCrouching
@@ -107,10 +112,22 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // gravity
-        verticalVelocity += gravity * Time.deltaTime;
+        float g = gravity;
+        if (verticalVelocity < 0f) g *= 1.5f;
+        else if (!Input.GetKey(jumpKey)) g *= 2f;
+        verticalVelocity += g * Time.deltaTime;
 
         Vector3 move = horizontal + Vector3.up * verticalVelocity;
-        controller.Move(move * Time.deltaTime);
+
+        var flags = controller.Move(move * Time.deltaTime);
+
+        // hit head on ceiling
+        if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
+            verticalVelocity = 0f;
+
+        // hit wall midair
+        if ((flags & CollisionFlags.Sides) != 0 && !IsGrounded)
+            airVelocity = Vector3.ProjectOnPlane(controller.velocity, Vector3.up);
     }
 
     void HandleCrouch()
