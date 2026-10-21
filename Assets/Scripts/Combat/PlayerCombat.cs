@@ -35,12 +35,14 @@ public class PlayerCombat : MonoBehaviour
     private Coroutine swingRoutine;
     private PlayerStats playerStats;
     private PlayerDefence defence;
+    private PlayerMovement movement;
 
     public bool IsAttacking => swinging;
 
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+        movement = GetComponent<PlayerMovement>();
         defence = GetComponent<PlayerDefence>();
         if (weaponPivot != null)
         {
@@ -113,7 +115,7 @@ public class PlayerCombat : MonoBehaviour
     // Checks for attack input; on click, starts the swing and damages the target in range.
     void Update()
     {
-        if (inventoryOpen || (playerStats != null && playerStats.IsDead()))
+        if ((movement != null && movement.IsRolling) || inventoryOpen || (playerStats != null && playerStats.IsDead()))
         {
             CancelAttack();
             return;
