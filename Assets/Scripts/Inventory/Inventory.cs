@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal.Commands;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
@@ -20,6 +22,9 @@ public class Inventory : MonoBehaviour
     private List<Slot> allSlots = new List<Slot>();
     private int currentSelectedHotSlot;
 
+    bool moveMode;
+    Slot movingSlot;
+
     private void Awake(){
         if (playerCombat == null)
         {
@@ -30,6 +35,8 @@ public class Inventory : MonoBehaviour
         allSlots.AddRange(inventorySlots);
         currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
+        moveMode = false;
+        movingSlot = null;
     }
 
     // start closed (in Start so slots wake up first)
@@ -41,7 +48,7 @@ public class Inventory : MonoBehaviour
     private void OnEnable()
     {
         Slot.Clicked += OnSlotClicked;
-    }
+    }   
 
     private void OnDisable()
     {
@@ -115,7 +122,7 @@ public class Inventory : MonoBehaviour
         hotbarSlots[slotIndex].SetSelected(true);
         currentSelectedHotSlot = slotIndex;
 
-        if (hotbarSlots[slotIndex].slotRef.GetItem() is Weapon weapon)
+        if (hotbarSlots[slotIndex].slotRef != null && hotbarSlots[slotIndex].slotRef.GetItem() is Weapon weapon)
         {
             playerCombat.SetEquippedWeapon(weapon);
         }
@@ -181,20 +188,45 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void OnSlotClicked(Slot slot)
+    private void OnSlotClicked(Slot slot, PointerEventData.InputButton button)
     {
-        if (infoPanel == null || !IsOpen())
-        {
-            return;
-        }
+        if (infoPanel == null || !IsOpen()) return;
 
-        if (slot.HasItem())
+        if (slot.HasItem() && button == PointerEventData.InputButton.Right)
         {
             infoPanel.Show(slot.GetItem());
-        }
+        } 
         else
         {
             infoPanel.Hide();
+        }
+
+        if (slot.HasItem() && button == PointerEventData.InputButton.Left && !moveMode)
+        {
+            moveMode = true;
+            movingSlot = slot;
+        } 
+        else if (button == PointerEventData.InputButton.Left && moveMode && slot != movingSlot)
+        {
+            Item item = movingSlot.GetItem();
+            int remaining = movingSlot.GetAmount();
+            if (slot.HasItem() && slot.GetItem() == item && slot.GetAmount() < item.maxStackSize){
+                int space = item.maxStackSize - slot.GetAmount();
+                int toAdd = Mathf.Min(space, remaining);
+                slot.SetItem(item, slot.GetAmount() + toAdd);
+                remaining -= toAdd;
+                if (remaining > 0)
+                {
+                    movingSlot.RemoveAmount(movingSlot.GetAmount() - remaining);
+                }
+            }
+            else if (!slot.HasItem() && CheckValidSlotForItem(slot, item))
+            {
+                int toAdd = Mathf.Min(item.maxStackSize, remaining);
+                slot.SetItem(item, toAdd);
+                movingSlot.ClearSlot();
+            }
+            moveMode = false;
         }
     }
 
@@ -261,7 +293,7 @@ public class Inventory : MonoBehaviour
             for (int x = startX; x < startX + itemSize.x; x++)
             {
                 int index = y * inventoryWidth + x;
-                if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked)
+                if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked || inventorySlots[index].HasItem())
                 {
                     return false;
                 }

@@ -12,7 +12,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     public bool hovering;
     public bool IsBlocked { get; private set; }
 
-    public static event System.Action<Slot> Clicked;
+    public static event System.Action<Slot, PointerEventData.InputButton> Clicked;
 
     public Item HeldItem {get; private set;}
     public int itemAmount {get; private set;}
@@ -108,6 +108,14 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     {
         foreach (Slot slot in activeSlots)
         {
+            if (slot.HasItem() || slot is HotbarSlot)
+            {
+                slot.iconImage.enabled = true;
+            } 
+            else
+            {
+                slot.iconImage.enabled = false;
+            }
             slot.IsBlocked = false;
         }
 
@@ -136,9 +144,12 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         }
 
         foreach (Slot slot in activeSlots)
-        {
+        {  
+            if (slot is not HotbarSlot)
+            {
             slot.canvasGroup.alpha = slot.IsBlocked ? 0f : 1f;
             slot.canvasGroup.blocksRaycasts = !slot.IsBlocked;
+            }
         }
     }
 
@@ -150,7 +161,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     }
 
     public void UpdateSlot(Slot slot){
-        if (slot.HeldItem != null){
+        if (slot.HasItem()){
             iconImage.enabled = true;
             iconImage.sprite = slot.HeldItem.icon;
             if (slot.itemAmount > 1){
@@ -177,9 +188,9 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!IsBlocked && Clicked != null)
+        if (hovering && Clicked != null)
         {
-            Clicked(this);
+            Clicked(this, eventData.button);
         }
     }
 }
