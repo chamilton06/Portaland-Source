@@ -25,4 +25,4 @@ MonoBehaviour:
     damage: 20
     attackRange: 2.5
     attackCooldown: 0.5
-  weaponPrefab: {fileID: 3079598078203230605, guid: ee997e3f3c074e242ac635aa12d59388, type: 3}
+  weaponPrefab: {fileID: 4176490268933227711, guid: ae1ec15c310b74f209dfbe6d7b127583, type: 3}

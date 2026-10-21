@@ -25,6 +25,12 @@ public class Health : MonoBehaviour
 
     private int currentHealth;
     public UnityEvent onDeath = new UnityEvent();
+    private DamageFlash damageFlash;
+// new method to flash the object when it takes damage
+    private void Awake()
+{
+    damageFlash = GetComponent<DamageFlash>();
+}
 
     // ------------------------------------------------------------------------
     // Unity Callbacks
@@ -49,6 +55,11 @@ public class Health : MonoBehaviour
         }
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
+        if (damageFlash != null)
+        {
+                                
+            damageFlash.Flash();
+        }
 
         Debug.Log(gameObject.name + " health: " + currentHealth);
 

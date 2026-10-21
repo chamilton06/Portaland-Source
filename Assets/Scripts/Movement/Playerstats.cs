@@ -159,6 +159,8 @@ public class PlayerStats : MonoBehaviour
         }
 
         health = Mathf.Max(0f, health - damage);
+        DamageFlash damageFlash = GetComponent<DamageFlash>();
+        if (damageFlash != null) damageFlash.Flash();
 
         if (health <= 0f)
         {
