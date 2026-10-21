@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Inventory : MonoBehaviour
     public Item testItem3;
 
     private List<Slot> inventorySlots = new List<Slot>();
-    private List<Slot> hotbarSlots = new List<Slot>();
+    private List<HotbarSlot> hotbarSlots = new List<HotbarSlot>();
     private List<Slot> allSlots = new List<Slot>();
 
     private void Awake(){
@@ -24,9 +25,8 @@ public class Inventory : MonoBehaviour
             playerCombat = GetComponent<PlayerCombat>();
         }
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
-        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<Slot>(true));
+        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<HotbarSlot>(true));
         allSlots.AddRange(inventorySlots);
-        allSlots.AddRange(hotbarSlots);
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
     }
 
@@ -64,59 +64,82 @@ public class Inventory : MonoBehaviour
             AddItem(testItem3, 1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
-            if (hotbarSlots[0].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+        if (!IsOpen()){
+            if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
+                if (hotbarSlots[0].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else
+                {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-            else
-            {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
+                if (hotbarSlots[1].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
-            if (hotbarSlots[1].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
+                if (hotbarSlots[2].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
+                if (hotbarSlots[3].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
-            if (hotbarSlots[2].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
+                if (hotbarSlots[4].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
+                if (hotbarSlots[5].GetItem() is Weapon weapon)
+                {
+                    playerCombat.SetEquippedWeapon(weapon);
+                }
+                else {
+                    playerCombat.SetEquippedWeapon(null);
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
-            if (hotbarSlots[3].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+        } else
+        {
+            Slot hoveredSlot = GetHoveredInventorySlot();
+            if (Input.GetKeyDown(KeyCode.Alpha1)){  // set item in hotbar slot 1
+                if (hoveredSlot != null) hotbarSlots[0].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha2)){  // set item in hotbar slot 2
+                if (hoveredSlot != null) hotbarSlots[1].SetItem(hoveredSlot);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
-            if (hotbarSlots[4].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha3)){  // set item in hotbar slot 3
+                if (hoveredSlot != null) hotbarSlots[2].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha4)){  // set item in hotbar slot 4
+                if (hoveredSlot != null) hotbarSlots[3].SetItem(hoveredSlot);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
-            if (hotbarSlots[5].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha5)){  // set item in hotbar slot 5
+                if (hoveredSlot != null) hotbarSlots[4].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha6)){  // set item in hotbar slot 6
+                if (hoveredSlot != null) hotbarSlots[5].SetItem(hoveredSlot);
             }
         }
     }
@@ -188,6 +211,32 @@ public class Inventory : MonoBehaviour
         {
             infoPanel.Hide();
         }
+    }
+
+    private Slot GetHoveredInventorySlot()
+    {
+        if (EventSystem.current == null)
+        {
+            return null;
+        }
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            Slot slot = result.gameObject.GetComponentInParent<Slot>();
+            if (slot != null && inventorySlots.Contains(slot))
+            {
+                return slot;
+            }
+        }
+
+        return null;
     }
 
     private bool CheckValidSlotForItem(Slot slot, Item item)

@@ -19,6 +19,6 @@ MonoBehaviour:
   shortDescription: Red juicy apple
   weight: 0.05
   maxDurability: 1
-  journalEntry: {fileID: 0}
+  journalEntry: {fileID: 11400000, guid: fbc0730d11939bc4983e0eb5a3271ba0, type: 2}
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}

@@ -14,11 +14,11 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public static event System.Action<Slot> Clicked;
 
-    private Item heldItem;
-    private int itemAmount;
+    public Item HeldItem {get; private set;}
+    public int itemAmount {get; private set;}
 
-    private Image iconImage;
-    private TextMeshProUGUI amountTxt;
+    public Image iconImage {get; private set;}
+    public TextMeshProUGUI amountTxt {get; private set;}
     private CanvasGroup canvasGroup;
 
     private void Awake(){
@@ -45,7 +45,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     }
 
     public Item GetItem(){
-        return heldItem;
+        return HeldItem;
     }
 
     public int GetAmount(){
@@ -53,12 +53,12 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     }
 
     public bool HasItem(){
-        return heldItem != null;
+        return HeldItem != null;
     }
 
     public void SetItem(Item item, int amount = 1)
     {
-        heldItem = item;
+        HeldItem = item;
         itemAmount = amount;
 
         // Resize the icon based on the item's inventory size parameters
@@ -67,16 +67,16 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         iconRect.anchorMax = new Vector2(0, 1);
         iconRect.pivot = new Vector2(0, 1);
         iconRect.anchoredPosition = Vector2.zero;
-        iconRect.sizeDelta = new Vector2(100 + ((heldItem.inventorySize.x-1) * 110), 100 + ((heldItem.inventorySize.y-1) * 110));
+        iconRect.sizeDelta = new Vector2(100 + ((HeldItem.inventorySize.x-1) * 110), 100 + ((HeldItem.inventorySize.y-1) * 110));
         
-        UpdateSlot();
+        UpdateSlot(this);
         RefreshBlockedSlots();
     }
 
     public int AddAmount(int amountToAdd)
     {
         itemAmount += amountToAdd;
-        UpdateSlot();
+        UpdateSlot(this);
         return itemAmount;
     }
 
@@ -90,7 +90,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         }
         else
         {
-            UpdateSlot();
+            UpdateSlot(this);
         }
 
         return itemAmount;
@@ -98,9 +98,9 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void ClearSlot()
     {
-        heldItem = null;
+        HeldItem = null;
         itemAmount = 0;
-        UpdateSlot();
+        UpdateSlot(this);
         RefreshBlockedSlots();
     }
 
@@ -113,7 +113,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
         foreach (Slot owner in activeSlots)
         {
-            if (owner.heldItem == null || owner.iconImage == null)
+            if (owner.HeldItem == null || owner.iconImage == null)
             {
                 continue;
             }
@@ -149,12 +149,12 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
     }
 
-    public void UpdateSlot(){
-        if (heldItem != null){
+    public void UpdateSlot(Slot slot){
+        if (slot.HeldItem != null){
             iconImage.enabled = true;
-            iconImage.sprite = heldItem.icon;
-            if (itemAmount > 1){
-                amountTxt.text = itemAmount.ToString();
+            iconImage.sprite = slot.HeldItem.icon;
+            if (slot.itemAmount > 1){
+                amountTxt.text = slot.itemAmount.ToString();
             } else {
                 amountTxt.text = "";
             }
