@@ -17,9 +17,8 @@ MonoBehaviour:
   maxStackSize: 1
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
-  fart: fart
   stats:
     damage: 10
     attackRange: 2.5
     attackCooldown: 0.5
-  weaponPrefab: {fileID: 3079598078203230605, guid: ee997e3f3c074e242ac635aa12d59388, type: 3}
+  weaponPrefab: {fileID: 4176490268933227711, guid: ff3bd8e53a75a47bf8427c7a1c1d8ca0, type: 3}
