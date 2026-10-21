@@ -21,13 +21,23 @@ public class Item : ScriptableObject
         string text = "";
         if (weight > 0f)
         {
-            text += "Weight: " + weight.ToString("0.0") + "\n";
+            text += StatLine("Weight", weight.ToString("0.0"));
         }
         if (maxDurability > 0)
         {
-            text += "Durability: " + maxDurability + "\n";
+            text += StatLine("Durability", maxDurability.ToString());
         }
         return text;
+    }
+
+    // label on the left, value lined up in a column
+    protected static string StatLine(string label, string value, string color = null)
+    {
+        if (color != null)
+        {
+            value = "<color=" + color + ">" + value + "</color>";
+        }
+        return label + "<pos=60%>" + value + "\n";
     }
 }
 

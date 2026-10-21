@@ -232,7 +232,7 @@ public class JournalUI : MonoBehaviour
         {
             entryTitle.text = currentTab.ToString();
             entryText.text = emptyTabText;
-            entryPicture.enabled = false;
+            entryPicture.gameObject.SetActive(false);   // hide so the layout closes the gap
             RefreshLabels();
             return;
         }
@@ -245,7 +245,7 @@ public class JournalUI : MonoBehaviour
         entryTitle.text = entry.title;
         entryText.text = entry.loreText;
         entryPicture.sprite = entry.picture;
-        entryPicture.enabled = entry.picture != null;
+        entryPicture.gameObject.SetActive(entry.picture != null);
         RefreshLabels();
     }
 
