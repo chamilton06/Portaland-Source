@@ -656,6 +656,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.12
+--- !u!114 &154194434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154194427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b04ce74945740dbb17ee494cb71572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 684481421}
+  weapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  weaponPivot: {fileID: 0}
+  swingDuration: 0.15
+  logHitResults: 1
+  turnSpeed: 180
+  damage: 10
+  attackRange: 2.5
+  attackAngle: 100
+  windUpDuration: 0.6
+  recoveryDuration: 1
+  showAttackLabel: 1
 --- !u!1 &164840395
 GameObject:
   m_ObjectHideFlags: 0
@@ -2655,7 +2679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ad81b4497f4402b9e2334f90c3ed32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equippedWeapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  equippedWeapon: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
   weaponPivot: {fileID: 3207179020257286302}
   weaponEquipped: 1
   inventoryOpen: 0
@@ -3959,6 +3983,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9192102642459302526, guid: 8b05ab3988e5d43b491669ca8ff2d1be, type: 3}
       insertIndex: -1
       addedObject: {fileID: 154194433}
+    - targetCorrespondingSourceObject: {fileID: 9192102642459302526, guid: 8b05ab3988e5d43b491669ca8ff2d1be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 154194434}
   m_SourcePrefab: {fileID: 100100000, guid: 8b05ab3988e5d43b491669ca8ff2d1be, type: 3}
 --- !u!1 &1025914953
 GameObject:
