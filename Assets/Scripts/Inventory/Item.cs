@@ -1,38 +1,46 @@
-// ============================================================================
-// Item.cs
-// Defines the Item ScriptableObject (name, icon, stack size, prefabs) used by
-// the inventory, plus an Equipment subclass reserved for future armour and
-// other equippable types.
-// ============================================================================
-
 using UnityEngine;
-
-// ============================================================================
-// Item
-// ============================================================================
 
 [CreateAssetMenu(fileName = "Item", menuName = "NewItem")]
 public class Item : ScriptableObject
 {
-    // ------------------------------------------------------------------------
-    // Info
-    // ------------------------------------------------------------------------
     public string itemName;
     public Sprite icon;
     public int maxStackSize;
 
-    // ------------------------------------------------------------------------
-    // Prefabs
-    // ------------------------------------------------------------------------
+    [TextArea(2, 4)]
+    public string shortDescription;
+    public float weight;
+    public int maxDurability;               // 0 = doesnt break
+    public JournalEntry journalEntry;       // lore page
+
     public GameObject itemPrefab;
-    public GameObject handItemPrefab; 
+    public GameObject handItemPrefab;
+
+    public virtual string GetStatsText()
+    {
+        string text = "";
+        if (weight > 0f)
+        {
+            text += StatLine("Weight", weight.ToString("0.0"));
+        }
+        if (maxDurability > 0)
+        {
+            text += StatLine("Durability", maxDurability.ToString());
+        }
+        return text;
+    }
+
+    // label on the left, value lined up in a column
+    protected static string StatLine(string label, string value, string color = null)
+    {
+        if (color != null)
+        {
+            value = "<color=" + color + ">" + value + "</color>";
+        }
+        return label + "<pos=60%>" + value + "\n";
+    }
 }
 
-// ============================================================================
-// Equipment
-// ============================================================================
-
-// Placeholder for armour and other equipment types. Currently empty.
 public class Equipment : Item
 {
 }

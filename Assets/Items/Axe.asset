@@ -15,6 +15,10 @@ MonoBehaviour:
   itemName: Axe
   icon: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
   maxStackSize: 1
+  shortDescription: Cool big axe!
+  weight: 3.2
+  maxDurability: 100
+  journalEntry: {fileID: 11400000, guid: 6d620c664d27fdb4ca27420ee127b4eb, type: 2}
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
   stats:

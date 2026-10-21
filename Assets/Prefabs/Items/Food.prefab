@@ -118,4 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51622c3f0ee3492d81795c984e76dc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 0e38275371934564187da3084de98d15, type: 2}
   hungerAmount: 25

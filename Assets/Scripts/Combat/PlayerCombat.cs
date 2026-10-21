@@ -1,22 +1,12 @@
-// ============================================================================
-// PlayerCombat.cs
-// Handles the player's melee attack: reads mouse input, enforces the weapon's
-// cooldown, raycasts forward to damage whatever it hits, and plays a swing
-// animation on the equipped weapon.
-// ============================================================================
-
 using UnityEngine;
 using System.Collections;
 
 public class PlayerCombat : MonoBehaviour
 {
-    // ------------------------------------------------------------------------
-    // Configuration
-    // ------------------------------------------------------------------------
     public Weapon equippedWeapon;
     public Transform weaponPivot; // Live scene pivot containing the visible weapon model
     public bool weaponEquipped = true;
-    public bool inventoryOpen = false;  // Set by the inventory UI; blocks attacks while open
+    public bool inventoryOpen = false;
 
     [Header("Guard Pose (block and parry)")]
     public Vector3 guardPositionOffset = new Vector3(-0.25f, 0.25f, 0.15f);
@@ -76,11 +66,6 @@ public class PlayerCombat : MonoBehaviour
         CancelAttack();
     }
 
-    // ------------------------------------------------------------------------
-    // Public API
-    // ------------------------------------------------------------------------
-
-    // Sets the active weapon and updates weaponEquipped to match.
     public void SetEquippedWeapon(Weapon weapon)
     {
         if (defence != null) defence.CancelGuard();
@@ -108,11 +93,6 @@ public class PlayerCombat : MonoBehaviour
         weaponInstance.SetActive(true);
     }
 
-    // ------------------------------------------------------------------------
-    // Unity Callbacks
-    // ------------------------------------------------------------------------
-
-    // Checks for attack input; on click, starts the swing and damages the target in range.
     void Update()
     {
         if ((movement != null && movement.IsRolling) || inventoryOpen || (playerStats != null && playerStats.IsDead()))

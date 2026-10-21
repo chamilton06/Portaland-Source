@@ -1,43 +1,22 @@
-// ============================================================================
-// Inventory.cs
-// Manages the player's inventory and hotbar: toggles the inventory UI,
-// adds items into stacks and empty slots, and equips weapons from hotbar
-// slots via PlayerCombat.
-// ============================================================================
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    // ------------------------------------------------------------------------
-    // Configuration
-    // ------------------------------------------------------------------------
-
     public GameObject hotbarObject;
     public GameObject inventorySlotParent;
-    public PlayerCombat playerCombat;           // Falls back to GetComponent in Awake if unset
-
-    // ------------------------------------------------------------------------
-    // Test Items (debug only)
-    // ------------------------------------------------------------------------
+    public PlayerCombat playerCombat;
+    public ItemInfoPanel infoPanel;             // stats panel on the right
+    public JournalUI journal;
 
     public Item testItem;
     public Item testItem2;
 
-    // ------------------------------------------------------------------------
-    // State
-    // ------------------------------------------------------------------------
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
     private List<Slot> allSlots = new List<Slot>();
 
-    // ------------------------------------------------------------------------
-    // Unity Callbacks
-    // ------------------------------------------------------------------------
-
-    // Finds PlayerCombat and collects all slot references.
     private void Awake(){
         if (playerCombat == null)
         {
@@ -50,24 +29,38 @@ public class Inventory : MonoBehaviour
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
     }
 
-    // Handles Tab (toggle inventory), E/R (spawn test items), and 1-6 (equip hotbar weapon).
+    // start closed (in Start so slots wake up first)
+    private void Start()
+    {
+        SetOpen(false);
+    }
+
+    private void OnEnable()
+    {
+        Slot.Clicked += OnSlotClicked;
+    }
+
+    private void OnDisable()
+    {
+        Slot.Clicked -= OnSlotClicked;
+    }
+
     [System.Obsolete]
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            inventorySlotParent.SetActive(!inventorySlotParent.activeSelf);
-            playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
+            SetOpen(!IsOpen());
         }
 
-        if (Input.GetKeyDown(KeyCode.E)){ //Spawn axe
+        if (Input.GetKeyDown(KeyCode.E)){ // spawn axe
             AddItem(testItem, 1);
         }
-        if (Input.GetKeyDown(KeyCode.R)){ //Spawn sword
+        if (Input.GetKeyDown(KeyCode.R)){ // spawn sword
             AddItem(testItem2, 1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)){  //Equip weapon in hotbar slot 1
+        if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
             if (hotbarSlots[0].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -77,7 +70,7 @@ public class Inventory : MonoBehaviour
                 playerCombat.SetEquippedWeapon(null);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2)){  //Equip weapon in hotbar slot 2
+        if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
             if (hotbarSlots[1].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -86,7 +79,7 @@ public class Inventory : MonoBehaviour
                 playerCombat.SetEquippedWeapon(null);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3)){  //Equip weapon in hotbar slot 3
+        if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
             if (hotbarSlots[2].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -95,7 +88,7 @@ public class Inventory : MonoBehaviour
                 playerCombat.SetEquippedWeapon(null);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4)){  //Equip weapon in hotbar slot 4
+        if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
             if (hotbarSlots[3].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -104,7 +97,7 @@ public class Inventory : MonoBehaviour
                 playerCombat.SetEquippedWeapon(null);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha5)){  //Equip weapon in hotbar slot 5
+        if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
             if (hotbarSlots[4].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -113,7 +106,7 @@ public class Inventory : MonoBehaviour
                 playerCombat.SetEquippedWeapon(null);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6)){  //Equip weapon in hotbar slot 6
+        if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
             if (hotbarSlots[5].GetItem() is Weapon weapon)
             {
                 playerCombat.SetEquippedWeapon(weapon);
@@ -124,12 +117,33 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    // ------------------------------------------------------------------------
-    // Public API
-    // ------------------------------------------------------------------------
+    public bool IsOpen()
+    {
+        return inventorySlotParent.activeSelf;
+    }
 
-    // Adds items by filling existing stacks first, then empty slots. Logs if space runs out.
+    public void SetOpen(bool open)
+    {
+        if (open && journal != null && journal.IsOpen())
+        {
+            journal.Close();
+        }
+
+        inventorySlotParent.SetActive(open);
+        playerCombat.inventoryOpen = open;
+
+        if (!open && infoPanel != null)
+        {
+            infoPanel.Hide();
+        }
+    }
+
     public void AddItem(Item item, int amount = 1){
+        if (journal != null)
+        {
+            journal.Discover(item);  // add to journal
+        }
+
         int remaining = amount;
         foreach (Slot slot in allSlots){
             if (slot.HasItem() && slot.GetItem() == item && slot.GetAmount() < item.maxStackSize){
@@ -152,6 +166,23 @@ public class Inventory : MonoBehaviour
 
         if (remaining > 0){
             Debug.Log("Not enough space in inventory for " + remaining + " " + item.itemName);
+        }
+    }
+
+    private void OnSlotClicked(Slot slot)
+    {
+        if (infoPanel == null || !IsOpen())
+        {
+            return;
+        }
+
+        if (slot.HasItem())
+        {
+            infoPanel.Show(slot.GetItem());
+        }
+        else
+        {
+            infoPanel.Hide();
         }
     }
 }

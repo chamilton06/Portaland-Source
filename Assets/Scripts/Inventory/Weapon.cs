@@ -1,30 +1,20 @@
-// ============================================================================
-// Weapon.cs
-// Defines the Weapon ScriptableObject (an Equipment subclass) and the
-// WeaponStats data it holds: damage, attack range, and attack cooldown.
-// ============================================================================
-
 using UnityEngine;
-
-// ============================================================================
-// Weapon
-// ============================================================================
 
 [CreateAssetMenu(fileName = "Weapon", menuName = "New Weapon")]
 public class Weapon : Equipment
 {
-    // ------------------------------------------------------------------------
-    // Configuration
-    // ------------------------------------------------------------------------
     public WeaponStats stats;
-    public GameObject weaponPrefab;     // Weapon model that PlayerCombat swings
+    public GameObject weaponPrefab;
+
+    public override string GetStatsText()
+    {
+        string text = StatLine("Attack", "+" + stats.damage, "#B71C1C");
+        text += StatLine("Range", stats.attackRange.ToString("0.0"));
+        text += StatLine("Speed", (1f / stats.attackCooldown).ToString("0.0") + "/sec");
+        return text + base.GetStatsText();
+    }
 }
 
-// ============================================================================
-// WeaponStats
-// ============================================================================
-
-// Combat numbers for a weapon. Serializable so it shows up in the Weapon inspector.
 [System.Serializable]
 public class WeaponStats
 {
