@@ -23,6 +23,40 @@ public class PlayerCombat : MonoBehaviour
     // ------------------------------------------------------------------------
     private float nextAttackTime = 0f;
     private bool swinging = false;
+    private GameObject weaponInstance;
+    private Quaternion restingRotation;
+    private Coroutine swingRoutine;
+    private PlayerStats playerStats;
+
+    public bool IsAttacking => swinging;
+
+    private void Awake()
+    {
+        playerStats = GetComponent<PlayerStats>();
+        if (weaponPivot != null)
+            restingRotation = weaponPivot.localRotation;
+    }
+
+    private void Start()
+    {
+        SetEquippedWeapon(equippedWeapon);
+    }
+
+    public void CancelAttack()
+    {
+        if (swingRoutine != null)
+            StopCoroutine(swingRoutine);
+
+        swingRoutine = null;
+        swinging = false;
+        if (weaponPivot != null)
+            weaponPivot.localRotation = restingRotation;
+    }
+
+    private void OnDisable()
+    {
+        CancelAttack();
+    }
 
     // ------------------------------------------------------------------------
     // Public API
@@ -31,8 +65,28 @@ public class PlayerCombat : MonoBehaviour
     // Sets the active weapon and updates weaponEquipped to match.
     public void SetEquippedWeapon(Weapon weapon)
     {
+        CancelAttack();
+        if (weaponInstance != null)
+        {
+            weaponInstance.SetActive(false);
+            Destroy(weaponInstance);
+            weaponInstance = null;
+        }
+
         equippedWeapon = weapon;
         weaponEquipped = equippedWeapon != null;
+
+        if (!weaponEquipped || weaponPivot == null) return;
+        if (weapon.weaponPrefab == null)
+        {
+            Debug.LogWarning("Equipped weapon has no Weapon Prefab assigned.", this);
+            return;
+        }
+
+        weaponInstance = Instantiate(weapon.weaponPrefab, weaponPivot, false);
+        weaponInstance.transform.localPosition = Vector3.zero;
+        weaponInstance.transform.localRotation = Quaternion.identity;
+        weaponInstance.SetActive(true);
     }
 
     // ------------------------------------------------------------------------
@@ -42,7 +96,14 @@ public class PlayerCombat : MonoBehaviour
     // Checks for attack input; on click, starts the swing and damages the target in range.
     void Update()
     {
-        if (!weaponEquipped || inventoryOpen|| equippedWeapon == null || swinging)
+        if (inventoryOpen || (playerStats != null && playerStats.IsDead()))
+        {
+            CancelAttack();
+            return;
+        }
+
+        if (!weaponEquipped || equippedWeapon == null || equippedWeapon.stats == null
+            || weaponPivot == null || weaponInstance == null || swinging)
         {
             return;
         }
@@ -51,7 +112,7 @@ public class PlayerCombat : MonoBehaviour
         {
             nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
             
-            StartCoroutine(SwingWeapon());
+            swingRoutine = StartCoroutine(SwingWeapon());
             
             RaycastHit hit;
 
@@ -83,7 +144,7 @@ public class PlayerCombat : MonoBehaviour
         swinging = true;
 
         Transform weapon = weaponPivot;
-        Quaternion startRotation = weapon.localRotation;
+        Quaternion startRotation = restingRotation;
         Quaternion swingRotation = startRotation * Quaternion.Euler(60f, 0f, -40f);
 
         float duration = 0.15f;
@@ -111,5 +172,6 @@ public class PlayerCombat : MonoBehaviour
 
         weapon.localRotation = startRotation;
         swinging = false;
+        swingRoutine = null;
     }
 }
