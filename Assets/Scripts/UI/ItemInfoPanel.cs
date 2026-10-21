@@ -65,7 +65,7 @@ public class ItemInfoPanel : MonoBehaviour
         currentItem = item;
 
         iconImage.sprite = item.icon;
-        iconImage.enabled = item.icon != null;
+        iconImage.gameObject.SetActive(item.icon != null);   // no gap if theres no icon
         nameText.text = item.itemName;
         statsText.text = item.GetStatsText();
         descriptionText.text = item.shortDescription;

@@ -8,9 +8,9 @@ public class Weapon : Equipment
 
     public override string GetStatsText()
     {
-        string text = "<color=#B71C1C>+" + stats.damage + " Attack</color>\n";
-        text += "Range: " + stats.attackRange.ToString("0.0") + "\n";
-        text += "Speed: " + (1f / stats.attackCooldown).ToString("0.0") + " hits/sec\n";
+        string text = StatLine("Attack", "+" + stats.damage, "#B71C1C");
+        text += StatLine("Range", stats.attackRange.ToString("0.0"));
+        text += StatLine("Speed", (1f / stats.attackCooldown).ToString("0.0") + "/sec");
         return text + base.GetStatsText();
     }
 }

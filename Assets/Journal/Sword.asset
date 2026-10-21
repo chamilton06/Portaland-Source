@@ -15,5 +15,8 @@ MonoBehaviour:
   title: Magical Long Sword
   tab: 4
   picture: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
-  loreText: SWOOOOORD
-  startsUnlocked: 1
+  loreText: "A straight sword with a double-edged blade.\r\n\r\nIn addition to its
+    reliable standard damage, this weapon also boasts powerful piercing attacks.
+    A superbly balanced armament.  \n\n\nStarting armament of the Vagabond origin.\n\r\nPurchased
+    from Twin Maiden Husks at the Roundtable Hold for 1,000 Runes."
+  startsUnlocked: 0

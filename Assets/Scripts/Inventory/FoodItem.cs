@@ -11,11 +11,11 @@ public class FoodItem : Item
         string text = "";
         if (healthRestore > 0f)
         {
-            text += "<color=#2E7D32>+" + healthRestore + " Health</color>\n";
+            text += StatLine("Health", "+" + healthRestore, "#2E7D32");
         }
         if (hungerRestore > 0f)
         {
-            text += "<color=#8D5524>+" + hungerRestore + " Hunger</color>\n";
+            text += StatLine("Hunger", "+" + hungerRestore, "#8D5524");
         }
         return text + base.GetStatsText();
     }

@@ -15,8 +15,7 @@ MonoBehaviour:
   itemName: Sword
   icon: {fileID: 21300000, guid: 467c60b5ec0b794468144c645754814e, type: 3}
   maxStackSize: 2
-  inventorySize: {x: 1, y: 3}
-  shortDescription: Magical long sword
+  shortDescription: Magical long sword!
   weight: 4.5
   maxDurability: 100
   journalEntry: {fileID: 11400000, guid: a684df0a7d4b90541a7c35d4567127e2, type: 2}
@@ -26,4 +25,4 @@ MonoBehaviour:
     damage: 20
     attackRange: 2.5
     attackCooldown: 0.5
-  weaponPrefab: {fileID: 3079598078203230605, guid: ee997e3f3c074e242ac635aa12d59388, type: 3}
+  weaponPrefab: {fileID: 4176490268933227711, guid: ae1ec15c310b74f209dfbe6d7b127583, type: 3}
