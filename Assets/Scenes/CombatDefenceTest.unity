@@ -2492,6 +2492,7 @@ GameObject:
   - component: {fileID: 684481421}
   - component: {fileID: 684481428}
   - component: {fileID: 684481429}
+  - component: {fileID: 684481430}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2575,6 +2576,15 @@ MonoBehaviour:
   sprintKey: 304
   crouchKey: 306
   jumpKey: 32
+  rollKey: 113
+  rollDuration: 0.45
+  rollSpeed: 8
+  rollStaminaCost: 25
+  rollCooldown: 0.35
+  dodgeWindowStart: 0.08
+  dodgeWindowEnd: 0.28
+  rollVisual: {fileID: 0}
+  createCapsuleRollVisual: 1
 --- !u!143 &684481424
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2684,6 +2694,9 @@ MonoBehaviour:
   weaponPivot: {fileID: 3207179020257286302}
   weaponEquipped: 1
   inventoryOpen: 0
+  guardPositionOffset: {x: -0.25, y: 0.25, z: 0.15}
+  guardRotationOffset: {x: -20, y: 0, z: 65}
+  guardTransitionTime: 0.12
 --- !u!114 &684481429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2699,6 +2712,20 @@ MonoBehaviour:
   parryWindow: 0.2
   blockAngle: 120
   parryMessageDuration: 0.75
+--- !u!114 &684481430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684481420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 078233116827c4046812b129c53d75b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.12
 --- !u!1 &692627892
 GameObject:
   m_ObjectHideFlags: 0

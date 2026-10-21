@@ -12,6 +12,11 @@ public class DamageFlash : MonoBehaviour
 
     private void Awake()
     {
+        CacheRenderers();
+    }
+
+    private void CacheRenderers()
+    {
         renderers = GetComponentsInChildren<Renderer>(true);
         originalBlocks = new MaterialPropertyBlock[renderers.Length];
 
@@ -31,6 +36,10 @@ public class DamageFlash : MonoBehaviour
             StopCoroutine(flashRoutine);
         }
 
+        RestoreAppearance();
+        // Rolling creates a visual child and equipping creates weapon models at
+        // runtime. Include the current renderers without caching a red flash.
+        CacheRenderers();
         flashRoutine = StartCoroutine(FlashRoutine());
     }
 
