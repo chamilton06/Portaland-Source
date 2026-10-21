@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   itemName: Apple
-  icon: {fileID: 21300000, guid: 467c60b5ec0b794468144c645754814e, type: 3}
+  icon: {fileID: 21300000, guid: a8e8b54821b52a0449eb25e8c3f40c55, type: 3}
   maxStackSize: 5
   inventorySize: {x: 1, y: 1}
   shortDescription: Red juicy apple
