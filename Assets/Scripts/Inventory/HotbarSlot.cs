@@ -9,10 +9,15 @@ public class HotbarSlot : Slot
 {
     public int slotIndex;
     public bool isSelected;
-    private Slot slotRef;
+    public Slot slotRef {get; private set;}
     private CanvasGroup hotbarCanvasGroup;
 
-    private void Update()
+    private void Start()
+    {
+        RefreshOpacity();
+    }
+
+    public void RefreshOpacity()
     {
         if (hotbarCanvasGroup == null)
         {
@@ -32,6 +37,7 @@ public class HotbarSlot : Slot
     public void SetSelected(bool selected)
     {
         isSelected = selected;
+        RefreshOpacity();
     }
 
     public void SetItem(Slot inventorySlot)

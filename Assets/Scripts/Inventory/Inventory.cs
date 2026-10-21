@@ -18,6 +18,7 @@ public class Inventory : MonoBehaviour
     private List<Slot> inventorySlots = new List<Slot>();
     private List<HotbarSlot> hotbarSlots = new List<HotbarSlot>();
     private List<Slot> allSlots = new List<Slot>();
+    private int currentSelectedHotSlot;
 
     private void Awake(){
         if (playerCombat == null)
@@ -27,6 +28,7 @@ public class Inventory : MonoBehaviour
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
         hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<HotbarSlot>(true));
         allSlots.AddRange(inventorySlots);
+        currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
     }
 
@@ -66,59 +68,22 @@ public class Inventory : MonoBehaviour
 
         if (!IsOpen()){
             if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
-                if (hotbarSlots[0].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else
-                {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(0);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
-                if (hotbarSlots[1].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(1);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
-                if (hotbarSlots[2].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(2);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
-                if (hotbarSlots[3].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(3);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
-                if (hotbarSlots[4].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(4);
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
-                if (hotbarSlots[5].GetItem() is Weapon weapon)
-                {
-                    playerCombat.SetEquippedWeapon(weapon);
-                }
-                else {
-                    playerCombat.SetEquippedWeapon(null);
-                }
+                ChangeCurrentSelectedHotbarSlot(5);
             }
         } else
         {
@@ -144,6 +109,21 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void ChangeCurrentSelectedHotbarSlot(int slotIndex)
+    {
+        hotbarSlots[currentSelectedHotSlot].SetSelected(false);
+        hotbarSlots[slotIndex].SetSelected(true);
+        currentSelectedHotSlot = slotIndex;
+
+        if (hotbarSlots[slotIndex].slotRef.GetItem() is Weapon weapon)
+        {
+            playerCombat.SetEquippedWeapon(weapon);
+        }
+        else
+        {
+            playerCombat.SetEquippedWeapon(null);
+        }
+    }
     public bool IsOpen()
     {
         return inventorySlotParent.activeSelf;
@@ -158,6 +138,11 @@ public class Inventory : MonoBehaviour
 
         inventorySlotParent.SetActive(open);
         playerCombat.inventoryOpen = open;
+
+        foreach (HotbarSlot slot in hotbarSlots)
+        {
+            slot.RefreshOpacity();
+        }
 
         if (!open && infoPanel != null)
         {
