@@ -15,6 +15,7 @@ MonoBehaviour:
   itemName: Food
   icon: {fileID: 0}
   maxStackSize: 0
+  inventorySize: {x: 1, y: 1}
   shortDescription: Food restores 5 health, 10 hunger.
   weight: 0
   maxDurability: 0

@@ -15,6 +15,7 @@ MonoBehaviour:
   itemName: Axe
   icon: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
   maxStackSize: 1
+  inventorySize: {x: 2, y: 3}
   shortDescription: Cool big axe!
   weight: 3.2
   maxDurability: 100

@@ -6,6 +6,9 @@ public class Item : ScriptableObject
     public string itemName;
     public Sprite icon;
     public int maxStackSize;
+    public Vector2Int inventorySize; 
+    private int width;
+    private int height;
 
     [TextArea(2, 4)]
     public string shortDescription;

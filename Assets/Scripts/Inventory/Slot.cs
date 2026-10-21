@@ -7,7 +7,10 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    private static readonly HashSet<Slot> activeSlots = new HashSet<Slot>();
+
     public bool hovering;
+    public bool IsBlocked { get; private set; }
 
     public static event System.Action<Slot> Clicked;
 
@@ -16,10 +19,29 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     private Image iconImage;
     private TextMeshProUGUI amountTxt;
+    private CanvasGroup canvasGroup;
 
     private void Awake(){
         iconImage = transform.GetChild(0).GetComponent<Image>();
         amountTxt = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+    }
+
+    private void OnEnable()
+    {
+        activeSlots.Add(this);
+        RefreshBlockedSlots();
+    }
+
+    private void OnDisable()
+    {
+        activeSlots.Remove(this);
+        hovering = false;
+        RefreshBlockedSlots();
     }
 
     public Item GetItem(){
@@ -39,7 +61,16 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         heldItem = item;
         itemAmount = amount;
 
+        // Resize the icon based on the item's inventory size parameters
+        RectTransform iconRect = iconImage.rectTransform;
+        iconRect.anchorMin = new Vector2(0, 1);
+        iconRect.anchorMax = new Vector2(0, 1);
+        iconRect.pivot = new Vector2(0, 1);
+        iconRect.anchoredPosition = Vector2.zero;
+        iconRect.sizeDelta = new Vector2(100 + ((heldItem.inventorySize.x-1) * 110), 100 + ((heldItem.inventorySize.y-1) * 110));
+        
         UpdateSlot();
+        RefreshBlockedSlots();
     }
 
     public int AddAmount(int amountToAdd)
@@ -70,13 +101,63 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         heldItem = null;
         itemAmount = 0;
         UpdateSlot();
+        RefreshBlockedSlots();
+    }
+
+    private static void RefreshBlockedSlots()
+    {
+        foreach (Slot slot in activeSlots)
+        {
+            slot.IsBlocked = false;
+        }
+
+        foreach (Slot owner in activeSlots)
+        {
+            if (owner.heldItem == null || owner.iconImage == null)
+            {
+                continue;
+            }
+
+            Rect itemBounds = GetWorldBounds(owner.iconImage.rectTransform);
+            foreach (Slot candidate in activeSlots)
+            {
+                if (candidate == owner)
+                {
+                    continue;
+                }
+
+                RectTransform candidateRect = candidate.transform as RectTransform;
+                if (candidateRect != null && itemBounds.Overlaps(GetWorldBounds(candidateRect)))
+                {
+                    candidate.IsBlocked = true;
+                    candidate.hovering = false;
+                }
+            }
+        }
+
+        foreach (Slot slot in activeSlots)
+        {
+            slot.canvasGroup.alpha = slot.IsBlocked ? 0f : 1f;
+            slot.canvasGroup.blocksRaycasts = !slot.IsBlocked;
+        }
+    }
+
+    private static Rect GetWorldBounds(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+        return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
     }
 
     public void UpdateSlot(){
         if (heldItem != null){
             iconImage.enabled = true;
             iconImage.sprite = heldItem.icon;
-            amountTxt.text = itemAmount.ToString(); 
+            if (itemAmount > 1){
+                amountTxt.text = itemAmount.ToString();
+            } else {
+                amountTxt.text = "";
+            }
         }
         else {
             iconImage.enabled = false;
@@ -86,7 +167,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        hovering = true;
+        hovering = !IsBlocked;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -96,7 +177,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Clicked != null)
+        if (!IsBlocked && Clicked != null)
         {
             Clicked(this);
         }

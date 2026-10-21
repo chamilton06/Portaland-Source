@@ -12,6 +12,7 @@ public class Inventory : MonoBehaviour
 
     public Item testItem;
     public Item testItem2;
+    public Item testItem3;
 
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
@@ -58,6 +59,9 @@ public class Inventory : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R)){ // spawn sword
             AddItem(testItem2, 1);
+        }
+        if (Input.GetKeyDown(KeyCode.T)){ // spawn apple
+            AddItem(testItem3, 1);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
@@ -156,7 +160,7 @@ public class Inventory : MonoBehaviour
         }
 
         foreach (Slot slot in allSlots){
-            if (!slot.HasItem()){
+            if (!slot.HasItem() && CheckValidSlotForItem(slot, item)){
                 int toAdd = Mathf.Min(item.maxStackSize, remaining);
                 slot.SetItem(item, toAdd);
                 remaining -= toAdd;
@@ -184,5 +188,59 @@ public class Inventory : MonoBehaviour
         {
             infoPanel.Hide();
         }
+    }
+
+    private bool CheckValidSlotForItem(Slot slot, Item item)
+    {
+        // Check if the slot is blocked
+        if (slot.IsBlocked)
+        {
+            return false;
+        }
+
+        Vector2Int itemSize = item.inventorySize;
+        const int inventoryWidth = 6;
+        const int inventoryHeight = 4;
+
+        if (itemSize.x <= 0 || itemSize.y <= 0)
+        {
+            return false;
+        }
+
+        int startIndex = inventorySlots.IndexOf(slot);
+        if (startIndex < 0)
+        {
+            return false;
+        }
+
+        int startX = startIndex % inventoryWidth;
+        int startY = startIndex / inventoryWidth;
+        if (startX + itemSize.x > inventoryWidth || startY + itemSize.y > inventoryHeight)
+        {
+            return false;
+        }
+
+        int requiredSlots = itemSize.x * itemSize.y;
+        int overlappingSlots = 0;
+        for (int y = startY; y < startY + itemSize.y; y++)
+        {
+            for (int x = startX; x < startX + itemSize.x; x++)
+            {
+                int index = y * inventoryWidth + x;
+                if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked)
+                {
+                    return false;
+                }
+
+                overlappingSlots++;
+            }
+        }
+
+        if (overlappingSlots != requiredSlots)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
