@@ -18,6 +18,11 @@ public class PlayerCombat : MonoBehaviour
     public bool weaponEquipped = true;
     public bool inventoryOpen = false;  // Set by the inventory UI; blocks attacks while open
 
+    [Header("Guard Pose (block and parry)")]
+    public Vector3 guardPositionOffset = new Vector3(-0.25f, 0.25f, 0.15f);
+    public Vector3 guardRotationOffset = new Vector3(-20f, 0f, 65f);
+    [Min(0.01f)] public float guardTransitionTime = 0.12f;
+
     // ------------------------------------------------------------------------
     // State
     // ------------------------------------------------------------------------
@@ -25,16 +30,23 @@ public class PlayerCombat : MonoBehaviour
     private bool swinging = false;
     private GameObject weaponInstance;
     private Quaternion restingRotation;
+    private Vector3 restingPosition;
+    private float guardPoseWeight;
     private Coroutine swingRoutine;
     private PlayerStats playerStats;
+    private PlayerDefence defence;
 
     public bool IsAttacking => swinging;
 
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+        defence = GetComponent<PlayerDefence>();
         if (weaponPivot != null)
+        {
             restingRotation = weaponPivot.localRotation;
+            restingPosition = weaponPivot.localPosition;
+        }
     }
 
     private void Start()
@@ -49,8 +61,12 @@ public class PlayerCombat : MonoBehaviour
 
         swingRoutine = null;
         swinging = false;
+        guardPoseWeight = 0f;
         if (weaponPivot != null)
+        {
             weaponPivot.localRotation = restingRotation;
+            weaponPivot.localPosition = restingPosition;
+        }
     }
 
     private void OnDisable()
@@ -65,6 +81,7 @@ public class PlayerCombat : MonoBehaviour
     // Sets the active weapon and updates weaponEquipped to match.
     public void SetEquippedWeapon(Weapon weapon)
     {
+        if (defence != null) defence.CancelGuard();
         CancelAttack();
         if (weaponInstance != null)
         {
@@ -108,6 +125,8 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
+        if (defence != null && defence.IsBlocking) return;
+
         if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
         {
             nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
@@ -132,6 +151,21 @@ public class PlayerCombat : MonoBehaviour
     // Coroutines
     // ------------------------------------------------------------------------
 
+    // Combat owns the pivot pose, so guard transitions never compete with swings.
+    private void LateUpdate()
+    {
+        if (weaponPivot == null || swinging) return;
+
+        bool guarding = defence != null && defence.IsBlocking;
+        guardPoseWeight = Mathf.MoveTowards(guardPoseWeight, guarding ? 1f : 0f,
+            Time.deltaTime / Mathf.Max(0.01f, guardTransitionTime));
+
+        weaponPivot.localPosition = Vector3.Lerp(restingPosition,
+            restingPosition + guardPositionOffset, guardPoseWeight);
+        weaponPivot.localRotation = Quaternion.Slerp(restingRotation,
+            restingRotation * Quaternion.Euler(guardRotationOffset), guardPoseWeight);
+    }
+
     // Rotates the weapon through a quick swing and back, blocking attacks until it finishes.
     IEnumerator SwingWeapon()
     {
@@ -142,6 +176,8 @@ public class PlayerCombat : MonoBehaviour
         }
 
         swinging = true;
+        guardPoseWeight = 0f;
+        weaponPivot.localPosition = restingPosition;
 
         Transform weapon = weaponPivot;
         Quaternion startRotation = restingRotation;

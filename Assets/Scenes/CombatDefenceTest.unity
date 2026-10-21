@@ -2491,6 +2491,7 @@ GameObject:
   - component: {fileID: 684481422}
   - component: {fileID: 684481421}
   - component: {fileID: 684481428}
+  - component: {fileID: 684481429}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2683,6 +2684,21 @@ MonoBehaviour:
   weaponPivot: {fileID: 3207179020257286302}
   weaponEquipped: 1
   inventoryOpen: 0
+--- !u!114 &684481429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684481420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c33c0f8d13f4cb699fe2948f1a8d66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parryWindow: 0.2
+  blockAngle: 120
+  parryMessageDuration: 0.75
 --- !u!1 &692627892
 GameObject:
   m_ObjectHideFlags: 0

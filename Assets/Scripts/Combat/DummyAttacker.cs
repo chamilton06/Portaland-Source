@@ -155,10 +155,17 @@ public class DummyAttacker : MonoBehaviour
             return;
         }
 
-        float before = player.GetHealthPercent() * player.maxHealth;
-        player.TakeDamage(damage);
-        float after = player.GetHealthPercent() * player.maxHealth;
-        Report("Hit: HP " + before.ToString("F1") + " -> " + after.ToString("F1"));
+        PlayerDefence defence = player.GetComponent<PlayerDefence>();
+        if (defence != null && defence.isActiveAndEnabled)
+        {
+            Report("Strike: " + defence.ReceiveHit(damage, transform.position));
+        }
+        else
+        {
+            // Existing scenes without PlayerDefence still receive normal damage.
+            player.TakeDamage(damage);
+            Report("Strike: Damaged");
+        }
     }
 
     private void Report(string result)
