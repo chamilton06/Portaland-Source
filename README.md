@@ -16,7 +16,7 @@ This prototype demonstrates the player’s movement through walking (forward, ba
 
 ### Keybinds
     Forward (W), Backward (S), Left (A), Right (D), Look (Mouse), Run/Sprint 
-    (Shift), Jump (Space), Combat Roll (Q)
+    (Shift), Jump (Space), Combat Roll (Q), Crouch (Control)
 
 ## Combat
 
