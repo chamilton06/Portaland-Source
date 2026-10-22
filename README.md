@@ -30,7 +30,7 @@ The prototype demonstrates our combat system through simple weapons that deal di
 The prototype demonstrates the player’s basic needs through three stat bars in the UI: health, hunger, and stamina. Health is tied to movement, since significant falls deal damage. Hunger decays naturally over time and can be restored by enemy item drops. Stamina decreases with player activity (sprinting and jumping). Hunger is also linked to health: when hunger is empty the player takes damage, and when it’s high enough the player heals.
 
 ### Keybinds (DEBUG ONLY)
-    Reduce Hunger by 25% (P)
+    Reduce Hunger by 25% (P), Refill Hunger (F)
 
 ## Inventory
 
