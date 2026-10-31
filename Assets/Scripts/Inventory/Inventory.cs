@@ -154,7 +154,10 @@ public class Inventory : MonoBehaviour
             if (hotSlot.slotRef == hoveredSlot) hotSlot.ClearRef();
         }
         hotbarSlots[index].SetItem(hoveredSlot);
-        ChangeCurrentSelectedHotbarSlot(currentSelectedHotSlot);   // re-equip in case the active key changed
+        if (hotbarSlots[currentSelectedHotSlot].isSelected)
+        {
+            ChangeCurrentSelectedHotbarSlot(currentSelectedHotSlot);   // re-equip in case the active key changed
+        }
     }
 
     public bool IsOpen()
@@ -253,6 +256,13 @@ public class Inventory : MonoBehaviour
         RefreshBlocked();
         RetargetHotbar(from, to);
         return true;
+    }
+
+    // covered cell -> the big item sitting on it
+    public Slot GetOwner(Slot slot)
+    {
+        int index = inventorySlots.IndexOf(slot);
+        return index >= 0 && coveredBy[index] != null ? coveredBy[index] : slot;
     }
 
     // hotbar follows the item when it moves + updates stack numbers

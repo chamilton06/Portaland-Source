@@ -16,6 +16,7 @@ public class InventoryDrag : MonoBehaviour
     private Image ghost;
     private Canvas ghostCanvas;
     private Slot dragSlot;
+    private Slot dragHandle;             // slot that got the mouse, can be a covered cell
     private Vector2Int grabCell;         // which cell of the item we grabbed
     private Vector3 grabOffset;          // mouse to icon corner
 
@@ -35,10 +36,13 @@ public class InventoryDrag : MonoBehaviour
 
     public void BeginDrag(Slot slot, PointerEventData eventData)
     {
+        Slot handle = slot;
+        slot = inventory.GetOwner(slot);   // grabbed a covered cell, use the item on it
         int index = inventory.InventorySlots.IndexOf(slot);
         if (index < 0 || !slot.HasItem()) return;
 
         dragSlot = slot;
+        dragHandle = handle;
         RectTransform icon = slot.iconImage.rectTransform;
 
         // copy the icon look + size
@@ -68,28 +72,30 @@ public class InventoryDrag : MonoBehaviour
 
     public void Drag(Slot slot, PointerEventData eventData)
     {
-        if (slot != dragSlot) return;
+        if (slot != dragHandle) return;
         ghost.transform.position = PointerWorld(eventData) + grabOffset;
     }
 
     public void EndDrag(Slot slot, PointerEventData eventData)
     {
-        if (slot != dragSlot) return;
+        if (slot != dragHandle) return;
 
+        Slot from = dragSlot;
         Slot target = GetTargetSlot(eventData.position, eventData.pressEventCamera);
         StopDrag();
-        if (target != null) inventory.TryMoveItem(slot, target);
+        if (target != null) inventory.TryMoveItem(from, target);
     }
 
     public void Cancel(Slot slot)
     {
-        if (slot == dragSlot) StopDrag();
+        if (slot == dragHandle) StopDrag();
     }
 
     void StopDrag()
     {
         if (dragSlot != null) dragSlot.iconImage.color = Color.white;
         dragSlot = null;
+        dragHandle = null;
         ghost.gameObject.SetActive(false);
     }
 
