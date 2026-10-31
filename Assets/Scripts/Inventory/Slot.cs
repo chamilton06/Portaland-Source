@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private static readonly HashSet<Slot> activeSlots = new HashSet<Slot>();
+    //private static readonly HashSet<Slot> activeSlots = new HashSet<Slot>();
 
     public bool hovering;
     public bool IsBlocked { get; private set; }
@@ -29,19 +29,12 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         {
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
-    }
-
-    private void OnEnable()
-    {
-        activeSlots.Add(this);
-        RefreshBlockedSlots();
+        UpdateSlot(this);   // empty slots start with icon off
     }
 
     private void OnDisable()
     {
-        activeSlots.Remove(this);
         hovering = false;
-        RefreshBlockedSlots();
     }
 
     public Item GetItem(){
@@ -70,7 +63,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         iconRect.sizeDelta = new Vector2(100 + ((HeldItem.inventorySize.x-1) * 110), 100 + ((HeldItem.inventorySize.y-1) * 110));
         
         UpdateSlot(this);
-        RefreshBlockedSlots();
+        //RefreshBlockedSlots();
     }
 
     public int AddAmount(int amountToAdd)
@@ -101,63 +94,74 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         HeldItem = null;
         itemAmount = 0;
         UpdateSlot(this);
-        RefreshBlockedSlots();
+        //RefreshBlockedSlots();
     }
 
-    private static void RefreshBlockedSlots()
+    //private static void RefreshBlockedSlots()
+    //{
+    //    foreach (Slot slot in activeSlots)
+    //    {
+    //        if (slot.HasItem() || slot is HotbarSlot)
+    //        {
+    //            slot.iconImage.enabled = true;
+    //        } 
+    //        else
+    //        {
+    //            slot.iconImage.enabled = false;
+    //        }
+    //        slot.IsBlocked = false;
+    //    }
+
+    //    foreach (Slot owner in activeSlots)
+    //    {
+    //        if (owner.HeldItem == null || owner.iconImage == null)
+    //        {
+    //            continue;
+    //        }
+
+    //        Rect itemBounds = GetWorldBounds(owner.iconImage.rectTransform);
+    //        foreach (Slot candidate in activeSlots)
+    //        {
+    //            if (candidate == owner)
+    //            {
+    //                continue;
+    //            }
+
+    //            RectTransform candidateRect = candidate.transform as RectTransform;
+    //            if (candidateRect != null && itemBounds.Overlaps(GetWorldBounds(candidateRect)))
+    //            {
+    //                candidate.IsBlocked = true;
+    //                candidate.hovering = false;
+    //            }
+    //        }
+    //    }
+
+    //    foreach (Slot slot in activeSlots)
+    //    {  
+    //        if (slot is not HotbarSlot)
+    //        {
+    //        slot.canvasGroup.alpha = slot.IsBlocked ? 0f : 1f;
+    //        slot.canvasGroup.blocksRaycasts = !slot.IsBlocked;
+    //        }
+    //    }
+    //}
+
+    //private static Rect GetWorldBounds(RectTransform rectTransform)
+    //{
+    //    Vector3[] corners = new Vector3[4];
+    //    rectTransform.GetWorldCorners(corners);
+    //    return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
+    //}
+
+
+    // fixing inventory
+    // inventory tells us if a big item is covering us
+    public void SetBlocked(bool blocked)
     {
-        foreach (Slot slot in activeSlots)
-        {
-            if (slot.HasItem() || slot is HotbarSlot)
-            {
-                slot.iconImage.enabled = true;
-            } 
-            else
-            {
-                slot.iconImage.enabled = false;
-            }
-            slot.IsBlocked = false;
-        }
-
-        foreach (Slot owner in activeSlots)
-        {
-            if (owner.HeldItem == null || owner.iconImage == null)
-            {
-                continue;
-            }
-
-            Rect itemBounds = GetWorldBounds(owner.iconImage.rectTransform);
-            foreach (Slot candidate in activeSlots)
-            {
-                if (candidate == owner)
-                {
-                    continue;
-                }
-
-                RectTransform candidateRect = candidate.transform as RectTransform;
-                if (candidateRect != null && itemBounds.Overlaps(GetWorldBounds(candidateRect)))
-                {
-                    candidate.IsBlocked = true;
-                    candidate.hovering = false;
-                }
-            }
-        }
-
-        foreach (Slot slot in activeSlots)
-        {  
-            if (slot is not HotbarSlot)
-            {
-            slot.canvasGroup.alpha = slot.IsBlocked ? 0f : 1f;
-            slot.canvasGroup.blocksRaycasts = !slot.IsBlocked;
-            }
-        }
-    }
-
-    private static Rect GetWorldBounds(RectTransform rectTransform)
-    {
-        Vector3[] corners = new Vector3[4];
-        rectTransform.GetWorldCorners(corners);
-        return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
+        IsBlocked = blocked;
+        canvasGroup.alpha = blocked ? 0f : 1f;
+        canvasGroup.blocksRaycasts = !blocked;
+        if (blocked) hovering = false;
     }
 
     public void UpdateSlot(Slot slot){
@@ -188,7 +192,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (hovering && Clicked != null)
+        if (!IsBlocked && Clicked != null)
         {
             Clicked(this, eventData.button);
         }

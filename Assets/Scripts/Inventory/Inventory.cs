@@ -4,6 +4,7 @@ using NUnit.Framework.Internal.Commands;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Inventory : MonoBehaviour
     private List<HotbarSlot> hotbarSlots = new List<HotbarSlot>();
     private List<Slot> allSlots = new List<Slot>();
     private int currentSelectedHotSlot;
+    private int gridWidth;
+    private int gridHeight;
 
     bool moveMode;
     Slot movingSlot;
@@ -33,6 +36,10 @@ public class Inventory : MonoBehaviour
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
         hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<HotbarSlot>(true));
         allSlots.AddRange(inventorySlots);
+        // read grid size so can add slots in the editor later
+        GridLayoutGroup grid = inventorySlotParent.GetComponent<GridLayoutGroup>();
+        gridWidth = grid != null ? grid.constraintCount : 6;
+        gridHeight = Mathf.CeilToInt(inventorySlots.Count / (float)gridWidth);
         currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
         moveMode = false;
@@ -178,6 +185,7 @@ public class Inventory : MonoBehaviour
             if (!slot.HasItem() && CheckValidSlotForItem(slot, item)){
                 int toAdd = Mathf.Min(item.maxStackSize, remaining);
                 slot.SetItem(item, toAdd);
+                RefreshBlocked();
                 remaining -= toAdd;
                 if (remaining <= 0) return;
             }
@@ -226,6 +234,7 @@ public class Inventory : MonoBehaviour
                 slot.SetItem(item, toAdd);
                 movingSlot.ClearSlot();
             }
+            RefreshBlocked();
             moveMode = false;
         }
     }
@@ -256,6 +265,36 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
+
+    // hide cells a big item is sitting on, works off grid index so closed inventory is fine
+    private void RefreshBlocked()
+    {
+        foreach (Slot slot in inventorySlots)
+        {
+            slot.SetBlocked(false);
+        }
+
+        for (int i = 0; i < inventorySlots.Count; i++)
+        {
+            Item item = inventorySlots[i].GetItem();
+            if (item == null) continue;
+
+            int startX = i % gridWidth;
+            int startY = i / gridWidth;
+            for (int y = startY; y < startY + item.inventorySize.y; y++)
+            {
+                for (int x = startX; x < startX + item.inventorySize.x && x < gridWidth; x++)
+                {
+                    int index = y * gridWidth + x;
+                    if (index != i && index < inventorySlots.Count)
+                    {
+                        inventorySlots[index].SetBlocked(true);
+                    }
+                }
+            }
+        }
+    }
+
     private bool CheckValidSlotForItem(Slot slot, Item item)
     {
         // Check if the slot is blocked
@@ -265,8 +304,8 @@ public class Inventory : MonoBehaviour
         }
 
         Vector2Int itemSize = item.inventorySize;
-        const int inventoryWidth = 6;
-        const int inventoryHeight = 4;
+        //const int gridWidth = 6;
+        //const int inventoryHeight = 4;
 
         if (itemSize.x <= 0 || itemSize.y <= 0)
         {
@@ -279,9 +318,9 @@ public class Inventory : MonoBehaviour
             return false;
         }
 
-        int startX = startIndex % inventoryWidth;
-        int startY = startIndex / inventoryWidth;
-        if (startX + itemSize.x > inventoryWidth || startY + itemSize.y > inventoryHeight)
+        int startX = startIndex % gridWidth;
+        int startY = startIndex / gridWidth;
+        if (startX + itemSize.x > gridWidth || startY + itemSize.y > gridHeight)
         {
             return false;
         }
@@ -292,7 +331,7 @@ public class Inventory : MonoBehaviour
         {
             for (int x = startX; x < startX + itemSize.x; x++)
             {
-                int index = y * inventoryWidth + x;
+                int index = y * gridWidth + x;
                 if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked || inventorySlots[index].HasItem())
                 {
                     return false;

@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class ItemInfoPanel : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class ItemInfoPanel : MonoBehaviour
 
     private Item currentItem;
     private Vector2[] homePositions;
+    private readonly List<RaycastResult> hits = new List<RaycastResult>();
 
     void Awake()
     {
@@ -50,6 +53,7 @@ public class ItemInfoPanel : MonoBehaviour
 
     void Update()
     {
+        HideOnOutsideClick();
         float offset = panelRoot.activeSelf ? -slideDistance : 0f;
         float t = slideSpeed * Time.unscaledDeltaTime;
 
@@ -58,6 +62,30 @@ public class ItemInfoPanel : MonoBehaviour
             Vector2 target = homePositions[i] + new Vector2(offset, 0f);
             slideLeft[i].anchoredPosition = Vector2.Lerp(slideLeft[i].anchoredPosition, target, t);
         }
+    }
+
+    // click anywhere thats not the panel or a slot closes it
+    void HideOnOutsideClick()
+    {
+        if (!panelRoot.activeSelf || !(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
+        {
+            return;
+        }
+
+        if (EventSystem.current != null)
+        {
+            PointerEventData data = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            EventSystem.current.RaycastAll(data, hits);
+            foreach (RaycastResult hit in hits)
+            {
+                if (hit.gameObject.transform.IsChildOf(panelRoot.transform) || hit.gameObject.GetComponentInParent<Slot>() != null)
+                {
+                    return;
+                }
+            }
+        }
+
+        Hide();
     }
 
     public void Show(Item item)
