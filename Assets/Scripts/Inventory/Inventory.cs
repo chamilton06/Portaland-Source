@@ -105,24 +105,24 @@ public class Inventory : MonoBehaviour
             }
         } else
         {
-            Slot hoveredSlot = GetHoveredInventorySlot();
+            //Slot hoveredSlot = GetHoveredInventorySlot();
             if (Input.GetKeyDown(KeyCode.Alpha1)){  // set item in hotbar slot 1
-                if (hoveredSlot != null) hotbarSlots[0].SetItem(hoveredSlot);
+                AssignHotbar(0);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2)){  // set item in hotbar slot 2
-                if (hoveredSlot != null) hotbarSlots[1].SetItem(hoveredSlot);
+                AssignHotbar(1);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)){  // set item in hotbar slot 3
-                if (hoveredSlot != null) hotbarSlots[2].SetItem(hoveredSlot);
+                AssignHotbar(2);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)){  // set item in hotbar slot 4
-                if (hoveredSlot != null) hotbarSlots[3].SetItem(hoveredSlot);
+                AssignHotbar(3);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)){  // set item in hotbar slot 5
-                if (hoveredSlot != null) hotbarSlots[4].SetItem(hoveredSlot);
+                AssignHotbar(4);
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)){  // set item in hotbar slot 6
-                if (hoveredSlot != null) hotbarSlots[5].SetItem(hoveredSlot);
+                AssignHotbar(5);
             }
         }
     }
@@ -142,6 +142,21 @@ public class Inventory : MonoBehaviour
             playerCombat.SetEquippedWeapon(null);
         }
     }
+
+    // put hovered item on a hotbar key, one key per item
+    private void AssignHotbar(int index)
+    {
+        Slot hoveredSlot = GetHoveredInventorySlot();
+        if (hoveredSlot == null || !hoveredSlot.HasItem()) return;
+
+        foreach (HotbarSlot hotSlot in hotbarSlots)
+        {
+            if (hotSlot.slotRef == hoveredSlot) hotSlot.ClearRef();
+        }
+        hotbarSlots[index].SetItem(hoveredSlot);
+        ChangeCurrentSelectedHotbarSlot(currentSelectedHotSlot);   // re-equip in case the active key changed
+    }
+
     public bool IsOpen()
     {
         return inventorySlotParent.activeSelf;
@@ -181,7 +196,11 @@ public class Inventory : MonoBehaviour
                 int toAdd = Mathf.Min(space, remaining);
                 slot.SetItem(item, slot.GetAmount() + toAdd);
                 remaining -= toAdd;
-                if (remaining <= 0) return;
+                if (remaining <= 0)
+                {
+                    RetargetHotbar(null, null);   // update hotbar numbers
+                    return;
+                }
             }
         }
 
@@ -191,7 +210,11 @@ public class Inventory : MonoBehaviour
                 slot.SetItem(item, toAdd);
                 RefreshBlocked();
                 remaining -= toAdd;
-                if (remaining <= 0) return;
+                if (remaining <= 0)
+                {
+                    RetargetHotbar(null, null);   // update hotbar numbers
+                    return;
+                }
             }
         }
 
