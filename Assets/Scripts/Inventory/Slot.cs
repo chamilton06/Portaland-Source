@@ -159,7 +159,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     public void SetBlocked(bool blocked)
     {
         IsBlocked = blocked;
-        canvasGroup.alpha = blocked ? 0f : 1f;
+        //canvasGroup.alpha = blocked ? 0f : 1f;
         canvasGroup.blocksRaycasts = !blocked;
         if (blocked) hovering = false;
     }

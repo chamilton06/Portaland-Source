@@ -25,9 +25,11 @@ public class Inventory : MonoBehaviour
     private int gridWidth;
     private int gridHeight;
     private Slot[] coveredBy;   // which big item is sitting on each cell
+    public List<Slot> InventorySlots => inventorySlots;   // for drag
+    public int GridWidth => gridWidth;
 
-    bool moveMode;
-    Slot movingSlot;
+    //bool moveMode;
+    //Slot movingSlot;
 
     private void Awake(){
         if (playerCombat == null)
@@ -44,8 +46,8 @@ public class Inventory : MonoBehaviour
         coveredBy = new Slot[inventorySlots.Count];
         currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
-        moveMode = false;
-        movingSlot = null;
+        //moveMode = false;
+        //movingSlot = null;
     }
 
     // start closed (in Start so slots wake up first)
@@ -253,16 +255,6 @@ public class Inventory : MonoBehaviour
             infoPanel.Hide();
         }
 
-        if (slot.HasItem() && button == PointerEventData.InputButton.Left && !moveMode)
-        {
-            moveMode = true;
-            movingSlot = slot;
-        }
-        else if (button == PointerEventData.InputButton.Left && moveMode && slot != movingSlot)
-        {
-            TryMoveItem(movingSlot, slot);
-            moveMode = false;
-        }
     
     }
 
