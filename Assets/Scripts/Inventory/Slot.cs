@@ -22,8 +22,8 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     private CanvasGroup canvasGroup;
 
     private void Awake(){
-        iconImage = transform.GetChild(0).GetComponent<Image>();
-        amountTxt = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        iconImage = transform.Find("Icon").GetComponent<Image>();
+        amountTxt = transform.Find("AmountTxt").GetComponent<TextMeshProUGUI>();
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
         {
