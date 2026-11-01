@@ -15,6 +15,7 @@ public class SlotDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        eventData.eligibleForClick = false;   // a drag isnt a click
         if (eventData.button != PointerEventData.InputButton.Left || InventoryDrag.Instance == null) return;
         InventoryDrag.Instance.BeginDrag(slot, eventData);
     }

@@ -21,6 +21,7 @@ public class ItemInfoPanel : MonoBehaviour
     public JournalUI journal;
 
     private Item currentItem;
+    public bool IsShowing => panelRoot != null && panelRoot.activeSelf;
     private Vector2[] homePositions;
     private readonly List<RaycastResult> hits = new List<RaycastResult>();
 

@@ -22,6 +22,8 @@ public class Inventory : MonoBehaviour
     private List<HotbarSlot> hotbarSlots = new List<HotbarSlot>();
     private List<Slot> allSlots = new List<Slot>();
     private int currentSelectedHotSlot;
+
+    private Slot infoSlot;   // slot the info panel is showing
     private int gridWidth;
     private int gridHeight;
     private Slot[] coveredBy;   // which big item is sitting on each cell
@@ -170,6 +172,7 @@ public class Inventory : MonoBehaviour
         if (open && journal != null && journal.IsOpen())
         {
             journal.Close();
+            infoSlot = null;
         }
 
         inventorySlotParent.SetActive(open);
@@ -277,18 +280,19 @@ public class Inventory : MonoBehaviour
 
     private void OnSlotClicked(Slot slot, PointerEventData.InputButton button)
     {
-        if (infoPanel == null || !IsOpen()) return;
+        if (infoPanel == null || !IsOpen() || button != PointerEventData.InputButton.Left) return;
 
-        if (slot.HasItem() && button == PointerEventData.InputButton.Right)
+        // click same item again to close
+        if (slot.HasItem() && slot != infoSlot || !infoPanel.IsShowing)
         {
             infoPanel.Show(slot.GetItem());
-        } 
+            infoSlot = slot;
+        }
         else
         {
             infoPanel.Hide();
+            infoSlot = null;
         }
-
-    
     }
 
     private Slot GetHoveredInventorySlot()
