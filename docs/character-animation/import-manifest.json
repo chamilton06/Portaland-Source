@@ -1,0 +1,581 @@
+{
+  "copied_on": "2026-11-02",
+  "files": [
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Unity/Superhero_Female_FullBody.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Models/Superhero_Female_FullBody.fbx",
+      "sha256": "0727e7b236eeea4115531e07aeb2bb7690c1a58155f743bbf54282944fb97ea9",
+      "bytes": 1006508
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Unity/Superhero_Male_FullBody.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Models/Superhero_Male_FullBody.fbx",
+      "sha256": "79344418d754a59730b79d1874752e9592143db34abe8adf138fa9a92a4768e9",
+      "bytes": 826876
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/Normals Unity - Godot/T_Eye_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/Normals Unity - Godot/T_Eye_Normal.png",
+      "sha256": "9ed61f7726a54fe346a78b9e5a18905d8e2b88f86235d97f53cd207a26f3f8c7",
+      "bytes": 15099
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/Normals Unity - Godot/T_Hair_1_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/Normals Unity - Godot/T_Hair_1_Normal.png",
+      "sha256": "57fd0ad8c96a4d01b38769637e066cecaa285b456f6e48ce00863754a457affb",
+      "bytes": 4326126
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/Normals Unity - Godot/T_Hair_2_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/Normals Unity - Godot/T_Hair_2_Normal.png",
+      "sha256": "172f230aae0d4366c3cfc0402b2e6d1811b11f8487344bff28605eeacac1558d",
+      "bytes": 4710013
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/Normals Unity - Godot/T_Superhero_Female_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/Normals Unity - Godot/T_Superhero_Female_Normal.png",
+      "sha256": "cf922460b43ccd31e983e34db05514c9d451dd2f9cdd01a843978e797719f859",
+      "bytes": 3940537
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/Normals Unity - Godot/T_Superhero_Male_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/Normals Unity - Godot/T_Superhero_Male_Normal.png",
+      "sha256": "9b25cf9200216eb754b79cf4c63b5380c419780788322f3c57cdd2b3e02679a6",
+      "bytes": 4252937
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Eye_Brown.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Eye_Brown.png",
+      "sha256": "d08e3356a83211bc6ca21fe3a8e39f4b5c1a3b8f85457fc2c0fb57be09935025",
+      "bytes": 35958
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Eye_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Eye_Normal.png",
+      "sha256": "a74aa37050f26fe336e7dbe5d1e9f01942879dd541c67be2f836633529bc68b7",
+      "bytes": 15097
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_1_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Hair_1_BaseColor.png",
+      "sha256": "bc7aa863bd22ab0a995cd838cceb4d3a5186ee54ee2fb0108fad85d20c057e6e",
+      "bytes": 1570376
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_1_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Hair_1_Normal.png",
+      "sha256": "fd4530bb696a083ac7f9c2f685b4bb15d91150040e76c905db591c7644b4aa87",
+      "bytes": 3770683
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_2_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Hair_2_BaseColor.png",
+      "sha256": "f9f4f2fb3eeeefb0b6f0fdef38b0770fd6607640c1c680b8139dd76697e9f9b3",
+      "bytes": 1729467
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_2_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Hair_2_Normal.png",
+      "sha256": "214dff8981ab87319b2acfaf1ad9143db020989afa14896a0d70048a667e17e3",
+      "bytes": 4109628
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Female_Dark_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Female_Dark_BaseColor.png",
+      "sha256": "d366843ee7d9e9f37ec87a0e1c98c7f2e45573c08eeb80a51a6d9344e68cf288",
+      "bytes": 1319410
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Female_Light_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Female_Light_BaseColor.png",
+      "sha256": "743f811857db0b950f3ad09a0733dfa4888801ead332313ca25becea14c54f8d",
+      "bytes": 1317541
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Female_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Female_Normal.png",
+      "sha256": "3b90600cbd90d1e8b39bcb0befee4333388003a82af9d0ff00825d144cf99373",
+      "bytes": 3420584
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Female_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Female_Roughness.png",
+      "sha256": "4e00eb2d8196cebacd027e3360b9da6431d8915e27e1b5262c14f20eaaa6dced",
+      "bytes": 1997719
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Male_Dark.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Male_Dark.png",
+      "sha256": "df680cbc1967a61e85998bfafb8f7bc0a36dd604bb3266486c4b06b1a184bb45",
+      "bytes": 1384380
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Male_Ligh.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Male_Ligh.png",
+      "sha256": "419f96dbb8811511e2d515bcdabc085ff2f219ec7b8b4e91050a84cba6888fe9",
+      "bytes": 1389170
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Male_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Male_Normal.png",
+      "sha256": "3645858289beb51643155a924e5148735dd5fe226230532936375c06ba829dec",
+      "bytes": 3687166
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Male_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Textures/T_Superhero_Male_Roughness.png",
+      "sha256": "5079fd95603bdd34700abd42ca6bcf43b615929f29134822aeb63a3a8bb3400c",
+      "bytes": 1912686
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Eyebrows_Female.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Eyebrows_Female.fbx",
+      "sha256": "fccb1043cfa5fd3c00c228496702a2b2d6fe8848364b5292dd1f1d52045c35da",
+      "bytes": 73596
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Eyebrows_Regular.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Eyebrows_Regular.fbx",
+      "sha256": "52da1303f33042b361e937e0a7a5baba09d4fcf05d92b42a07f17c1e4a29fc52",
+      "bytes": 47132
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_Beard.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_Beard.fbx",
+      "sha256": "675541ea0dfc95fe125264bc8c59eee543269469b4793ba7c20e6df58709f4c0",
+      "bytes": 48444
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_Buns.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_Buns.fbx",
+      "sha256": "e0dc086cfc9c20eff1449461146c070b061fa8126056e7a79f900214bfe598ae",
+      "bytes": 135388
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_Buzzed.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_Buzzed.fbx",
+      "sha256": "45cfb65bedb6984510b15cadf12e55c872961380228d971d1e434af438e70f8b",
+      "bytes": 45036
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_BuzzedFemale.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_BuzzedFemale.fbx",
+      "sha256": "5b226ec4d3f5e7794b8034db70e930e869abe08db3665b023b37a7cbdcca5a7c",
+      "bytes": 43004
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_Long.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_Long.fbx",
+      "sha256": "d2547c3e508ee7c03325792ef87af2de659f6fb79f93df4528479276588b4c56",
+      "bytes": 125036
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_SimpleParted.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Origin at 0/Hair_SimpleParted.fbx",
+      "sha256": "7612975d40a7520f5a3ca4df19685a88da37ecd3e5c7d10b198a2265baf98047",
+      "bytes": 62668
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Eyebrows_Female.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Eyebrows_Female.fbx",
+      "sha256": "ea6a6d1a3deddcf24b984684543c53693425560e670957e8486b4d2ba7b345dc",
+      "bytes": 194428
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Eyebrows_Regular.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Eyebrows_Regular.fbx",
+      "sha256": "1005c97901cc6eb09d0d9f8b11fb2a692f1dab90229498b27cd50b87c48f96e8",
+      "bytes": 168636
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_Beard.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_Beard.fbx",
+      "sha256": "00899e7d2cceebab8c07456ca1c25e54e441eb271bb3427c3d12e371c2ef5189",
+      "bytes": 169804
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_Buns.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_Buns.fbx",
+      "sha256": "cb45536c0e8c2b715732d9a75a33849239ca5e788c7dee4e17998daa0986fdfc",
+      "bytes": 259420
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_Buzzed.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_Buzzed.fbx",
+      "sha256": "01c5c2ededd8b164274147ee8713a7a68cf74cd699fad6b969ce5e37c1b7b686",
+      "bytes": 165884
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_BuzzedFemale.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_BuzzedFemale.fbx",
+      "sha256": "aeb3a606d8b9b1818025dbf6b4640ff33f14b0e9676f3cbfe410321e1a1d6a5d",
+      "bytes": 164492
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_Long.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_Long.fbx",
+      "sha256": "206f14b69e05758425278f074eb61a730bfe40250e7cc30e0c433ab0b05342c7",
+      "bytes": 249404
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Rigged to Head Bone/FBX (Unity)/Hair_SimpleParted.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Rigged to Head Bone/Hair_SimpleParted.fbx",
+      "sha256": "5e98acd3561c814127326fdc78e74f20dfa1c3397760006d17ebaea4c8d7a24d",
+      "bytes": 181628
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/Normals Unity - Godot/T_Hair_1_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/Normals Unity - Godot/T_Hair_1_Normal.png",
+      "sha256": "57fd0ad8c96a4d01b38769637e066cecaa285b456f6e48ce00863754a457affb",
+      "bytes": 4326126
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/Normals Unity - Godot/T_Hair_2_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/Normals Unity - Godot/T_Hair_2_Normal.png",
+      "sha256": "172f230aae0d4366c3cfc0402b2e6d1811b11f8487344bff28605eeacac1558d",
+      "bytes": 4710013
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/T_Hair_1_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/T_Hair_1_BaseColor.png",
+      "sha256": "bc7aa863bd22ab0a995cd838cceb4d3a5186ee54ee2fb0108fad85d20c057e6e",
+      "bytes": 1570376
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/T_Hair_1_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/T_Hair_1_Normal.png",
+      "sha256": "fd4530bb696a083ac7f9c2f685b4bb15d91150040e76c905db591c7644b4aa87",
+      "bytes": 3770683
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/T_Hair_2_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/T_Hair_2_BaseColor.png",
+      "sha256": "f9f4f2fb3eeeefb0b6f0fdef38b0770fd6607640c1c680b8139dd76697e9f9b3",
+      "bytes": 1729467
+    },
+    {
+      "source": "Universal Base Characters[Standard]/Hairstyles/Textures/T_Hair_2_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/Hairstyles/Textures/T_Hair_2_Normal.png",
+      "sha256": "214dff8981ab87319b2acfaf1ad9143db020989afa14896a0d70048a667e17e3",
+      "bytes": 4109628
+    },
+    {
+      "source": "Universal Base Characters[Standard]/License_Standard.txt",
+      "destination": "Assets/ThirdParty/Quaternius/BaseCharacters/License_Standard.txt",
+      "sha256": "0f4beaf0fe360a7732e58bbe3dbf60a2422367fbea60cb9ea4add968f383268e",
+      "bytes": 806
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Peasant_Arms.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Peasant_Arms.fbx",
+      "sha256": "35ebfa4a7a67acdc5e2e06cae5450a60d7a34fc480678f43a74ac424bd43007d",
+      "bytes": 368204
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Peasant_Body.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Peasant_Body.fbx",
+      "sha256": "93531d57b49102de1f310c148d9db97385c6aa352ef62935fa915da845b75ee0",
+      "bytes": 239212
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Peasant_Feet.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Peasant_Feet.fbx",
+      "sha256": "e90746436f8bc3934e746455d175347ab0b119d2a6d8ba158675333d66bd19ee",
+      "bytes": 228572
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Peasant_Legs.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Peasant_Legs.fbx",
+      "sha256": "817e5ed6840a29f039d9d3c4fafa7aa9cea57a554dcce8fd8486bbeb081d7595",
+      "bytes": 204956
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Acc_Pauldrons.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Acc_Pauldrons.fbx",
+      "sha256": "992b49cb6aa6ffa32bcd211ee601e92d106b37f7d0d20d6bc8ddecdd1f6d3c7b",
+      "bytes": 184220
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Arms.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Arms.fbx",
+      "sha256": "c5ba0ba31dccbd99e959313168a65c01afdf68e3acf9767313e7ccae0e0c86f4",
+      "bytes": 500428
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Body.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Body.fbx",
+      "sha256": "07a455d19f55c6b3663a5423b1b0d9f7b94efd2fae8b78d7884e1bbe2af16d2f",
+      "bytes": 474188
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Feet.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Feet.fbx",
+      "sha256": "4b25d8d735756ea872eb5e3a617a1636f6fcb4957c580aa344046fca81132574",
+      "bytes": 463884
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Head_Hood.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Head_Hood.fbx",
+      "sha256": "fa5e0b078b0af1953d053e09ba7aa194e702e6782598cd592f1f04999024a16e",
+      "bytes": 234540
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Female_Ranger_Legs.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Female_Ranger_Legs.fbx",
+      "sha256": "753ee8ab27a2da655268178a446c106e6f25c39baa85e9cd031227acb1f64f21",
+      "bytes": 185276
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Peasant_Arms.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Peasant_Arms.fbx",
+      "sha256": "67e91b9f9054ae0b17ba7b7c2f1a3a6ddce68704b08ee69cf66c7300993e5b54",
+      "bytes": 368316
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Peasant_Body.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Peasant_Body.fbx",
+      "sha256": "d875b268f63ddf884257a6f7c7a8c20b48f3aafa30363755a6115963b1a17349",
+      "bytes": 302524
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Peasant_Feet.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Peasant_Feet.fbx",
+      "sha256": "09defc77e6ff81ddcc312a52940099079e0f31e5d73e331cdf6391440879ede4",
+      "bytes": 226316
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Peasant_Legs.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Peasant_Legs.fbx",
+      "sha256": "547c90e8c7440cc149ebc5164ec0fda2cf2be0470cdf53816401545be0337abd",
+      "bytes": 175884
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Acc_Pauldron.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Acc_Pauldron.fbx",
+      "sha256": "b0d28af472710870e654286682059c0aaa89bda7af316cccc520ea45dfd8cb68",
+      "bytes": 182668
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Arms.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Arms.fbx",
+      "sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b",
+      "bytes": 525548
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Body.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Body.fbx",
+      "sha256": "9f5b7866170daa1d32a4652c0574188379d93b9889792e13edb3f2492fed444c",
+      "bytes": 478524
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Feet_Boots.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Feet_Boots.fbx",
+      "sha256": "e60d0f0eae8a9791dce407767991cc3b759f2f7660cd8eae5018e61f11e1aaef",
+      "bytes": 440540
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Head_Hood.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Head_Hood.fbx",
+      "sha256": "c8b6f4e01b569176a5d91a7255bfc0eb45e83529b7e97eb4640c75db25f847f2",
+      "bytes": 226940
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Modular Parts/Male_Ranger_Legs.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Modular Parts/Male_Ranger_Legs.fbx",
+      "sha256": "f1e30b2e4210086496ab2e18d107d4c163c8bde7ce72b10cd309cf5125540f63",
+      "bytes": 181020
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Outfits/Female_Peasant.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Outfits/Female_Peasant.fbx",
+      "sha256": "cb33c493852310400ca3974fe6734fcd4e1da5232b527708a6082a86b90ca5d5",
+      "bytes": 807980
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Outfits/Female_Ranger.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Outfits/Female_Ranger.fbx",
+      "sha256": "63e7804f8129d507e84fcc2d6e17d98ef2bd6c4217a487a6bd4694c2a58447ab",
+      "bytes": 1657932
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Outfits/Male_Peasant.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Outfits/Male_Peasant.fbx",
+      "sha256": "d083f08a910c739b5a337207e4b6112f70c1235cdc3891c314ba26357c5f4965",
+      "bytes": 840556
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Exports/FBX (Unity)/Outfits/Male_Ranger.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Models/Outfits/Male_Ranger.fbx",
+      "sha256": "f142f1c0fee43d0b1a635928469289dff2abeaaa2c3daf95dd7b74a8044b244e",
+      "bytes": 1648444
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Female_Dark_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Female_Dark_BaseColor.png",
+      "sha256": "3b6ab973f9f3d6f8961226a0dbd99cf6d1b72df3795a8a5c1620a55754c161c2",
+      "bytes": 1348542
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Female_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Female_Normal.png",
+      "sha256": "e1051d3d56df9cf061bc14c769c37253aecd595f8275f9d4c0d6e0e953c00e18",
+      "bytes": 3913459
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Female_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Female_Roughness.png",
+      "sha256": "da541fbd4b3bffe754fada5c29f8a0d8f836bf20ce7df8273607af4729a3a5ae",
+      "bytes": 3274215
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Male_Dark_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Male_Dark_BaseColor.png",
+      "sha256": "b4dcc0f4139aab548d7c070c4655bd2080ef16caeaaabee6c4aeb693c524e802",
+      "bytes": 1316151
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Male_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Male_Normal.png",
+      "sha256": "10cd71e2453e577fdd43e912b6016a99baf64964f0593e524bdd304855e15e2a",
+      "bytes": 4064184
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Base/T_Regular_Male_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Base/T_Regular_Male_Roughness.png",
+      "sha256": "086c2eb25bddfdb77d8e639ccbffb8df723ef4a1910d8e1b217e852f8668bfe5",
+      "bytes": 3160102
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Peasant/Normals-UnrealEngine/T_Peasant_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Peasant/Normals-UnrealEngine/T_Peasant_Normal.png",
+      "sha256": "42271473b0441901c06b11004d1ec3028a0f193939ab18ffdf812312c5aba1ae",
+      "bytes": 14228086
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Peasant/T_Peasant_2_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Peasant/T_Peasant_2_BaseColor.png",
+      "sha256": "0019ae4ae3f1a9005d3a6993cfca9218d7e74ec7e10ce1c54e67d63e8054f134",
+      "bytes": 4699929
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Peasant/T_Peasant_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Peasant/T_Peasant_BaseColor.png",
+      "sha256": "a43635628d95571cd62fd4db0cc3a6ea32778b2bc02f242dda224c89d07f1ade",
+      "bytes": 5055760
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Peasant/T_Peasant_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Peasant/T_Peasant_Normal.png",
+      "sha256": "7598fa7b63e46fd4dac29708bf5a81e05eb9a67280f7b13c61e28a9110eeb679",
+      "bytes": 14110336
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Peasant/T_Peasant_ORM.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Peasant/T_Peasant_ORM.png",
+      "sha256": "e1932f5f91104afca89c501416a5fec09069b8552734237fc09045fabc4ca9b4",
+      "bytes": 9903835
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Female_Dark_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Female_Dark_BaseColor.png",
+      "sha256": "3b6ab973f9f3d6f8961226a0dbd99cf6d1b72df3795a8a5c1620a55754c161c2",
+      "bytes": 1348542
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Female_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Female_Normal.png",
+      "sha256": "e1051d3d56df9cf061bc14c769c37253aecd595f8275f9d4c0d6e0e953c00e18",
+      "bytes": 3913459
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Female_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Female_Roughness.png",
+      "sha256": "da541fbd4b3bffe754fada5c29f8a0d8f836bf20ce7df8273607af4729a3a5ae",
+      "bytes": 3274215
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Male_Dark_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Male_Dark_BaseColor.png",
+      "sha256": "b4dcc0f4139aab548d7c070c4655bd2080ef16caeaaabee6c4aeb693c524e802",
+      "bytes": 1316151
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Male_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Male_Normal.png",
+      "sha256": "10cd71e2453e577fdd43e912b6016a99baf64964f0593e524bdd304855e15e2a",
+      "bytes": 4064184
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Base Chars/T_Regular_Male_Roughness.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Base Chars/T_Regular_Male_Roughness.png",
+      "sha256": "086c2eb25bddfdb77d8e639ccbffb8df723ef4a1910d8e1b217e852f8668bfe5",
+      "bytes": 3160102
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/Normals-UnrealEngine/T_Ranger_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/Normals-UnrealEngine/T_Ranger_Normal.png",
+      "sha256": "6c76583b62e20a05adf9c829196ae7cc1f90534ae0167072528644112bba6ab2",
+      "bytes": 12679906
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/T_Ranger_3_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/T_Ranger_3_BaseColor.png",
+      "sha256": "018b93098e400421fc29d2fac28be35dd2b704fda285b113ee9ac2cecd26be08",
+      "bytes": 6180183
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/T_Ranger_BaseColor.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/T_Ranger_BaseColor.png",
+      "sha256": "846ef2170b04ee584ad83bb8a1e86dab57a9a43b1193204505912c274d949925",
+      "bytes": 6630927
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/T_Ranger_Normal.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/T_Ranger_Normal.png",
+      "sha256": "dd64da2af3180f0c8f0b721cfc5f0d2720c351b97da8285c6cf49e7717c84147",
+      "bytes": 12713653
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Textures/Ranger/T_Ranger_ORM.png",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Textures/Ranger/T_Ranger_ORM.png",
+      "sha256": "aca03d2fba12508ef07d5968ca22267fb207ea26ae898b6b2def8a296bd44f1c",
+      "bytes": 10792085
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/License_Standard.txt",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/License_Standard.txt",
+      "sha256": "2202cc2f608c4210790b112e5f121bc2e7f8dced7b5b1c7f4be6203461bdebbb",
+      "bytes": 728
+    },
+    {
+      "source": "Modular Character Outfits - Fantasy[Standard]/Readme.txt",
+      "destination": "Assets/ThirdParty/Quaternius/FantasyOutfits/Readme.txt",
+      "sha256": "2f87579c277cde1e1ddbd4b8d823bed618728781cb6597b4dee3978c589ff5c4",
+      "bytes": 311
+    },
+    {
+      "source": "Universal Animation Library[Standard]/Unity/UAL1_Standard.fbx",
+      "destination": "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx",
+      "sha256": "21b32d912da3cb93426d974fb945e86f5b2e86970acd2ce89905e0fbf9f1dcc2",
+      "bytes": 23754684
+    },
+    {
+      "source": "Universal Animation Library[Standard]/License.txt",
+      "destination": "Assets/ThirdParty/Quaternius/AnimationLibrary/License.txt",
+      "sha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061",
+      "bytes": 332
+    },
+    {
+      "source": "Universal Animation Library[Standard]/README.txt",
+      "destination": "Assets/ThirdParty/Quaternius/AnimationLibrary/README.txt",
+      "sha256": "ccd02718886b5a57f10f0a8911a38cfe10c36880e1d6dfa3445923fba32d2a72",
+      "bytes": 702
+    },
+    {
+      "source": "Universal Animation Library[Standard]/Unity_Setup.png",
+      "destination": "Assets/ThirdParty/Quaternius/AnimationLibrary/Unity_Setup.png",
+      "sha256": "1f9ac00f442c4342fae060150a2cfb5a825f7e3b6e8ffd8ce01044e4fe31f7c9",
+      "bytes": 237945
+    }
+  ]
+}
