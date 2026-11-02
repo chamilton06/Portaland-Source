@@ -22,6 +22,8 @@ assets and how we'll compare them. KayKit is no longer our first character recom
 
 ## Finding things in Unity
 
+For assembling the head and outfit, see [character preparation](character-preparation.md).
+
 1. Open the project with **Unity 2023.1.22f1**.
 2. In the **Project** window, go to **Assets → Scenes** and double-click **Prototype**.
 3. In the **Hierarchy**, select the top-level **Player** object.
