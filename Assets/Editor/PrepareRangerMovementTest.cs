@@ -16,12 +16,21 @@ public static class PrepareRangerMovementTest
 
     static PrepareRangerMovementTest()
     {
-        EditorApplication.delayCall += () =>
+        EditorApplication.delayCall += PrepareWhenReady;
+        // A script reload can happen during Play mode. Retry once we're back in edit mode.
+        EditorApplication.playModeStateChanged += state =>
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || SessionState.GetBool("Portaland.MovementTest.Attempted.v2", false)) return;
-            SessionState.SetBool("Portaland.MovementTest.Attempted.v2", true);
-            Prepare();
+            if (state == PlayModeStateChange.EnteredEditMode)
+                EditorApplication.delayCall += PrepareWhenReady;
         };
+    }
+
+    private static void PrepareWhenReady()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling
+            || SessionState.GetBool("Portaland.MovementTest.Attempted.v4", false)) return;
+        SessionState.SetBool("Portaland.MovementTest.Attempted.v4", true);
+        Prepare();
     }
 
     [MenuItem("Tools/Portaland/Prepare Ranger Movement Test")]
@@ -32,11 +41,14 @@ public static class PrepareRangerMovementTest
         {
             try
             {
-                AddAirborneStates(AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath));
+                AnimatorController existing = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+                AddAirborneStates(existing);
+                AddCrouchState(existing);
+                EnableAnimatedCrouch();
                 AssetDatabase.SaveAssets();
-                Debug.Log("Ranger airborne setup ready. Open " + ScenePath + " and test Space, falling off an edge and landing. Saved scene changes were kept.");
+                Debug.Log("Ranger crouch setup ready. Open " + ScenePath + " and test Ctrl and low ceilings. If the scene was already open, save its changes before closing it.");
             }
-            catch (Exception error) { Debug.LogError("Ranger airborne setup stopped: " + error); }
+            catch (Exception error) { Debug.LogError("Ranger movement/crouch setup stopped: " + error); }
             return;
         }
         Scene original = SceneManager.GetActiveScene();
@@ -58,6 +70,7 @@ public static class PrepareRangerMovementTest
             }
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
             AddAirborneStates(controller);
+            AddCrouchState(controller);
             copiedScene = AssetDatabase.CopyAsset("Assets/Scenes/Prototype.unity", ScenePath);
             if (!copiedScene) throw new InvalidOperationException("Couldn't copy the saved Prototype scene.");
             test = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
@@ -66,6 +79,7 @@ public static class PrepareRangerMovementTest
                 .SelectMany(root => root.GetComponentsInChildren<PlayerMovement>(true)).ToArray();
             if (players.Length != 1) throw new InvalidOperationException("Expected one gameplay Player in Prototype; found " + players.Length);
             PlayerMovement movement = players[0];
+            movement.resizeControllerForCrouch = true;
             GameObject player = movement.gameObject;
             CharacterController capsule = player.GetComponent<CharacterController>();
             if (capsule == null) throw new InvalidOperationException("Player has no CharacterController.");
@@ -118,7 +132,7 @@ public static class PrepareRangerMovementTest
             AssetDatabase.SaveAssets();
             if (!EditorSceneManager.SaveScene(test)) throw new InvalidOperationException("Couldn't save the movement scene.");
             finished = true;
-            Debug.Log("Ranger movement test ready: " + ScenePath + ". Open it and test WASD, Shift, Space, falling and landing. Crouch animations aren't finished yet.");
+            Debug.Log("Ranger movement test ready: " + ScenePath + ". Open it and test WASD, Shift, Space and Ctrl.");
         }
         catch (Exception error) { Debug.LogError("Ranger movement setup stopped: " + error); }
         finally
@@ -220,6 +234,91 @@ public static class PrepareRangerMovementTest
         transition.hasFixedDuration = true;
         transition.duration = 0.08f;
         return transition;
+    }
+
+    private static void AddCrouchState(AnimatorController controller)
+    {
+        AnimatorStateMachine machine = controller.layers[0].stateMachine;
+        if (machine.states.Any(child => child.state.name == "Crouching")) return;
+        const string path = "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx";
+        var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+        if (importer == null) throw new InvalidOperationException("Missing animation importer.");
+        string[] names = { "Crouch_Idle_Loop", "Crouch_Fwd_Loop" };
+        ModelImporterClipAnimation[] settings = importer.clipAnimations;
+        if (settings.Length == 0) settings = importer.defaultClipAnimations;
+        foreach (string name in names)
+            if (!settings.Any(clip => clip.name.Split('|').Last() == name))
+                throw new InvalidOperationException("Missing crouch clip: " + name);
+        foreach (ModelImporterClipAnimation clip in settings)
+        {
+            if (!names.Contains(clip.name.Split('|').Last())) continue;
+            clip.loopTime = true;
+            clip.lockRootPositionXZ = true;
+            clip.lockRootRotation = true;
+        }
+        importer.clipAnimations = settings;
+        importer.SaveAndReimport();
+        AnimationClip[] all = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
+            .Where(clip => !clip.name.StartsWith("__preview__", StringComparison.Ordinal)).ToArray();
+        AnimationClip Find(string name)
+        {
+            AnimationClip[] matches = all.Where(clip => clip.name == "Armature|" + name).ToArray();
+            if (matches.Length == 0) matches = all.Where(clip => clip.name == name).ToArray();
+            if (matches.Length != 1) throw new InvalidOperationException("Expected one " + name + "; found " + matches.Length);
+            return matches[0];
+        }
+        AnimationClip idle = Find(names[0]);
+        AnimationClip walk = Find(names[1]);
+        AnimatorState locomotion = machine.defaultState;
+        AnimatorState landing = machine.states.Single(child => child.state.name == "Landing").state;
+        AnimatorState falling = machine.states.Single(child => child.state.name == "Falling").state;
+        if (!controller.parameters.Any(parameter => parameter.name == "Crouching"))
+            controller.AddParameter("Crouching", AnimatorControllerParameterType.Bool);
+        if (!controller.parameters.Any(parameter => parameter.name == "CrouchSpeed"))
+            controller.AddParameter("CrouchSpeed", AnimatorControllerParameterType.Float);
+        var tree = new BlendTree { name = "Crouch Movement", blendType = BlendTreeType.Simple1D,
+            blendParameter = "CrouchSpeed", useAutomaticThresholds = false };
+        AssetDatabase.AddObjectToAsset(tree, controller);
+        tree.AddChild(idle, 0f);
+        tree.AddChild(walk, 1f);
+        AnimatorState crouch = machine.AddState("Crouching", new Vector3(330, 250));
+        crouch.motion = tree;
+        crouch.writeDefaultValues = false;
+        foreach (AnimatorState from in new[] { locomotion, landing })
+        {
+            AnimatorStateTransition enter = Transition(from, crouch);
+            enter.AddCondition(AnimatorConditionMode.If, 0f, "Crouching");
+            enter.AddCondition(AnimatorConditionMode.If, 0f, "Grounded");
+        }
+        foreach (AnimatorStateTransition exitLanding in landing.transitions.Where(transition => transition.destinationState == locomotion))
+            if (!exitLanding.conditions.Any(condition => condition.parameter == "Crouching"))
+                exitLanding.AddCondition(AnimatorConditionMode.IfNot, 0f, "Crouching");
+        AnimatorStateTransition stand = Transition(crouch, locomotion);
+        stand.AddCondition(AnimatorConditionMode.IfNot, 0f, "Crouching");
+        stand.AddCondition(AnimatorConditionMode.If, 0f, "Grounded");
+        Transition(crouch, falling).AddCondition(AnimatorConditionMode.IfNot, 0f, "Grounded");
+        EditorUtility.SetDirty(controller);
+    }
+
+    private static void EnableAnimatedCrouch()
+    {
+        Scene scene = SceneManager.GetSceneByPath(ScenePath);
+        bool wasOpen = scene.IsValid() && scene.isLoaded;
+        if (!wasOpen) scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+        try
+        {
+            PlayerMovement[] players = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<PlayerMovement>(true)).ToArray();
+            if (players.Length != 1) throw new InvalidOperationException("Expected one Player for crouch setup.");
+            if (players[0].resizeControllerForCrouch) return;
+            players[0].resizeControllerForCrouch = true;
+            EditorUtility.SetDirty(players[0]);
+            EditorSceneManager.MarkSceneDirty(scene);
+            // If it's open, leave saving to the user so we don't save other unfinished edits.
+            if (!wasOpen && !EditorSceneManager.SaveScene(scene))
+                throw new InvalidOperationException("Couldn't save animated crouch settings.");
+        }
+        finally { if (!wasOpen) EditorSceneManager.CloseScene(scene, true); }
     }
 
     private static Bounds LocalBounds(Transform player, Renderer[] renderers)

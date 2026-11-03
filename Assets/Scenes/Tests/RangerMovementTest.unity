@@ -10683,6 +10683,7 @@ MonoBehaviour:
   crouchHeight: 1
   crouchTransitionSpeed: 4
   toggleCrouch: 0
+  resizeControllerForCrouch: 1
   sprintKey: 304
   crouchKey: 306
   jumpKey: 32

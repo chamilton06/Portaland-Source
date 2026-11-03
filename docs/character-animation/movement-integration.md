@@ -8,7 +8,7 @@ This is a ground-movement checkpoint; it doesn't mean all character animations a
 ## Remaining work
 
 - Finish and check jumping, falling and landing.
-- Add crouch poses and address the current root-scale squash.
+- Validate the new [crouch poses and optional capsule resizing](crouch-animation.md).
 - Add sideways and backwards locomotion animations.
 - Integrate animations for existing combat, including weapon/hand alignment, attacks and
   guarding. New combat mechanics aren't implied by this list.
@@ -70,8 +70,9 @@ so hotbar keys keep their gameplay purpose.
 - **Airborne:** the next update adds jump/fall/landing states. See
   [airborne animation](airborne-animation.md); generation is confirmed, but jump quality
   and gameplay checks still need completing.
-- **Crouch:** the existing controller scales the Player root. The Ranger will squash too;
-  a proper crouch pose and compatible collider change are still needed.
+- **Crouch:** an optional collider-resizing mode and crouch poses are now implemented for
+  this test. Kartikeya confirmed crouching works; detailed ceiling and regression checks
+  remain. See [crouch setup](crouch-animation.md).
 - **Roll:** the wrapper still makes a full visual rotation, rather than using a roll clip.
   Check floor clipping and return to the resting pose.
 - **Weapons:** they stay on the existing WeaponPivot. Check hand alignment and guard/swing

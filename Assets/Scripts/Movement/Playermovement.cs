@@ -40,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
     public float crouchHeight = 1f;
     public float crouchTransitionSpeed = 4f;     // how fast capsule shrinks/grows
     public bool toggleCrouch = false;            // off = hold, on = press to toggle
+    [Tooltip("Use for animated characters so crouching doesn't squash the model.")]
+    public bool resizeControllerForCrouch = false;
 
     // keys
     public KeyCode sprintKey = KeyCode.LeftShift;
@@ -86,6 +88,8 @@ public class PlayerMovement : MonoBehaviour
     private bool wasGrounded;
     private bool crouchToggled;
     private float baseScaleY;
+    private float standingControllerHeight;
+    private Vector3 standingControllerCenter;
 
     // ------------------------------------------------------------------------
     // Unity Callbacks
@@ -97,6 +101,8 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
         stats = GetComponent<PlayerStats>();
         baseScaleY = transform.localScale.y;
+        standingControllerHeight = controller.height;
+        standingControllerCenter = controller.center;
         combat = GetComponent<PlayerCombat>();
         defence = GetComponent<PlayerDefence>();
     }
@@ -161,6 +167,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(rollKey) && !IsRolling && IsGrounded && !IsCrouching
             && !Input.GetKey(crouchKey) && Time.time >= nextRollAt
             && Mathf.Abs(transform.localScale.y - baseScaleY) < 0.01f
+            && (!resizeControllerForCrouch || Mathf.Abs(controller.height - standingControllerHeight) < 0.01f)
             && (combat == null || (!combat.inventoryOpen && !combat.IsAttacking))
             && (stats == null || stats.TryUseStamina(rollStaminaCost)))
         {
@@ -285,10 +292,24 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // dont stand up into a ceiling
-        if (!wantsCrouch && IsCrouching && !CanStandUp())
+        if (!wantsCrouch && (IsCrouching || (resizeControllerForCrouch
+            && controller.height < standingControllerHeight - 0.001f)) && !CanStandUp())
             wantsCrouch = true;
 
         IsCrouching = wantsCrouch;
+
+        if (resizeControllerForCrouch)
+        {
+            // Keep the feet at the same height and let the Animator bend the body.
+            float targetHeight = IsCrouching
+                ? Mathf.Max(controller.radius * 2f, standingControllerHeight * crouchHeight / standHeight)
+                : standingControllerHeight;
+            controller.height = Mathf.MoveTowards(controller.height, targetHeight,
+                crouchTransitionSpeed * standingControllerHeight * Time.deltaTime);
+            controller.center = standingControllerCenter
+                + Vector3.down * ((standingControllerHeight - controller.height) * 0.5f);
+            return;
+        }
 
         // shrink/grow capsule
         float targetScaleY = IsCrouching ? baseScaleY * (crouchHeight / standHeight) : baseScaleY;
@@ -313,9 +334,10 @@ public class PlayerMovement : MonoBehaviour
     {
         float radius = controller.radius * Mathf.Max(transform.localScale.x, transform.localScale.z);
         float currentHeight = controller.height * transform.localScale.y;
-        float fullHeight = controller.height * baseScaleY;
+        float fullHeight = (resizeControllerForCrouch ? standingControllerHeight : controller.height) * baseScaleY;
 
-        Vector3 top = transform.position + Vector3.up * (currentHeight * 0.5f - radius);
+        Vector3 center = resizeControllerForCrouch ? transform.TransformPoint(controller.center) : transform.position;
+        Vector3 top = center + Vector3.up * (currentHeight * 0.5f - radius);
         float distance = (fullHeight - currentHeight) + controller.skinWidth;
 
         return !Physics.SphereCast(top, radius * 0.95f, Vector3.up, out _, distance,

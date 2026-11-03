@@ -14,14 +14,30 @@ public class PlayerLocomotionAnimation : MonoBehaviour
     private static readonly int Speed = Animator.StringToHash("Speed");
     private static readonly int Grounded = Animator.StringToHash("Grounded");
     private static readonly int VerticalSpeed = Animator.StringToHash("VerticalSpeed");
+    private static readonly int Crouching = Animator.StringToHash("Crouching");
+    private static readonly int CrouchSpeed = Animator.StringToHash("CrouchSpeed");
     private float timeInAir;
+    private bool hasCrouchParameters;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         movement = GetComponent<PlayerMovement>();
         stats = GetComponent<PlayerStats>();
-        if (characterAnimator != null) characterAnimator.applyRootMotion = false;
+        if (characterAnimator != null)
+        {
+            characterAnimator.applyRootMotion = false;
+            bool hasCrouching = false;
+            bool hasCrouchSpeed = false;
+            foreach (AnimatorControllerParameter parameter in characterAnimator.parameters)
+            {
+                if (parameter.nameHash == Crouching && parameter.type == AnimatorControllerParameterType.Bool) hasCrouching = true;
+                if (parameter.nameHash == CrouchSpeed && parameter.type == AnimatorControllerParameterType.Float) hasCrouchSpeed = true;
+            }
+            hasCrouchParameters = hasCrouching && hasCrouchSpeed;
+            if (!hasCrouchParameters)
+                Debug.LogWarning("Ranger crouch setup is missing. Stop Play mode and run Tools > Portaland > Prepare Ranger Movement Test, then save the test scene.", this);
+        }
     }
 
     void Update()
@@ -38,6 +54,11 @@ public class PlayerLocomotionAnimation : MonoBehaviour
         // Wall collisions reduce actual speed, so pushing a wall won't play a full sprint.
         float speed = canAnimate ? Vector3.ProjectOnPlane(controller.velocity, Vector3.up).magnitude : 0f;
         characterAnimator.SetFloat(Speed, speed, blendTime, Time.deltaTime);
+        if (hasCrouchParameters)
+        {
+            characterAnimator.SetBool(Crouching, movement.IsCrouching);
+            characterAnimator.SetFloat(CrouchSpeed, speed / Mathf.Max(0.01f, movement.crouchSpeed), blendTime, Time.deltaTime);
+        }
     }
 
     void OnDisable()
