@@ -23,6 +23,7 @@ assets and how we'll compare them. KayKit is no longer our first character recom
 ## Finding things in Unity
 
 For assembling the head and outfit, see [character preparation](character-preparation.md).
+For the separate idle/walk/jog/sprint preview, see [animation testing](animation-test.md).
 
 1. Open the project with **Unity 2023.1.22f1**.
 2. In the **Project** window, go to **Assets → Scenes** and double-click **Prototype**.
