@@ -18,8 +18,8 @@ public static class PrepareRangerMovementTest
     {
         EditorApplication.delayCall += () =>
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || SessionState.GetBool("Portaland.MovementTest.Attempted", false)) return;
-            SessionState.SetBool("Portaland.MovementTest.Attempted", true);
+            if (EditorApplication.isPlayingOrWillChangePlaymode || SessionState.GetBool("Portaland.MovementTest.Attempted.v2", false)) return;
+            SessionState.SetBool("Portaland.MovementTest.Attempted.v2", true);
             Prepare();
         };
     }
@@ -30,7 +30,13 @@ public static class PrepareRangerMovementTest
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
         if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null)
         {
-            Debug.Log("Ranger movement test already exists: " + ScenePath + ". Keeping your saved changes.");
+            try
+            {
+                AddAirborneStates(AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath));
+                AssetDatabase.SaveAssets();
+                Debug.Log("Ranger airborne setup ready. Open " + ScenePath + " and test Space, falling off an edge and landing. Saved scene changes were kept.");
+            }
+            catch (Exception error) { Debug.LogError("Ranger airborne setup stopped: " + error); }
             return;
         }
         Scene original = SceneManager.GetActiveScene();
@@ -51,6 +57,7 @@ public static class PrepareRangerMovementTest
                 if (!copiedController) throw new InvalidOperationException("The preview controller wasn't found. Prepare the animation test first.");
             }
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            AddAirborneStates(controller);
             copiedScene = AssetDatabase.CopyAsset("Assets/Scenes/Prototype.unity", ScenePath);
             if (!copiedScene) throw new InvalidOperationException("Couldn't copy the saved Prototype scene.");
             test = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
@@ -111,7 +118,7 @@ public static class PrepareRangerMovementTest
             AssetDatabase.SaveAssets();
             if (!EditorSceneManager.SaveScene(test)) throw new InvalidOperationException("Couldn't save the movement scene.");
             finished = true;
-            Debug.Log("Ranger movement test ready: " + ScenePath + ". Open it and test WASD, mouse and Shift. Airborne and crouch animations aren't finished yet.");
+            Debug.Log("Ranger movement test ready: " + ScenePath + ". Open it and test WASD, Shift, Space, falling and landing. Crouch animations aren't finished yet.");
         }
         catch (Exception error) { Debug.LogError("Ranger movement setup stopped: " + error); }
         finally
@@ -124,6 +131,95 @@ public static class PrepareRangerMovementTest
                 if (copiedController) AssetDatabase.DeleteAsset(ControllerPath);
             }
         }
+    }
+
+    private static void AddAirborneStates(AnimatorController controller)
+    {
+        if (controller == null) throw new InvalidOperationException("The gameplay Animator Controller wasn't found.");
+        AnimatorStateMachine machine = controller.layers[0].stateMachine;
+        string[] stateNames = { "Jump Start", "Falling", "Landing" };
+        int present = machine.states.Count(state => stateNames.Contains(state.state.name));
+        if (present == stateNames.Length) return;
+        if (present != 0) throw new InvalidOperationException("Some airborne states already exist. Check the controller before rebuilding them.");
+        string path = "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx";
+        var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+        if (importer == null) throw new InvalidOperationException("The animation library wasn't found.");
+        ModelImporterClipAnimation[] settings = importer.clipAnimations;
+        if (settings.Length == 0) settings = importer.defaultClipAnimations;
+        string[] names = { "Jump_Start", "Jump_Loop", "Jump_Land" };
+        foreach (string name in names)
+            if (!settings.Any(clip => clip.name.Split('|').Last() == name))
+                throw new InvalidOperationException("Missing imported clip settings: " + name);
+        foreach (ModelImporterClipAnimation clip in settings)
+        {
+            string name = clip.name.Split('|').Last();
+            if (!names.Contains(name)) continue;
+            clip.loopTime = name == "Jump_Loop";
+            clip.lockRootPositionXZ = true;
+            clip.lockRootRotation = true;
+        }
+        importer.clipAnimations = settings;
+        importer.SaveAndReimport();
+        AnimationClip[] clips = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
+            .Where(clip => !clip.name.StartsWith("__preview__", StringComparison.Ordinal)).ToArray();
+        AnimationClip Find(string name)
+        {
+            AnimationClip[] matches = clips.Where(clip => clip.name == "Armature|" + name).ToArray();
+            if (matches.Length == 0) matches = clips.Where(clip => clip.name == name).ToArray();
+            if (matches.Length != 1) throw new InvalidOperationException("Expected one playable " + name + " clip; found " + matches.Length);
+            return matches[0];
+        }
+        // Find every clip before changing the controller so a missing clip doesn't leave half a setup.
+        AnimationClip startClip = Find("Jump_Start");
+        AnimationClip airClip = Find("Jump_Loop");
+        AnimationClip landClip = Find("Jump_Land");
+        AnimatorState locomotion = machine.defaultState;
+        if (locomotion == null) throw new InvalidOperationException("No default locomotion state.");
+        if (!controller.parameters.Any(parameter => parameter.name == "Grounded"))
+            controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+        if (!controller.parameters.Any(parameter => parameter.name == "VerticalSpeed"))
+            controller.AddParameter("VerticalSpeed", AnimatorControllerParameterType.Float);
+        AnimatorState jump = machine.AddState("Jump Start", new Vector3(330, -100));
+        AnimatorState fall = machine.AddState("Falling", new Vector3(570, -100));
+        AnimatorState land = machine.AddState("Landing", new Vector3(570, 100));
+        jump.motion = startClip;
+        fall.motion = airClip;
+        land.motion = landClip;
+        jump.writeDefaultValues = fall.writeDefaultValues = land.writeDefaultValues = false;
+
+        // Movement decides when we leave the floor. Animation never applies the jump force.
+        foreach (AnimatorState from in new[] { locomotion, land })
+        {
+            AnimatorStateTransition takeoff = Transition(from, jump);
+            takeoff.AddCondition(AnimatorConditionMode.IfNot, 0f, "Grounded");
+            takeoff.AddCondition(AnimatorConditionMode.Greater, 0.1f, "VerticalSpeed");
+            AnimatorStateTransition drop = Transition(from, fall);
+            drop.AddCondition(AnimatorConditionMode.IfNot, 0f, "Grounded");
+            drop.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalSpeed");
+        }
+        AnimatorStateTransition apex = Transition(jump, fall);
+        apex.AddCondition(AnimatorConditionMode.IfNot, 0f, "Grounded");
+        apex.AddCondition(AnimatorConditionMode.Less, 0.1f, "VerticalSpeed");
+        foreach (AnimatorState from in new[] { jump, fall })
+            Transition(from, land).AddCondition(AnimatorConditionMode.If, 0f, "Grounded");
+        AnimatorStateTransition finishLanding = Transition(land, locomotion);
+        finishLanding.hasExitTime = true;
+        finishLanding.exitTime = 0.85f;
+        finishLanding.AddCondition(AnimatorConditionMode.If, 0f, "Grounded");
+        // Walking can interrupt the landing pose, so the controller never feels locked in place.
+        AnimatorStateTransition movingLanding = Transition(land, locomotion);
+        movingLanding.AddCondition(AnimatorConditionMode.If, 0f, "Grounded");
+        movingLanding.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed");
+        EditorUtility.SetDirty(controller);
+    }
+
+    private static AnimatorStateTransition Transition(AnimatorState from, AnimatorState to)
+    {
+        AnimatorStateTransition transition = from.AddTransition(to);
+        transition.hasExitTime = false;
+        transition.hasFixedDuration = true;
+        transition.duration = 0.08f;
+        return transition;
     }
 
     private static Bounds LocalBounds(Transform player, Renderer[] renderers)

@@ -2,7 +2,17 @@
 
 Added 3 November 2026. This connects ground locomotion to the existing controller in a
 separate scene. Unity compilation and scene/controller generation are confirmed by the
-Editor log and generated files. Play mode gameplay checks haven't been reported yet.
+Editor log and generated files. Kartikeya reports that the Ranger movement test works.
+This is a ground-movement checkpoint; it doesn't mean all character animations are finished.
+
+## Remaining work
+
+- Finish and check jumping, falling and landing.
+- Add crouch poses and address the current root-scale squash.
+- Add sideways and backwards locomotion animations.
+- Integrate animations for existing combat, including weapon/hand alignment, attacks and
+  guarding. New combat mechanics aren't implied by this list.
+- Check rolling and repeat gameplay tests on the female character.
 
 ## Where things are
 
@@ -57,8 +67,9 @@ so hotbar keys keep their gameplay purpose.
 - **Play mode checks:** setup generation alone doesn't prove gameplay works.
 - **Foot sliding:** actual movement speeds may not match each clip's stride; tune after viewing.
 - **Direction:** sideways and backwards movement still uses forward locomotion clips.
-- **Airborne:** jump/fall/landing states haven't been added. Ground locomotion can still
-  play while airborne at this stage.
+- **Airborne:** the next update adds jump/fall/landing states. See
+  [airborne animation](airborne-animation.md); generation is confirmed, but jump quality
+  and gameplay checks still need completing.
 - **Crouch:** the existing controller scales the Player root. The Ranger will squash too;
   a proper crouch pose and compatible collider change are still needed.
 - **Roll:** the wrapper still makes a full visual rotation, rather than using a roll clip.

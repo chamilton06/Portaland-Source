@@ -25,6 +25,7 @@ assets and how we'll compare them. KayKit is no longer our first character recom
 For assembling the head and outfit, see [character preparation](character-preparation.md).
 For the separate idle/walk/jog/sprint preview, see [animation testing](animation-test.md).
 For the first playable copy of Prototype, see [movement integration](movement-integration.md).
+For the next jump/fall/landing setup, see [airborne animation](airborne-animation.md).
 
 1. Open the project with **Unity 2023.1.22f1**.
 2. In the **Project** window, go to **Assets → Scenes** and double-click **Prototype**.
