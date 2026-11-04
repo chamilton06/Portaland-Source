@@ -73,14 +73,14 @@ so hotbar keys keep their gameplay purpose.
 - **Crouch:** an optional collider-resizing mode and crouch poses are now implemented for
   this test. Kartikeya confirmed crouching works; detailed ceiling and regression checks
   remain. See [crouch setup](crouch-animation.md).
-- **Roll:** the wrapper still makes a full visual rotation, rather than using a roll clip.
-  Check floor clipping and return to the resting pose.
+- **Roll:** the newer [roll setup](roll-and-female-test.md) uses the supplied clip instead
+  of a full wrapper spin. Interactive timing/clipping checks remain.
 - **Weapons:** they stay on the existing WeaponPivot. Check hand alignment and guard/swing
   clipping; hand-bone attachment is a separate step.
 - **Respawn:** the copied scene isn't automatically added to Build Settings. Before testing
   death/reload, add `RangerMovementTest` under **File → Build Settings → Scenes In Build**.
-- **Female model:** the first gameplay scene uses the male prefab. The female has only been
-  tested in the separate animation preview so far; repeat gameplay fitting/testing later.
+- **Female model:** a separate `RangerMovementTestFemale` scene is now prepared. Its
+  scripted state/mesh checks passed; interactive gameplay checks remain.
 
 Prototype, the movement script and shared character prefabs aren't edited by this setup.
 This setup is saved as a local movement-integration checkpoint before airborne work.

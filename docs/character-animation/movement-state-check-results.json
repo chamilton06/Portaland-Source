@@ -1,0 +1,24 @@
+{
+  "unity_version": "2023.1.22f1",
+  "date": "2026-11-04",
+  "method": "isolated Unity batch setup and scripted Animator sampling of both saved gameplay scenes",
+  "passed": [
+    "project scripts compile",
+    "male and female scenes reference the shared directional controller",
+    "old visual-spin reference cleared; new roll-facing reference assigned",
+    "jump start -> falling -> landing -> locomotion",
+    "crouch entry and exit",
+    "roll playback progress matches PlayerMovement.rollDuration",
+    "roll returns to locomotion",
+    "rolling off an edge stays rolling until the movement roll ends, then falls",
+    "falling into a crouched landing returns to crouching",
+    "sampled model root stayed fixed; sampled skinned vertices finite and within a 10-unit sanity bound"
+  ],
+  "not_verified": [
+    "interactive input, collision and dodge-window gameplay",
+    "visual pacing, foot sliding and clothing clipping",
+    "damage, death and respawn regressions",
+    "directional crouch poses (clips still missing)",
+    "combat animations and weapon hand alignment"
+  ]
+}

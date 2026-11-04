@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsCrouching { get; private set; }
 
     public bool IsRolling { get; private set; }
+    public Vector3 RollDirection => rollDirection;
     public bool IsInDodgeWindow => isActiveAndEnabled && IsRolling
         && (stats == null || !stats.IsDead())
         && Time.time - rollStartedAt >= dodgeWindowStart

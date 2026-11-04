@@ -6,13 +6,19 @@ Branch: `feature/player-character-animation-23`
 
 ## Where we're up to
 
-Repository inspection and initial asset research are done. As of 2 November 2026, we're trying
-Quaternius's free Standard packs for a male and female character. The Unity FBXs, textures
-and original licences are now in `Assets/ThirdParty/Quaternius`; the in-place Standard
-animation file is included. No gameplay or scene changes have been made. Editor import,
-head/outfit assembly, materials and rig checks still need doing.
+Updated 4 November 2026. Male/female Ranger visual prefabs are assembled. The test scenes
+use the existing gameplay Player with ground locomotion, crouch, airborne states and a roll
+clip. Free KayKit animations supply side/back movement. Kartikeya confirmed the basic
+movement and crouch tests work; the other features still need detailed visual/gameplay checks.
 
-These notes record what was found on 1 November 2026 at local commit `c37c85c`. They describe the files on disk, not a completed Play mode test. Remote changes have not been fetched.
+Both saved gameplay scenes passed scripted Animator-state and mesh checks in Unity. Use
+`Assets/Scenes/Tests/RangerMovementTest.unity` for the male character and
+`Assets/Scenes/Tests/RangerMovementTestFemale.unity` for the female. Directional crouch clips,
+combat animation/hand alignment and final integration into the shared scene remain.
+
+The architecture findings below are the original inspection baseline from 1 November 2026,
+at local commit `c37c85c`. The linked feature notes describe subsequent changes. Remote
+changes haven't been fetched as part of this work.
 
 The aim is to replace the visible capsule and animate the movements we already have. New combat mechanics and new movement abilities are outside this issue.
 
@@ -28,6 +34,7 @@ For the first playable copy of Prototype, see [movement integration](movement-in
 For the next jump/fall/landing setup, see [airborne animation](airborne-animation.md).
 For animated crouching and the optional collider change, see [crouch setup](crouch-animation.md).
 For the directional blend setup and missing clips, see [directional movement](directional-movement.md).
+For the roll clip and both gameplay scenes, see [roll and female testing](roll-and-female-test.md).
 For using the characters in other scenes and merging, see [group handover](group-handover.md).
 
 1. Open the project with **Unity 2023.1.22f1**.
@@ -51,7 +58,7 @@ The scripts' file names have different capitalisation from their class names. Fo
 | [`PlayerDeathHandler.cs`](../../Assets/Scripts/Combat/PlayerDeathHandler.cs) | Disables controls and reloads the scene after death |
 | [`Inventory.cs`](../../Assets/Scripts/Inventory/Inventory.cs) | Inventory UI and equipping through PlayerCombat |
 
-## Current player setup
+## Player setup found during inspection
 
 `Player` is stored directly in the Prototype scene. No separate player prefab was found.
 Its root contains the CharacterController, capsule MeshFilter/MeshRenderer, PlayerMovement,
@@ -123,9 +130,9 @@ from the code. Keep them brief and in the same plain style as the rest of the pr
 - Left the existing local edits to `.DS_Store` and the combat README alone.
 - Copied the Quaternius Unity source assets and checked their CC0 licences. See
   [the asset folder guide](../../Assets/ThirdParty/Quaternius/README.md) and
-  [copy manifest](import-manifest.json). Unity Editor import checks are pending.
-- Prepared an initial local asset/documentation commit, including Unity-generated `.meta`
-  files. No pushes or scene changes made.
-- Kartikeya completed the Ranger rig setup steps, but the pre-commit disk check still shows
-  Generic settings on both Ranger FBXs. Recheck Apply/Configure in Unity next; Humanoid
-  validation isn't confirmed by the saved files yet.
+  [copy manifest](import-manifest.json).
+- Assembled visual prefabs using the valid base character Avatars and prepared separate
+  animation and gameplay tests. Added optional collider crouching to the movement script.
+- Added the free KayKit directional clips and a shared directional controller.
+- Replaced the visual roll spin with a timed roll clip and prepared the female gameplay scene.
+- Kept local checkpoints as requested. Nothing has been pushed or merged into main.

@@ -10694,7 +10694,7 @@ MonoBehaviour:
   rollCooldown: 0.35
   dodgeWindowStart: 0.08
   dodgeWindowEnd: 0.28
-  rollVisual: {fileID: 1169247183}
+  rollVisual: {fileID: 0}
   createCapsuleRollVisual: 0
 --- !u!143 &2005957542
 CharacterController:
@@ -10805,6 +10805,7 @@ MonoBehaviour:
   characterAnimator: {fileID: 304127076}
   blendTime: 0.12
   groundGraceTime: 0.08
+  rollFacing: {fileID: 1169247183}
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

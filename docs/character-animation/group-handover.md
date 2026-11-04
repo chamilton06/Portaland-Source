@@ -42,9 +42,10 @@ The visual prefabs don't contain the full gameplay Player.
 5. Assign `RangerLocomotion.controller` to the Animator, or the validated directional
    controller once it has been built. Turn **Apply Root Motion off**.
 6. On Player Movement, enable **Resize Controller For Crouch**, disable **Create Capsule
-   Roll Visual** and assign **CharacterVisual** as **Roll Visual**.
+   Roll Visual** and leave **Roll Visual** empty when using the new roll animation. On
+   **Player Locomotion Animation**, assign **CharacterVisual** as **Roll Facing**.
 7. Keep the existing CameraFollow target and weapon pivot references. Don't parent the
-   camera or weapon pivot under CharacterVisual; that wrapper rotates during a roll.
+   camera or weapon pivot under CharacterVisual; that wrapper turns towards the roll direction.
 8. Save the scene and test movement, crouching, jumps, collisions, equipment and damage.
    For scene reload on death, add the destination scene to enabled Build Settings.
 
