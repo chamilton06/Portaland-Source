@@ -1974,7 +1974,7 @@ PrefabInstance:
     - target: {fileID: 6680635320088320970, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 181cbba23436d40dc8011d22c7e25a8c, type: 2}
+      objectReference: {fileID: 9100000, guid: 1137a4cfebdfd47238a876be848ceb3e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10804,6 +10804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 304127076}
   blendTime: 0.12
+  groundGraceTime: 0.08
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

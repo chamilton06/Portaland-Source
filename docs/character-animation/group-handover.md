@@ -9,6 +9,7 @@ Directional clips, final jump checks, combat animations and female gameplay chec
 | Folder | What belongs here |
 | --- | --- |
 | `Assets/ThirdParty/Quaternius` | Downloaded models, textures, animations and CC0 licence files |
+| `Assets/ThirdParty/KayKit/CharacterAnimations` | Free side/back animation source and original CC0 licence |
 | `Assets/Art/Characters/Player` | Our assembled male/female visual prefabs and copied meshes |
 | `Assets/Animations/Player` | Shared controllers and clip-choice assets |
 | `Assets/Scripts/Animation` | Scene-independent animation scripts |

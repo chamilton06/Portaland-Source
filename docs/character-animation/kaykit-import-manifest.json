@@ -1,0 +1,20 @@
+{
+  "creator": "Kay Lousberg",
+  "pack": "KayKit Character Animations 1.1",
+  "downloaded": "2026-11-04",
+  "official_page": "https://kaylousberg.itch.io/kaykit-character-animations",
+  "licence": "CC0 (included License.txt)",
+  "archive_sha256": "65882f31f905ad2e953819648a59287cdeab8f623908d5ef701971d3758be20f",
+  "files": [
+    {
+      "archive_path": "KayKit_Character_Animations_1.1/Animations/fbx/Rig_Medium/Rig_Medium_MovementAdvanced.fbx",
+      "project_path": "Assets/ThirdParty/KayKit/CharacterAnimations/Rig_Medium_MovementAdvanced.fbx",
+      "sha256": "09a2462f554fae1f36ef083b3ea089626e60f258b09aabdad4be2c38012a4f07"
+    },
+    {
+      "archive_path": "KayKit_Character_Animations_1.1/License.txt",
+      "project_path": "Assets/ThirdParty/KayKit/CharacterAnimations/License.txt",
+      "sha256": "373b159044d1a886ed15f57ca5a7673ba14e2623c460283452705f2056912ed9"
+    }
+  ]
+}
