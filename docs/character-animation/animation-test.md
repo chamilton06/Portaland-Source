@@ -20,14 +20,13 @@ compilation. Scene generation and a working test were subsequently confirmed.
 | `Assets/Animations/Player/RangerPreview.controller` | Generated test controller; not wired to gameplay |
 | `Assets/Scenes/Tests/RangerAnimationTest.unity` | Generated side-by-side test scene |
 
-The last two files are created by the Editor setup. It attempts to run once per Editor
-session after compilation, like the character preparation helper. If needed, run
+The last two files are created by the Editor setup. Run it explicitly from
 **Tools → Portaland → Prepare Ranger Animation Test** outside Play mode.
 Existing controller and scene files at these paths are left alone on later runs.
 
 ## Running the test
 
-1. Go back to Unity and let it compile/import. Look for `Ranger animation test ready`
+1. Go back to Unity, let it compile/import and run the menu command above. Look for `Ranger animation test ready`
    in the Console, or read the setup error if one appears.
 2. Save any scene work you want to keep before opening another scene.
 3. Open **Assets → Scenes → Tests → RangerAnimationTest**.

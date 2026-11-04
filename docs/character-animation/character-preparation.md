@@ -1,7 +1,7 @@
 # Preparing the Ranger prefabs
 
 The Editor helper is `Assets/Editor/PrepareRangerCharacters.cs`.
-It tries to run once per Editor session after compilation. It can also be run from
+Run it explicitly from
 **Tools → Portaland → Prepare Ranger Characters** while outside Play mode.
 
 It builds `PlayerRangerMale.prefab` and `PlayerRangerFemale.prefab` in

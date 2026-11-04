@@ -6,22 +6,10 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 // This only runs in the Editor. The downloaded models stay unchanged.
-[InitializeOnLoad]
 public static class PrepareRangerCharacters
 {
     private const string Source = "Assets/ThirdParty/Quaternius/";
     private const string Output = "Assets/Art/Characters/Player";
-    private const string SessionKey = "Portaland.PrepareRangers.Attempted";
-
-    static PrepareRangerCharacters()
-    {
-        EditorApplication.delayCall += () =>
-        {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || SessionState.GetBool(SessionKey, false)) return;
-            SessionState.SetBool(SessionKey, true);
-            Prepare();
-        };
-    }
 
     [MenuItem("Tools/Portaland/Prepare Ranger Characters")]
     public static void Prepare()

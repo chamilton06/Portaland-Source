@@ -8,30 +8,11 @@ using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 // Keep the first gameplay test in its own scene so the group's Prototype stays intact.
-[InitializeOnLoad]
 public static class PrepareRangerMovementTest
 {
     private const string ScenePath = "Assets/Scenes/Tests/RangerMovementTest.unity";
     private const string ControllerPath = "Assets/Animations/Player/RangerLocomotion.controller";
 
-    static PrepareRangerMovementTest()
-    {
-        EditorApplication.delayCall += PrepareWhenReady;
-        // A script reload can happen during Play mode. Retry once we're back in edit mode.
-        EditorApplication.playModeStateChanged += state =>
-        {
-            if (state == PlayModeStateChange.EnteredEditMode)
-                EditorApplication.delayCall += PrepareWhenReady;
-        };
-    }
-
-    private static void PrepareWhenReady()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling
-            || SessionState.GetBool("Portaland.MovementTest.Attempted.v4", false)) return;
-        SessionState.SetBool("Portaland.MovementTest.Attempted.v4", true);
-        Prepare();
-    }
 
     [MenuItem("Tools/Portaland/Prepare Ranger Movement Test")]
     public static void Prepare()

@@ -27,6 +27,8 @@ For the separate idle/walk/jog/sprint preview, see [animation testing](animation
 For the first playable copy of Prototype, see [movement integration](movement-integration.md).
 For the next jump/fall/landing setup, see [airborne animation](airborne-animation.md).
 For animated crouching and the optional collider change, see [crouch setup](crouch-animation.md).
+For the directional blend setup and missing clips, see [directional movement](directional-movement.md).
+For using the characters in other scenes and merging, see [group handover](group-handover.md).
 
 1. Open the project with **Unity 2023.1.22f1**.
 2. In the **Project** window, go to **Assets → Scenes** and double-click **Prototype**.

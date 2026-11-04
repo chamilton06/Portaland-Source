@@ -14,6 +14,7 @@ In Unity Hub, add this folder as a project. In Unity's Project window, open
 - [Character shortlist](docs/character-animation/asset-selection.md): options to choose from before importing anything.
 - [Art direction and group asset references](docs/character-animation/art-direction.md): the updated Elden Ring influence and possible packs.
 - [Character testing checklist](docs/character-animation/testing.md): checks to run before and after integration.
+- [Group handover and scene setup](docs/character-animation/group-handover.md): how to reuse the characters and review a merge with main.
 - Existing system notes: [movement](Assets/Scripts/Movement/README.md), [combat](Assets/Scripts/Combat/README.md), [inventory](Assets/Scripts/Inventory/README.md), [journal](Assets/Scripts/Journal/README.md).
 
 Some older system notes describe earlier prototypes, so check the current scene and scripts as well.

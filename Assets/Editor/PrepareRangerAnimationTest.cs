@@ -8,22 +8,12 @@ using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 // Makes a separate test scene so we can check the models before touching Player.
-[InitializeOnLoad]
 public static class PrepareRangerAnimationTest
 {
     private const string AnimationPath = "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx";
     private const string ControllerPath = "Assets/Animations/Player/RangerPreview.controller";
     private const string ScenePath = "Assets/Scenes/Tests/RangerAnimationTest.unity";
 
-    static PrepareRangerAnimationTest()
-    {
-        EditorApplication.delayCall += () =>
-        {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || SessionState.GetBool("Portaland.AnimationTest.Attempted.v2", false)) return;
-            SessionState.SetBool("Portaland.AnimationTest.Attempted.v2", true);
-            Prepare();
-        };
-    }
 
     [MenuItem("Tools/Portaland/Prepare Ranger Animation Test")]
     public static void Prepare()

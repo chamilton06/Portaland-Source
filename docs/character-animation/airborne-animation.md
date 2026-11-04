@@ -11,8 +11,8 @@ but jumping still needs completing and its quality checks aren't marked as passe
 - Driver: `Assets/Scripts/Animation/PlayerLocomotionAnimation.cs`, on **Player**.
 - Editor setup: `Assets/Editor/PrepareRangerMovementTest.cs`.
 
-Return to Unity and let it compile. The updated movement setup tries once automatically.
-If needed, run **Tools → Portaland → Prepare Ranger Movement Test** outside Play mode.
+Return to Unity and let it compile. Run **Tools → Portaland → Prepare Ranger Movement Test**
+outside Play mode when setting up or updating the test.
 It upgrades the existing controller and keeps the saved test scene intact.
 
 ## What the new states do

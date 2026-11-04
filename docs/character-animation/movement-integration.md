@@ -25,7 +25,7 @@ This is a ground-movement checkpoint; it doesn't mean all character animations a
 | Hierarchy: `Player → CharacterVisual → PlayerRangerMale` | Generated character placement in the test scene |
 
 The last two asset files and the Hierarchy setup are created when the Editor helper runs.
-The helper tries once after compilation. You can also use
+Run the helper explicitly from
 **Tools → Portaland → Prepare Ranger Movement Test** outside Play mode.
 If the test scene already exists, it keeps your saved changes and doesn't rebuild it.
 
