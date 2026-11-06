@@ -1,0 +1,30 @@
+{
+  "unity_version": "2023.1.22f1",
+  "date": "2026-11-04",
+  "setup": "passed in isolated Unity batch project",
+  "checks": [
+    "KayKit Humanoid Avatar valid",
+    "three selected clips Humanoid and looping",
+    "directional controller built and assigned in saved RangerMovementTest",
+    "male and female: idle, forward, backwards, left, right and two diagonals sampled for 30 frames each",
+    "sampled model roots stayed in place",
+    "sampled skinned vertices finite and within a 10-unit sanity bound"
+  ],
+  "limits": [
+    "No rendered or interactive gameplay test performed",
+    "Stride pacing, foot sliding and clothing clipping need visual checks",
+    "Directional crouch clips still missing"
+  ],
+  "copied_outputs": [
+    "Assets/Scenes/Tests/RangerMovementTest.unity",
+    "Assets/Animations/Player/RangerDirectional.controller",
+    "Assets/Animations/Player/RangerDirectional.controller.meta",
+    "Assets/Animations/Player/RangerDirectionalClips.asset",
+    "Assets/Animations/Player/RangerDirectionalClips.asset.meta",
+    "Assets/ThirdParty/KayKit.meta",
+    "Assets/ThirdParty/KayKit/CharacterAnimations.meta",
+    "Assets/ThirdParty/KayKit/CharacterAnimations/License.txt.meta",
+    "Assets/ThirdParty/KayKit/CharacterAnimations/Rig_Medium_MovementAdvanced.fbx.meta",
+    "Assets/ThirdParty/KayKit/CharacterAnimations/README.md.meta"
+  ]
+}
