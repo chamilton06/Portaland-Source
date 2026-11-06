@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal.Commands;
 using UnityEngine;
+using UnityEngine.Analytics;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
@@ -12,10 +15,15 @@ public class Inventory : MonoBehaviour
 
     public Item testItem;
     public Item testItem2;
+    public Item testItem3;
 
     private List<Slot> inventorySlots = new List<Slot>();
-    private List<Slot> hotbarSlots = new List<Slot>();
+    private List<HotbarSlot> hotbarSlots = new List<HotbarSlot>();
     private List<Slot> allSlots = new List<Slot>();
+    private int currentSelectedHotSlot;
+
+    bool moveMode;
+    Slot movingSlot;
 
     private void Awake(){
         if (playerCombat == null)
@@ -23,10 +31,12 @@ public class Inventory : MonoBehaviour
             playerCombat = GetComponent<PlayerCombat>();
         }
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
-        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<Slot>(true));
+        hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<HotbarSlot>(true));
         allSlots.AddRange(inventorySlots);
-        allSlots.AddRange(hotbarSlots);
+        currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
+        moveMode = false;
+        movingSlot = null;
     }
 
     // start closed (in Start so slots wake up first)
@@ -38,7 +48,7 @@ public class Inventory : MonoBehaviour
     private void OnEnable()
     {
         Slot.Clicked += OnSlotClicked;
-    }
+    }   
 
     private void OnDisable()
     {
@@ -59,64 +69,68 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)){ // spawn sword
             AddItem(testItem2, 1);
         }
+        if (Input.GetKeyDown(KeyCode.T)){ // spawn apple
+            AddItem(testItem3, 1);
+        }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
-            if (hotbarSlots[0].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+        if (!IsOpen()){
+            if (Input.GetKeyDown(KeyCode.Alpha1)){  // equip weapon in hotbar slot 1
+                ChangeCurrentSelectedHotbarSlot(0);
             }
-            else
-            {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
+                ChangeCurrentSelectedHotbarSlot(1);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)){  // equip weapon in hotbar slot 2
-            if (hotbarSlots[1].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
+                ChangeCurrentSelectedHotbarSlot(2);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
+                ChangeCurrentSelectedHotbarSlot(3);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)){  // equip weapon in hotbar slot 3
-            if (hotbarSlots[2].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
+                ChangeCurrentSelectedHotbarSlot(4);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
+                ChangeCurrentSelectedHotbarSlot(5);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)){  // equip weapon in hotbar slot 4
-            if (hotbarSlots[3].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+        } else
+        {
+            Slot hoveredSlot = GetHoveredInventorySlot();
+            if (Input.GetKeyDown(KeyCode.Alpha1)){  // set item in hotbar slot 1
+                if (hoveredSlot != null) hotbarSlots[0].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha2)){  // set item in hotbar slot 2
+                if (hoveredSlot != null) hotbarSlots[1].SetItem(hoveredSlot);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5)){  // equip weapon in hotbar slot 5
-            if (hotbarSlots[4].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha3)){  // set item in hotbar slot 3
+                if (hoveredSlot != null) hotbarSlots[2].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha4)){  // set item in hotbar slot 4
+                if (hoveredSlot != null) hotbarSlots[3].SetItem(hoveredSlot);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6)){  // equip weapon in hotbar slot 6
-            if (hotbarSlots[5].GetItem() is Weapon weapon)
-            {
-                playerCombat.SetEquippedWeapon(weapon);
+            if (Input.GetKeyDown(KeyCode.Alpha5)){  // set item in hotbar slot 5
+                if (hoveredSlot != null) hotbarSlots[4].SetItem(hoveredSlot);
             }
-            else {
-                playerCombat.SetEquippedWeapon(null);
+            if (Input.GetKeyDown(KeyCode.Alpha6)){  // set item in hotbar slot 6
+                if (hoveredSlot != null) hotbarSlots[5].SetItem(hoveredSlot);
             }
         }
     }
 
+    public void ChangeCurrentSelectedHotbarSlot(int slotIndex)
+    {
+        hotbarSlots[currentSelectedHotSlot].SetSelected(false);
+        hotbarSlots[slotIndex].SetSelected(true);
+        currentSelectedHotSlot = slotIndex;
+
+        if (hotbarSlots[slotIndex].slotRef != null && hotbarSlots[slotIndex].slotRef.GetItem() is Weapon weapon)
+        {
+            playerCombat.SetEquippedWeapon(weapon);
+        }
+        else
+        {
+            playerCombat.SetEquippedWeapon(null);
+        }
+    }
     public bool IsOpen()
     {
         return inventorySlotParent.activeSelf;
@@ -131,6 +145,11 @@ public class Inventory : MonoBehaviour
 
         inventorySlotParent.SetActive(open);
         playerCombat.inventoryOpen = open;
+
+        foreach (HotbarSlot slot in hotbarSlots)
+        {
+            slot.RefreshOpacity();
+        }
 
         if (!open && infoPanel != null)
         {
@@ -156,7 +175,7 @@ public class Inventory : MonoBehaviour
         }
 
         foreach (Slot slot in allSlots){
-            if (!slot.HasItem()){
+            if (!slot.HasItem() && CheckValidSlotForItem(slot, item)){
                 int toAdd = Mathf.Min(item.maxStackSize, remaining);
                 slot.SetItem(item, toAdd);
                 remaining -= toAdd;
@@ -169,20 +188,125 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void OnSlotClicked(Slot slot)
+    private void OnSlotClicked(Slot slot, PointerEventData.InputButton button)
     {
-        if (infoPanel == null || !IsOpen())
-        {
-            return;
-        }
+        if (infoPanel == null || !IsOpen()) return;
 
-        if (slot.HasItem())
+        if (slot.HasItem() && button == PointerEventData.InputButton.Right)
         {
             infoPanel.Show(slot.GetItem());
-        }
+        } 
         else
         {
             infoPanel.Hide();
         }
+
+        if (slot.HasItem() && button == PointerEventData.InputButton.Left && !moveMode)
+        {
+            moveMode = true;
+            movingSlot = slot;
+        } 
+        else if (button == PointerEventData.InputButton.Left && moveMode && slot != movingSlot)
+        {
+            Item item = movingSlot.GetItem();
+            int remaining = movingSlot.GetAmount();
+            if (slot.HasItem() && slot.GetItem() == item && slot.GetAmount() < item.maxStackSize){
+                int space = item.maxStackSize - slot.GetAmount();
+                int toAdd = Mathf.Min(space, remaining);
+                slot.SetItem(item, slot.GetAmount() + toAdd);
+                remaining -= toAdd;
+                if (remaining > 0)
+                {
+                    movingSlot.RemoveAmount(movingSlot.GetAmount() - remaining);
+                }
+            }
+            else if (!slot.HasItem() && CheckValidSlotForItem(slot, item))
+            {
+                int toAdd = Mathf.Min(item.maxStackSize, remaining);
+                slot.SetItem(item, toAdd);
+                movingSlot.ClearSlot();
+            }
+            moveMode = false;
+        }
+    }
+
+    private Slot GetHoveredInventorySlot()
+    {
+        if (EventSystem.current == null)
+        {
+            return null;
+        }
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            Slot slot = result.gameObject.GetComponentInParent<Slot>();
+            if (slot != null && inventorySlots.Contains(slot))
+            {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    private bool CheckValidSlotForItem(Slot slot, Item item)
+    {
+        // Check if the slot is blocked
+        if (slot.IsBlocked)
+        {
+            return false;
+        }
+
+        Vector2Int itemSize = item.inventorySize;
+        const int inventoryWidth = 6;
+        const int inventoryHeight = 4;
+
+        if (itemSize.x <= 0 || itemSize.y <= 0)
+        {
+            return false;
+        }
+
+        int startIndex = inventorySlots.IndexOf(slot);
+        if (startIndex < 0)
+        {
+            return false;
+        }
+
+        int startX = startIndex % inventoryWidth;
+        int startY = startIndex / inventoryWidth;
+        if (startX + itemSize.x > inventoryWidth || startY + itemSize.y > inventoryHeight)
+        {
+            return false;
+        }
+
+        int requiredSlots = itemSize.x * itemSize.y;
+        int overlappingSlots = 0;
+        for (int y = startY; y < startY + itemSize.y; y++)
+        {
+            for (int x = startX; x < startX + itemSize.x; x++)
+            {
+                int index = y * inventoryWidth + x;
+                if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked || inventorySlots[index].HasItem())
+                {
+                    return false;
+                }
+
+                overlappingSlots++;
+            }
+        }
+
+        if (overlappingSlots != requiredSlots)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
