@@ -13,6 +13,12 @@ public class PlayerCombat : MonoBehaviour
     public Vector3 guardRotationOffset = new Vector3(-20f, 0f, 65f);
     [Min(0.01f)] public float guardTransitionTime = 0.12f;
 
+    [Header("Hand-held weapons (optional)")]
+    [Tooltip("Turned on by WeaponHandSocket. The hand bone moves the weapon, so the code swing and guard pose are skipped.")]
+    public bool weaponFollowsHand = false;
+    [Tooltip("Models to hold instead of a weapon's Weapon Prefab. Leave empty to use the normal prefabs.")]
+    public HeldWeaponModel[] heldWeaponModels;
+
     // ------------------------------------------------------------------------
     // State
     // ------------------------------------------------------------------------
@@ -54,7 +60,7 @@ public class PlayerCombat : MonoBehaviour
         swingRoutine = null;
         swinging = false;
         guardPoseWeight = 0f;
-        if (weaponPivot != null)
+        if (weaponPivot != null && !weaponFollowsHand)
         {
             weaponPivot.localRotation = restingRotation;
             weaponPivot.localPosition = restingPosition;
@@ -81,16 +87,29 @@ public class PlayerCombat : MonoBehaviour
         weaponEquipped = equippedWeapon != null;
 
         if (!weaponEquipped || weaponPivot == null) return;
-        if (weapon.weaponPrefab == null)
+
+        HeldWeaponModel held = FindHeldModel(weapon);
+        GameObject prefab = held != null ? held.model : weapon.weaponPrefab;
+        if (prefab == null)
         {
             Debug.LogWarning("Equipped weapon has no Weapon Prefab assigned.", this);
             return;
         }
 
-        weaponInstance = Instantiate(weapon.weaponPrefab, weaponPivot, false);
+        weaponInstance = Instantiate(prefab, weaponPivot, false);
         weaponInstance.transform.localPosition = Vector3.zero;
         weaponInstance.transform.localRotation = Quaternion.identity;
+        if (held != null) held.FitToGrip(weaponInstance.transform, weaponPivot);
         weaponInstance.SetActive(true);
+    }
+
+    // Returns the hand-held model set up for this weapon, or null to use its normal prefab.
+    private HeldWeaponModel FindHeldModel(Weapon weapon)
+    {
+        if (heldWeaponModels == null) return null;
+        foreach (HeldWeaponModel held in heldWeaponModels)
+            if (held != null && held.weapon == weapon && held.model != null) return held;
+        return null;
     }
 
     void Update()
@@ -136,7 +155,7 @@ public class PlayerCombat : MonoBehaviour
     // Combat owns the pivot pose, so guard transitions never compete with swings.
     private void LateUpdate()
     {
-        if (weaponPivot == null || swinging) return;
+        if (weaponPivot == null || swinging || weaponFollowsHand) return;
 
         bool guarding = defence != null && defence.IsBlocking;
         guardPoseWeight = Mathf.MoveTowards(guardPoseWeight, guarding ? 1f : 0f,
@@ -159,6 +178,16 @@ public class PlayerCombat : MonoBehaviour
 
         swinging = true;
         guardPoseWeight = 0f;
+
+        // In the hand, the swing keeps its timing but leaves the pose to the animation.
+        if (weaponFollowsHand)
+        {
+            yield return new WaitForSeconds(0.3f);
+            swinging = false;
+            swingRoutine = null;
+            yield break;
+        }
+
         weaponPivot.localPosition = restingPosition;
 
         Transform weapon = weaponPivot;

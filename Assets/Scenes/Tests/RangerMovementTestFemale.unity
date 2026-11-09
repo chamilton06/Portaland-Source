@@ -451,6 +451,7 @@ MonoBehaviour:
   journal: {fileID: 938379326}
   testItem: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
   testItem2: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+  testItem3: {fileID: 0}
 --- !u!114 &49294145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10542,6 +10543,7 @@ GameObject:
   - component: {fileID: 2005957537}
   - component: {fileID: 2005957536}
   - component: {fileID: 2005957546}
+  - component: {fileID: 2005957547}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10643,6 +10645,18 @@ MonoBehaviour:
   guardPositionOffset: {x: -0.25, y: 0.25, z: 0.15}
   guardRotationOffset: {x: -20, y: 0, z: 65}
   guardTransitionTime: 0.12
+  weaponFollowsHand: 0
+  heldWeaponModels:
+  - weapon: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+    model: {fileID: 919132149155446097, guid: 94ff9598bd289445daeb1c3e680088dd, type: 3}
+    length: 1
+    gripPoint: 0.08
+    rotationOffset: {x: 0, y: 0, z: 0}
+  - weapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+    model: {fileID: 919132149155446097, guid: 0f73923bda55f4f7f94f29618a13300e, type: 3}
+    length: 0.9
+    gripPoint: 0.12
+    rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10806,6 +10820,21 @@ MonoBehaviour:
   blendTime: 0.12
   groundGraceTime: 0.08
   rollFacing: {fileID: 1169247183}
+--- !u!114 &2005957547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6fb5f51543ca4e43971a868ce94e1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 238919483}
+  gripPosition: {x: 0, y: 0.08, z: 0.03}
+  gripRotation: {x: 90, y: 0, z: 0}
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0
