@@ -19,4 +19,11 @@ public class JournalEntry : ScriptableObject
     {
         return loreText;
     }
+
+
+    // title in the list, page + tracker, quests cross it out when done
+    public virtual string GetDisplayTitle()
+    {
+        return title;
+    }
 }

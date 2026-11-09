@@ -17,6 +17,16 @@ public class QuestTracker : MonoBehaviour
         trackerRoot.SetActive(false);
     }
 
+    void Start()
+    {
+        if (QuestLog.Instance != null) QuestLog.Instance.Changed += OnQuestChanged;
+    }
+
+    void OnQuestChanged(Quest quest)
+    {
+        if (quest == PinnedQuest) Refresh();
+    }
+
     public void Pin(Quest quest)
     {
         PinnedQuest = quest;
@@ -35,11 +45,11 @@ public class QuestTracker : MonoBehaviour
         trackerRoot.SetActive(PinnedQuest != null);
         if (PinnedQuest == null) return;
 
-        titleText.text = PinnedQuest.title;
+        titleText.text = PinnedQuest.GetDisplayTitle() + (PinnedQuest.IsComplete ? " <color=#2E7D32>Completed!</color>" : "");
         string text = PinnedQuest.shortGoal;
-        foreach (string task in PinnedQuest.tasks)
+        for (int i = 0; i < PinnedQuest.tasks.Count; i++)
         {
-            text += "\n- " + task;
+            text += "\n- " + PinnedQuest.TaskLine(i);
         }
         goalText.text = text;
     }

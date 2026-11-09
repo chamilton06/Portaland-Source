@@ -266,7 +266,7 @@ public class JournalUI : MonoBehaviour
             unread.Remove(entry);
         }
 
-        entryTitle.text = entry.title;
+        entryTitle.text = entry.GetDisplayTitle();
         //entryText.text = entry.loreText;
         entryText.text = entry.GetPageText();
         entryPicture.sprite = entry.picture;
@@ -279,7 +279,7 @@ public class JournalUI : MonoBehaviour
     {
         foreach (KeyValuePair<JournalEntry, TextMeshProUGUI> pair in entryLabels)
         {
-            pair.Value.text = pair.Key.title + (unread.Contains(pair.Key) ? newTag : "");
+            pair.Value.text = pair.Key.GetDisplayTitle() + (unread.Contains(pair.Key) ? newTag : "");
         }
 
         for (int i = 0; i < tabButtons.Length; i++)

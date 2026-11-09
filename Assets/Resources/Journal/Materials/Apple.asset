@@ -16,4 +16,4 @@ MonoBehaviour:
   tab: 0
   picture: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
   loreText: It's an apple! It stacks up to a bundle of 5 in just 1 slot.
-  startsUnlocked: 1
+  startsUnlocked: 0
