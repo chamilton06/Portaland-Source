@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Magical Long Sword
   tab: 4
-  picture: {fileID: 21300000, guid: 54daf19cf421373448b4eb2055ed1812, type: 3}
+  picture: {fileID: 21300000, guid: 15e37df10c91b574592e039dad159905, type: 3}
   loreText: "A straight sword with a double-edged blade.\r\n\r\nIn addition to its
     reliable standard damage, this weapon also boasts powerful piercing attacks.
     A superbly balanced armament.  \n\n\nStarting armament of the Vagabond origin.\n\r\nPurchased

@@ -28,6 +28,7 @@ public class JournalUI : MonoBehaviour
     public string newTag = " <color=#B22222>NEW!</color>";
     public TextMeshProUGUI newEntryPopup;       // optional popup
     public float popupTime = 3f;
+    public event System.Action<JournalEntry> EntryShown;   // pin button listens
 
     private readonly HashSet<JournalEntry> unlocked = new HashSet<JournalEntry>();
     private readonly HashSet<JournalEntry> unread = new HashSet<JournalEntry>();
@@ -249,6 +250,7 @@ public class JournalUI : MonoBehaviour
     void ShowEntry(JournalEntry entry, bool markRead)
     {
         if (textScroll != null) textScroll.gameObject.SetActive(true);
+        EntryShown?.Invoke(entry);
         if (entry == null)
         {
 
