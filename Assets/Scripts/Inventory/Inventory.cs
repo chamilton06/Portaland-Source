@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     public PlayerCombat playerCombat;
     public ItemInfoPanel infoPanel;             // stats panel on the right
     public JournalUI journal;
+    public event System.Action<Item, int> ItemAdded;   // quests listen
 
     public Item testItem;
     public Item testItem2;
@@ -190,6 +191,7 @@ public class Inventory : MonoBehaviour
     }
 
     public void AddItem(Item item, int amount = 1){
+        ItemAdded?.Invoke(item, amount);
         if (journal != null)
         {
             journal.Discover(item);  // add to journal
