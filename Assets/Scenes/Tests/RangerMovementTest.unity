@@ -10627,6 +10627,8 @@ MonoBehaviour:
   parryWindow: 0.2
   blockAngle: 120
   parryMessageDuration: 0.75
+  blockStaminaCost: 15
+  guardBreakDuration: 1
 --- !u!114 &2005957539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10889,6 +10891,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 304127076}
   blendIn: 0.05
+  guardPose: 0.35
+  guardRaiseTime: 0.12
+  parryAnimationTime: 0.5
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

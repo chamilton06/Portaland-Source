@@ -5,11 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStats), typeof(PlayerCombat))]
 public class PlayerDefence : MonoBehaviour
 {
-    public enum HitResult { Ignored, Damaged, Blocked, Parried, Dodged }
+    public enum HitResult { Ignored, Damaged, Blocked, Parried, Dodged, GuardBroken }
 
     [Min(0f)] public float parryWindow = 0.2f;
     [Range(1f, 180f)] public float blockAngle = 120f;
     [Min(0.1f)] public float parryMessageDuration = 0.75f;
+    [Tooltip("Stamina each blocked hit costs. Without enough, the guard breaks and the hit lands. 0 = unlimited guard.")]
+    [Min(0f)] public float blockStaminaCost = 0f;
+    [Tooltip("Seconds the player staggers after a guard break, unable to guard or attack.")]
+    [Min(0f)] public float guardBreakDuration = 1f;
+
+    // Lets animation react to blocks, parries and guard breaks.
+    public event System.Action<HitResult> HitResolved;
 
     private PlayerMovement movement;
     private PlayerStats stats;
@@ -20,6 +27,9 @@ public class PlayerDefence : MonoBehaviour
     private float messageUntil = float.NegativeInfinity;
     private bool parryUsed;
     private int inputFrame = -1;
+    private float guardBrokenUntil = float.NegativeInfinity;
+
+    public bool IsGuardBroken => Time.time < guardBrokenUntil;
 
     public bool IsBlocking
     {
@@ -39,7 +49,7 @@ public class PlayerDefence : MonoBehaviour
 
     private bool CanGuard()
     {
-        return (movement == null || !movement.IsRolling) && isActiveAndEnabled && focused && stats != null && !stats.IsDead()
+        return (movement == null || !movement.IsRolling) && !IsGuardBroken && isActiveAndEnabled && focused && stats != null && !stats.IsDead()
             && combat != null && combat.isActiveAndEnabled && !combat.inventoryOpen
             && combat.weaponEquipped && combat.equippedWeapon != null && !combat.IsAttacking;
     }
@@ -79,6 +89,13 @@ public class PlayerDefence : MonoBehaviour
 
     public HitResult ReceiveHit(float damage, Vector3 attackerPosition)
     {
+        HitResult result = ResolveHit(damage, attackerPosition);
+        if (result != HitResult.Ignored) HitResolved?.Invoke(result);
+        return result;
+    }
+
+    private HitResult ResolveHit(float damage, Vector3 attackerPosition)
+    {
         if (stats == null || stats.IsDead() || damage <= 0f) return HitResult.Ignored;
 
         if (movement != null && movement.IsInDodgeWindow) return HitResult.Dodged;
@@ -98,8 +115,14 @@ public class PlayerDefence : MonoBehaviour
                 return HitResult.Parried;
             }
 
-            // Unlimited prototype guard: no stamina drain or guard break.
-            return HitResult.Blocked;
+            // Each block costs stamina. Run out and the guard breaks: the hit lands and the player staggers.
+            if (blockStaminaCost <= 0f || stats.TryUseStamina(blockStaminaCost))
+                return HitResult.Blocked;
+
+            CancelGuard();
+            guardBrokenUntil = Time.time + guardBreakDuration;
+            stats.TakeDamage(damage);
+            return HitResult.GuardBroken;
         }
 
         stats.TakeDamage(damage);

@@ -34,6 +34,12 @@ public static class PrepareCombatAnimations
         ("Sword_Dash", 0.35f, 1.25f, 15f);
     private static readonly (string clip, float hitPoint, float damage, float stamina) CrouchAttack =
         ("Sword_Regular_B", 0.42f, 1f, 10f);
+
+    // Held guard, quick parry and the stagger when stamina runs out while blocking.
+    private const string BlockClipName = "Sword_Block";
+    private const string GuardBreakClipName = "Idle_Shield_Break";
+    private const float ParrySpeed = 1.5f;
+    private const float TestBlockStaminaCost = 15f;
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -57,7 +63,9 @@ public static class PrepareCombatAnimations
             AnimationClip jumpClip = FindClip(JumpAttack.clip, FirstLibraryPath);
             AnimationClip sprintClip = FindClip(SprintAttack.clip);
             AnimationClip crouchClip = FindClip(CrouchAttack.clip);
-            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip }).Distinct().ToArray());
+            AnimationClip guardBreakClip = FindClip(GuardBreakClipName);
+            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip }).Distinct().ToArray());
+            AddGuardStates(FindClip(BlockClipName));
             AssetDatabase.SaveAssets();
             AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip);
             Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
@@ -187,6 +195,38 @@ public static class PrepareCombatAnimations
         EditorUtility.SetDirty(controller);
     }
 
+    // Guard holds one frame of the block clip, picked by GuardTime, so the sword stays raised.
+    // Parry plays the whole block clip quickly, then blends back to Empty.
+    private static void AddGuardStates(AnimationClip block)
+    {
+        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        if (!controller.parameters.Any(p => p.name == "GuardTime"))
+            controller.AddParameter("GuardTime", AnimatorControllerParameterType.Float);
+
+        AnimatorStateMachine machine = controller.layers.First(layer => layer.name == LayerName).stateMachine;
+        AnimatorState empty = machine.states.Select(child => child.state).First(state => state.name == "Empty");
+
+        if (!machine.states.Any(child => child.state.name == "Guard"))
+        {
+            AnimatorState guard = machine.AddState("Guard");
+            guard.motion = block;
+            guard.timeParameterActive = true;
+            guard.timeParameter = "GuardTime";
+        }
+
+        if (!machine.states.Any(child => child.state.name == "Parry"))
+        {
+            AnimatorState parry = machine.AddState("Parry");
+            parry.motion = block;
+            parry.speed = ParrySpeed;
+            AnimatorStateTransition finish = parry.AddTransition(empty);
+            finish.hasExitTime = true;
+            finish.exitTime = 0.85f;
+            finish.duration = 0.15f;
+        }
+        EditorUtility.SetDirty(controller);
+    }
+
     private static string ShortName(AnimationClip clip) => clip.name.Split('|').Last();
 
     private static HandAttack MakeAttack(AnimationClip clip, (string clip, float hitPoint, float damage, float stamina) settings)
@@ -236,6 +276,14 @@ public static class PrepareCombatAnimations
                 combat.sprintAttack = MakeAttack(sprintClip, SprintAttack);
             if (combat.crouchAttack == null || string.IsNullOrEmpty(combat.crouchAttack.name))
                 combat.crouchAttack = MakeAttack(crouchClip, CrouchAttack);
+
+            // Blocking costs stamina in the test scenes only; Prototype keeps the unlimited guard.
+            PlayerDefence defence = combat.GetComponent<PlayerDefence>();
+            if (defence != null && defence.blockStaminaCost <= 0f)
+            {
+                defence.blockStaminaCost = TestBlockStaminaCost;
+                EditorUtility.SetDirty(defence);
+            }
 
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);
