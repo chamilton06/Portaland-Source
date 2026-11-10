@@ -20,6 +20,8 @@ public class PlayerCombat : MonoBehaviour
     public HeldWeaponModel[] heldWeaponModels;
     [Tooltip("How long an attack lasts when the weapon is in the hand. Roughly match the attack animation.")]
     [Min(0.05f)] public float handAttackDuration = 0.6f;
+    [Tooltip("Seconds into the attack animation before the blade connects and damage lands.")]
+    [Min(0f)] public float handHitDelay = 0.18f;
 
     // ------------------------------------------------------------------------
     // State
@@ -135,17 +137,25 @@ public class PlayerCombat : MonoBehaviour
             nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
             
             swingRoutine = StartCoroutine(SwingWeapon());
-            
-            RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.stats.attackRange))
+            // With the hand animation, damage waits for the blade (see SwingWeapon).
+            if (!weaponFollowsHand) DealDamage();
+        }
+    }
+
+    private void DealDamage()
+    {
+        if (equippedWeapon == null || equippedWeapon.stats == null) return;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.forward, out hit, equippedWeapon.stats.attackRange))
+        {
+            Health targetHealth = hit.collider.GetComponentInParent<Health>();
+
+            if (targetHealth != null)
             {
-                Health targetHealth = hit.collider.GetComponentInParent<Health>();
-
-                if (targetHealth != null)
-                {
-                    targetHealth.TakeDamage(equippedWeapon.stats.damage);
-                }
+                targetHealth.TakeDamage(equippedWeapon.stats.damage);
             }
         }
     }
@@ -182,9 +192,13 @@ public class PlayerCombat : MonoBehaviour
         guardPoseWeight = 0f;
 
         // In the hand, the swing keeps its timing but leaves the pose to the animation.
+        // Damage lands when the blade connects; a roll or cancel before then means no hit.
         if (weaponFollowsHand)
         {
-            yield return new WaitForSeconds(handAttackDuration);
+            float hitDelay = Mathf.Min(handHitDelay, handAttackDuration);
+            yield return new WaitForSeconds(hitDelay);
+            DealDamage();
+            yield return new WaitForSeconds(handAttackDuration - hitDelay);
             swinging = false;
             swingRoutine = null;
             yield break;
