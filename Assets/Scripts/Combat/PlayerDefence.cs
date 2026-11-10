@@ -14,6 +14,8 @@ public class PlayerDefence : MonoBehaviour
     [Min(0f)] public float blockStaminaCost = 0f;
     [Tooltip("Seconds the player staggers after a guard break, unable to guard or attack.")]
     [Min(0f)] public float guardBreakDuration = 1f;
+    [Tooltip("Seconds a hit that lands interrupts the player: cancels their attack and stops attacking or guarding. 0 = no hit stun.")]
+    [Min(0f)] public float hitStunDuration = 0f;
 
     // Lets animation react to blocks, parries and guard breaks.
     public event System.Action<HitResult> HitResolved;
@@ -27,9 +29,9 @@ public class PlayerDefence : MonoBehaviour
     private float messageUntil = float.NegativeInfinity;
     private bool parryUsed;
     private int inputFrame = -1;
-    private float guardBrokenUntil = float.NegativeInfinity;
+    private float staggeredUntil = float.NegativeInfinity;
 
-    public bool IsGuardBroken => Time.time < guardBrokenUntil;
+    public bool IsStaggered => Time.time < staggeredUntil;
 
     public bool IsBlocking
     {
@@ -49,7 +51,7 @@ public class PlayerDefence : MonoBehaviour
 
     private bool CanGuard()
     {
-        return (movement == null || !movement.IsRolling) && !IsGuardBroken && isActiveAndEnabled && focused && stats != null && !stats.IsDead()
+        return (movement == null || !movement.IsRolling) && !IsStaggered && isActiveAndEnabled && focused && stats != null && !stats.IsDead()
             && combat != null && combat.isActiveAndEnabled && !combat.inventoryOpen
             && combat.weaponEquipped && combat.equippedWeapon != null && !combat.IsAttacking;
     }
@@ -120,12 +122,17 @@ public class PlayerDefence : MonoBehaviour
                 return HitResult.Blocked;
 
             CancelGuard();
-            guardBrokenUntil = Time.time + guardBreakDuration;
+            staggeredUntil = Time.time + guardBreakDuration;
             stats.TakeDamage(damage);
             return HitResult.GuardBroken;
         }
 
         stats.TakeDamage(damage);
+        if (hitStunDuration > 0f)
+        {
+            if (combat != null) combat.CancelAttack();
+            staggeredUntil = Mathf.Max(staggeredUntil, Time.time + hitStunDuration);
+        }
         return HitResult.Damaged;
     }
 

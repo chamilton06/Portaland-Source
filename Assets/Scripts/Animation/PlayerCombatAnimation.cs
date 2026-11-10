@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Plays the attack, guard, parry and guard break animations for PlayerCombat and PlayerDefence.
+// Plays the attack, guard, parry, guard break, hit and death animations for PlayerCombat and PlayerDefence.
 // Combat and defence still decide what happens; this only shows it.
 [RequireComponent(typeof(PlayerCombat))]
 public class PlayerCombatAnimation : MonoBehaviour
@@ -18,16 +18,26 @@ public class PlayerCombatAnimation : MonoBehaviour
     [Tooltip("Seconds the parry animation plays before going back to the guard.")]
     [Min(0.05f)] public float parryAnimationTime = 0.5f;
 
+    [Header("Getting hit")]
+    [Tooltip("Seconds the flinch plays after a hit lands, before the guard can show again.")]
+    [Min(0.05f)] public float hitAnimationTime = 0.3f;
+
     private const string CombatLayerName = "Combat";
+    private const string DeathLayerName = "Death";
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int GuardTime = Animator.StringToHash("GuardTime");
     private static readonly int EmptyState = Animator.StringToHash("Empty");
     private static readonly int GuardState = Animator.StringToHash("Guard");
     private static readonly int ParryState = Animator.StringToHash("Parry");
     private static readonly int GuardBreakState = Animator.StringToHash("Idle_Shield_Break");
+    private static readonly int HitState = Animator.StringToHash("Hit_Chest");
+    private static readonly int DeathState = Animator.StringToHash("Death01");
 
     private PlayerCombat combat;
     private PlayerDefence defence;
+    private PlayerStats stats;
+    private int deathLayer = -1;
+    private bool dead;
     private bool hasAttackParameter;
     private bool hasGuard;
     private int combatLayer = -1;
@@ -40,6 +50,7 @@ public class PlayerCombatAnimation : MonoBehaviour
     {
         combat = GetComponent<PlayerCombat>();
         defence = GetComponent<PlayerDefence>();
+        stats = GetComponent<PlayerStats>();
         if (characterAnimator == null) characterAnimator = GetComponentInChildren<Animator>();
         if (characterAnimator == null) return;
 
@@ -52,6 +63,7 @@ public class PlayerCombatAnimation : MonoBehaviour
                 hasGuardTime = true;
         }
         combatLayer = characterAnimator.GetLayerIndex(CombatLayerName);
+        deathLayer = characterAnimator.GetLayerIndex(DeathLayerName);
         hasGuard = defence != null && hasGuardTime && combatLayer >= 0 && characterAnimator.HasState(combatLayer, GuardState);
 
         if (!hasAttackParameter || combatLayer < 0 || (defence != null && !hasGuard))
@@ -61,16 +73,26 @@ public class PlayerCombatAnimation : MonoBehaviour
     private void OnEnable()
     {
         if (defence != null) defence.HitResolved += OnHitResolved;
+        if (stats != null) stats.onDeath.AddListener(OnDeath);
     }
 
     private void OnDisable()
     {
         if (defence != null) defence.HitResolved -= OnHitResolved;
+        if (stats != null) stats.onDeath.RemoveListener(OnDeath);
+    }
+
+    // The whole body falls on the Death layer; the scene reloads on respawn, so it never resets.
+    private void OnDeath()
+    {
+        dead = true;
+        if (deathLayer >= 0 && characterAnimator.HasState(deathLayer, DeathState))
+            characterAnimator.CrossFadeInFixedTime(DeathState, 0.1f, deathLayer, 0f);
     }
 
     private void Update()
     {
-        if (!hasAttackParameter || combatLayer < 0) return;
+        if (dead || !hasAttackParameter || combatLayer < 0) return;
 
         // Start once at the beginning of each attack, not every frame it lasts.
         bool attacking = combat.IsAttacking;
@@ -103,9 +125,11 @@ public class PlayerCombatAnimation : MonoBehaviour
 
     private void OnHitResolved(PlayerDefence.HitResult result)
     {
-        if (!hasGuard) return;
+        if (dead || combatLayer < 0) return;
 
-        if (result == PlayerDefence.HitResult.Parried)
+        if (result == PlayerDefence.HitResult.Damaged)
+            PlayReaction(HitState, hitAnimationTime);
+        else if (result == PlayerDefence.HitResult.Parried)
             PlayReaction(ParryState, parryAnimationTime);
         else if (result == PlayerDefence.HitResult.GuardBroken)
             PlayReaction(GuardBreakState, defence.guardBreakDuration);

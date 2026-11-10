@@ -152,7 +152,7 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        if (defence != null && (defence.IsBlocking || defence.IsGuardBroken))
+        if (defence != null && (defence.IsBlocking || defence.IsStaggered))
         {
             holdingAttack = false;
             return;

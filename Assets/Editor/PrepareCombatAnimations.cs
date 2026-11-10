@@ -40,6 +40,12 @@ public static class PrepareCombatAnimations
     private const string GuardBreakClipName = "Idle_Shield_Break";
     private const float ParrySpeed = 1.5f;
     private const float TestBlockStaminaCost = 15f;
+
+    // Flinch when a hit lands (upper body), and a full-body death on its own layer.
+    private const string HitClipName = "Hit_Chest";
+    private const string DeathClipName = "Death01";
+    private const string DeathLayerName = "Death";
+    private const float TestHitStunDuration = 0.4f;
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -64,8 +70,10 @@ public static class PrepareCombatAnimations
             AnimationClip sprintClip = FindClip(SprintAttack.clip);
             AnimationClip crouchClip = FindClip(CrouchAttack.clip);
             AnimationClip guardBreakClip = FindClip(GuardBreakClipName);
-            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip }).Distinct().ToArray());
+            AnimationClip hitClip = FindClip(HitClipName, FirstLibraryPath);
+            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip, hitClip }).Distinct().ToArray());
             AddGuardStates(FindClip(BlockClipName));
+            AddDeathLayer(FindClip(DeathClipName, FirstLibraryPath));
             AssetDatabase.SaveAssets();
             AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip);
             Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
@@ -227,6 +235,28 @@ public static class PrepareCombatAnimations
         EditorUtility.SetDirty(controller);
     }
 
+    // A full-body layer above everything else. It stays empty until death, then holds the last frame.
+    private static void AddDeathLayer(AnimationClip death)
+    {
+        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        AnimatorControllerLayer[] layers = controller.layers;
+        int index = Array.FindIndex(layers, layer => layer.name == DeathLayerName);
+        if (index >= 0) return;
+
+        controller.AddLayer(DeathLayerName);
+        layers = controller.layers;
+        index = layers.Length - 1;
+
+        AnimatorStateMachine machine = layers[index].stateMachine;
+        machine.defaultState = machine.AddState("Empty");
+        machine.AddState(ShortName(death)).motion = death;
+
+        layers[index].defaultWeight = 1f;
+        layers[index].blendingMode = AnimatorLayerBlendingMode.Override;
+        controller.layers = layers;
+        EditorUtility.SetDirty(controller);
+    }
+
     private static string ShortName(AnimationClip clip) => clip.name.Split('|').Last();
 
     private static HandAttack MakeAttack(AnimationClip clip, (string clip, float hitPoint, float damage, float stamina) settings)
@@ -282,6 +312,12 @@ public static class PrepareCombatAnimations
             if (defence != null && defence.blockStaminaCost <= 0f)
             {
                 defence.blockStaminaCost = TestBlockStaminaCost;
+                EditorUtility.SetDirty(defence);
+            }
+            // Same for hit stun: a hit that lands interrupts the player, in the test scenes only.
+            if (defence != null && defence.hitStunDuration <= 0f)
+            {
+                defence.hitStunDuration = TestHitStunDuration;
                 EditorUtility.SetDirty(defence);
             }
 
