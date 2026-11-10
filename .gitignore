@@ -111,6 +111,3 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 .DS_Store
-
-/Assets/Environment/Asset Imports/Medieval Village Pack Vol.1
-/Assets/Environment/Asset Imports/Medieval Village Pack Vol.1.meta
