@@ -29,6 +29,11 @@ public static class PrepareCombatAnimations
     // Overhead swing from the first library, used when attacking in the air.
     private static readonly (string clip, float hitPoint, float damage, float stamina) JumpAttack =
         ("Sword_Attack", 0.35f, 1.5f, 15f);
+    // Lunging strike while sprinting, and a quick swing while crouched (the legs stay crouched).
+    private static readonly (string clip, float hitPoint, float damage, float stamina) SprintAttack =
+        ("Sword_Dash", 0.35f, 1.25f, 15f);
+    private static readonly (string clip, float hitPoint, float damage, float stamina) CrouchAttack =
+        ("Sword_Regular_B", 0.42f, 1f, 10f);
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -50,10 +55,12 @@ public static class PrepareCombatAnimations
             AnimationClip[] lightClips = LightAttacks.Select(hit => FindClip(hit.clip)).ToArray();
             AnimationClip heavyClip = FindClip(HeavyAttack.clip);
             AnimationClip jumpClip = FindClip(JumpAttack.clip, FirstLibraryPath);
-            AddAttackStates(lightClips.Append(heavyClip).Append(jumpClip).ToArray());
+            AnimationClip sprintClip = FindClip(SprintAttack.clip);
+            AnimationClip crouchClip = FindClip(CrouchAttack.clip);
+            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip }).Distinct().ToArray());
             AssetDatabase.SaveAssets();
-            AddToTestScenes(attack, lightClips, heavyClip, jumpClip);
-            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks, hold it for a heavy attack, or click in the air for a jump attack.");
+            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip);
+            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
         }
         catch (Exception error)
         {
@@ -194,7 +201,8 @@ public static class PrepareCombatAnimations
         };
     }
 
-    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip, AnimationClip jumpClip)
+    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip,
+        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip)
     {
         foreach (string path in ScenePaths)
         {
@@ -224,6 +232,10 @@ public static class PrepareCombatAnimations
                 combat.heavyAttack = MakeAttack(heavyClip, HeavyAttack);
             if (combat.jumpAttack == null || string.IsNullOrEmpty(combat.jumpAttack.name))
                 combat.jumpAttack = MakeAttack(jumpClip, JumpAttack);
+            if (combat.sprintAttack == null || string.IsNullOrEmpty(combat.sprintAttack.name))
+                combat.sprintAttack = MakeAttack(sprintClip, SprintAttack);
+            if (combat.crouchAttack == null || string.IsNullOrEmpty(combat.crouchAttack.name))
+                combat.crouchAttack = MakeAttack(crouchClip, CrouchAttack);
 
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);

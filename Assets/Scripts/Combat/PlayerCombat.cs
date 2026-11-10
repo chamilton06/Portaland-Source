@@ -28,6 +28,10 @@ public class PlayerCombat : MonoBehaviour
     public HandAttack heavyAttack;
     [Tooltip("Left click in the air. Leave its Name empty to use the normal attacks in the air too.")]
     public HandAttack jumpAttack;
+    [Tooltip("Left click while sprinting: a lunging strike. Leave its Name empty to use the normal attacks.")]
+    public HandAttack sprintAttack;
+    [Tooltip("Left click while crouched. Leave its Name empty to use the normal attacks.")]
+    public HandAttack crouchAttack;
     [Tooltip("Seconds left click must be held for a heavy attack instead of a light one.")]
     [Min(0.05f)] public float heavyHoldTime = 0.3f;
     [Tooltip("Seconds after a light attack ends to tap again and carry on the chain.")]
@@ -154,11 +158,12 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        // In the air, left click goes straight into the jump attack.
-        if (weaponFollowsHand && movement != null && !movement.IsGrounded && IsSet(jumpAttack))
+        // In the air, sprinting or crouched, left click goes straight into that attack.
+        HandAttack special = weaponFollowsHand ? SituationAttack() : null;
+        if (special != null)
         {
             holdingAttack = false;
-            if (Input.GetMouseButtonDown(0)) StartAttack(jumpAttack, true);
+            if (Input.GetMouseButtonDown(0)) StartAttack(special, true);
             return;
         }
 
@@ -191,8 +196,18 @@ public class PlayerCombat : MonoBehaviour
 
     private static bool IsSet(HandAttack attack) => attack != null && !string.IsNullOrEmpty(attack.name);
 
+    // The attack for what the player is doing right now, or null for the normal light/heavy.
+    private HandAttack SituationAttack()
+    {
+        if (movement == null) return null;
+        if (!movement.IsGrounded && IsSet(jumpAttack)) return jumpAttack;
+        if (movement.IsSprinting && IsSet(sprintAttack)) return sprintAttack;
+        if (movement.IsCrouching && IsSet(crouchAttack)) return crouchAttack;
+        return null;
+    }
+
     // Starts an attack if the cooldown is over and there's enough stamina for it.
-    // Heavy and jump attacks restart the light chain; a light attack moves it on.
+    // Heavy and situation attacks restart the light chain; a light attack moves it on.
     private void StartAttack(HandAttack attack, bool restartsChain)
     {
         if (Time.time < nextAttackTime) return;

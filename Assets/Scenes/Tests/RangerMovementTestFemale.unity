@@ -10683,6 +10683,18 @@ MonoBehaviour:
     hitDelay: 0.5366667
     damageMultiplier: 1.5
     staminaCost: 15
+  sprintAttack:
+    name: Sword_Dash
+    duration: 1.3316667
+    hitDelay: 0.54833335
+    damageMultiplier: 1.25
+    staminaCost: 15
+  crouchAttack:
+    name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
   heavyHoldTime: 0.3
   comboWindow: 0.6
 --- !u!114 &2005957540
