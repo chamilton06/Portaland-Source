@@ -15,6 +15,16 @@ public static class PrepareCombatAnimations
     private const string MaskPath = "Assets/Animations/Player/UpperBody.mask";
     private const string AttackClipName = "Sword_Regular_A";
     private const string LayerName = "Combat";
+
+    // Clip, how far into it the blade connects, damage multiplier and stamina cost.
+    // Light attacks chain in order when tapping; the heavy is a slow, strong single hit.
+    private static readonly (string clip, float hitPoint, float damage, float stamina)[] LightAttacks =
+    {
+        ("Sword_Regular_A", 0.42f, 1f, 10f),
+        ("Sword_Regular_B", 0.42f, 1f, 10f),
+    };
+    private static readonly (string clip, float hitPoint, float damage, float stamina) HeavyAttack =
+        ("Sword_Regular_C", 0.4f, 2f, 25f);
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -33,9 +43,12 @@ public static class PrepareCombatAnimations
             AnimationClip attack = FindClip(AttackClipName);
             AvatarMask mask = GetOrCreateUpperBodyMask();
             AddCombatLayer(attack, mask);
+            AnimationClip[] lightClips = LightAttacks.Select(hit => FindClip(hit.clip)).ToArray();
+            AnimationClip heavyClip = FindClip(HeavyAttack.clip);
+            AddAttackStates(lightClips.Append(heavyClip).ToArray());
             AssetDatabase.SaveAssets();
-            AddToTestScenes(attack);
-            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play and left click to attack.");
+            AddToTestScenes(attack, lightClips, heavyClip);
+            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks and hold it for a heavy attack.");
         }
         catch (Exception error)
         {
@@ -140,7 +153,43 @@ public static class PrepareCombatAnimations
         EditorUtility.SetDirty(controller);
     }
 
-    private static void AddToTestScenes(AnimationClip attack)
+    // One Combat layer state per attack clip, named after the clip, which blends back to Empty.
+    private static void AddAttackStates(AnimationClip[] clips)
+    {
+        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        AnimatorStateMachine machine = controller.layers.First(layer => layer.name == LayerName).stateMachine;
+        AnimatorState empty = machine.states.Select(child => child.state).First(state => state.name == "Empty");
+
+        foreach (AnimationClip clip in clips)
+        {
+            string stateName = ShortName(clip);
+            if (machine.states.Any(child => child.state.name == stateName)) continue;
+
+            AnimatorState state = machine.AddState(stateName);
+            state.motion = clip;
+            AnimatorStateTransition finish = state.AddTransition(empty);
+            finish.hasExitTime = true;
+            finish.exitTime = 0.85f;
+            finish.duration = 0.15f;
+        }
+        EditorUtility.SetDirty(controller);
+    }
+
+    private static string ShortName(AnimationClip clip) => clip.name.Split('|').Last();
+
+    private static HandAttack MakeAttack(AnimationClip clip, (string clip, float hitPoint, float damage, float stamina) settings)
+    {
+        return new HandAttack
+        {
+            name = ShortName(clip),
+            duration = clip.length * 0.85f,
+            hitDelay = clip.length * settings.hitPoint,
+            damageMultiplier = settings.damage,
+            staminaCost = settings.stamina,
+        };
+    }
+
+    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip)
     {
         foreach (string path in ScenePaths)
         {
@@ -162,6 +211,12 @@ public static class PrepareCombatAnimations
 
             // Attacks last about as long as the animation, until it starts blending back out.
             combat.handAttackDuration = attack.length * 0.85f;
+
+            // Filled once; after that, tweaks made in the Inspector are kept.
+            if (combat.lightAttacks == null || combat.lightAttacks.Length == 0)
+                combat.lightAttacks = lightClips.Select((clip, i) => MakeAttack(clip, LightAttacks[i])).ToArray();
+            if (combat.heavyAttack == null || string.IsNullOrEmpty(combat.heavyAttack.name))
+                combat.heavyAttack = MakeAttack(heavyClip, HeavyAttack);
 
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);

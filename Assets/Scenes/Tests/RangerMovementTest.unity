@@ -10659,6 +10659,26 @@ MonoBehaviour:
     gripPoint: 0.12
     rotationOffset: {x: 0, y: 0, z: 0}
   handAttackDuration: 0.36833337
+  handHitDelay: 0.18
+  lightAttacks:
+  - name: Sword_Regular_A
+    duration: 0.36833337
+    hitDelay: 0.18200001
+    damageMultiplier: 1
+    staminaCost: 10
+  - name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+  heavyAttack:
+    name: Sword_Regular_C
+    duration: 1.7
+    hitDelay: 0.8
+    damageMultiplier: 2
+    staminaCost: 25
+  heavyHoldTime: 0.3
+  comboWindow: 0.6
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10850,6 +10870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 304127076}
+  blendIn: 0.05
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

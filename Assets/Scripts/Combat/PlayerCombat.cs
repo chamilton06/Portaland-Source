@@ -22,6 +22,14 @@ public class PlayerCombat : MonoBehaviour
     [Min(0.05f)] public float handAttackDuration = 0.6f;
     [Tooltip("Seconds into the attack animation before the blade connects and damage lands.")]
     [Min(0f)] public float handHitDelay = 0.18f;
+    [Tooltip("Tap left click: quick attacks that chain in order if you keep tapping. Leave empty to use the single attack above.")]
+    public HandAttack[] lightAttacks;
+    [Tooltip("Hold left click: a slow, strong attack. Leave its Name empty to have no heavy attack.")]
+    public HandAttack heavyAttack;
+    [Tooltip("Seconds left click must be held for a heavy attack instead of a light one.")]
+    [Min(0.05f)] public float heavyHoldTime = 0.3f;
+    [Tooltip("Seconds after a light attack ends to tap again and carry on the chain.")]
+    [Min(0f)] public float comboWindow = 0.6f;
 
     // ------------------------------------------------------------------------
     // State
@@ -36,8 +44,14 @@ public class PlayerCombat : MonoBehaviour
     private PlayerStats playerStats;
     private PlayerDefence defence;
     private PlayerMovement movement;
+    private int comboStep;
+    private float comboEndTime = -100f;
+    private bool holdingAttack;
+    private float holdStartTime;
 
     public bool IsAttacking => swinging;
+    // The hand attack being played, or null for the single default attack.
+    public HandAttack CurrentAttack { get; private set; }
 
     private void Awake()
     {
@@ -63,6 +77,8 @@ public class PlayerCombat : MonoBehaviour
 
         swingRoutine = null;
         swinging = false;
+        comboStep = 0;
+        holdingAttack = false;
         guardPoseWeight = 0f;
         if (weaponPivot != null && !weaponFollowsHand)
         {
@@ -130,20 +146,70 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        if (defence != null && defence.IsBlocking) return;
-
-        if (Input.GetMouseButtonDown(0) && Time.time >= nextAttackTime)
+        if (defence != null && defence.IsBlocking)
         {
-            nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
-            
-            swingRoutine = StartCoroutine(SwingWeapon());
-
-            // With the hand animation, damage waits for the blade (see SwingWeapon).
-            if (!weaponFollowsHand) DealDamage();
+            holdingAttack = false;
+            return;
         }
+
+        // In the hand with a heavy attack set: tap left click for light, hold it for heavy.
+        if (weaponFollowsHand && HasHeavyAttack)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                holdingAttack = true;
+                holdStartTime = Time.time;
+            }
+            if (!holdingAttack) return;
+
+            if (Time.time - holdStartTime >= heavyHoldTime)
+            {
+                holdingAttack = false;
+                StartAttack(heavyAttack, true);
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                holdingAttack = false;
+                StartAttack(NextLightAttack(), false);
+            }
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+            StartAttack(weaponFollowsHand ? NextLightAttack() : null, false);
     }
 
-    private void DealDamage()
+    private bool HasHeavyAttack => heavyAttack != null && !string.IsNullOrEmpty(heavyAttack.name);
+
+    // Starts an attack if the cooldown is over and there's enough stamina for it.
+    private void StartAttack(HandAttack attack, bool heavy)
+    {
+        if (Time.time < nextAttackTime) return;
+        float staminaCost = attack != null ? attack.staminaCost : 0f;
+        if (staminaCost > 0f && playerStats != null && !playerStats.TryUseStamina(staminaCost)) return;
+
+        nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
+        CurrentAttack = attack;
+
+        // A heavy attack restarts the light chain; a light one moves it on.
+        if (heavy) comboStep = 0;
+        else if (lightAttacks != null && lightAttacks.Length > 0) comboStep = (comboStep + 1) % lightAttacks.Length;
+
+        swingRoutine = StartCoroutine(SwingWeapon());
+
+        // With the hand animation, damage waits for the blade (see SwingWeapon).
+        if (!weaponFollowsHand) DealDamage(1f);
+    }
+
+    // The next light attack in the chain, or the first if the last attack ended a while ago.
+    private HandAttack NextLightAttack()
+    {
+        if (lightAttacks == null || lightAttacks.Length == 0) return null;
+        if (Time.time > comboEndTime + comboWindow) comboStep = 0;
+        return lightAttacks[comboStep % lightAttacks.Length];
+    }
+
+    private void DealDamage(float multiplier)
     {
         if (equippedWeapon == null || equippedWeapon.stats == null) return;
 
@@ -155,7 +221,7 @@ public class PlayerCombat : MonoBehaviour
 
             if (targetHealth != null)
             {
-                targetHealth.TakeDamage(equippedWeapon.stats.damage);
+                targetHealth.TakeDamage(Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier));
             }
         }
     }
@@ -195,10 +261,13 @@ public class PlayerCombat : MonoBehaviour
         // Damage lands when the blade connects; a roll or cancel before then means no hit.
         if (weaponFollowsHand)
         {
-            float hitDelay = Mathf.Min(handHitDelay, handAttackDuration);
+            HandAttack attack = CurrentAttack;
+            float attackDuration = attack != null ? attack.duration : handAttackDuration;
+            float hitDelay = Mathf.Min(attack != null ? attack.hitDelay : handHitDelay, attackDuration);
             yield return new WaitForSeconds(hitDelay);
-            DealDamage();
-            yield return new WaitForSeconds(handAttackDuration - hitDelay);
+            DealDamage(attack != null ? attack.damageMultiplier : 1f);
+            yield return new WaitForSeconds(attackDuration - hitDelay);
+            comboEndTime = Time.time;
             swinging = false;
             swingRoutine = null;
             yield break;
