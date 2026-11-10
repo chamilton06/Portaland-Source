@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 // gold menu text that glows when hovered or picked with arrow keys
 [RequireComponent(typeof(Button))]
-public class MenuButtonGlow : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IDeselectHandler
+public class MenuButtonGlow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Image glow;                                          // soft gold strip behind the text
     public TextMeshProUGUI label;
@@ -26,14 +26,9 @@ public class MenuButtonGlow : MonoBehaviour, IPointerEnterHandler, ISelectHandle
         SetLit(0f);
     }
 
-    // hovering selects it, so only one button is lit at a time
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (button.interactable) button.Select();
-    }
-
-    public void OnSelect(BaseEventData eventData) { target = 1f; }
-    public void OnDeselect(BaseEventData eventData) { target = 0f; }
+    // lit only while the mouse is on it
+    public void OnPointerEnter(PointerEventData eventData) { target = 1f; }
+    public void OnPointerExit(PointerEventData eventData) { target = 0f; }
 
     void Update()
     {
