@@ -18,6 +18,8 @@ public class PlayerCombat : MonoBehaviour
     public bool weaponFollowsHand = false;
     [Tooltip("Models to hold instead of a weapon's Weapon Prefab. Leave empty to use the normal prefabs.")]
     public HeldWeaponModel[] heldWeaponModels;
+    [Tooltip("How long an attack lasts when the weapon is in the hand. Roughly match the attack animation.")]
+    [Min(0.05f)] public float handAttackDuration = 0.6f;
 
     // ------------------------------------------------------------------------
     // State
@@ -182,7 +184,7 @@ public class PlayerCombat : MonoBehaviour
         // In the hand, the swing keeps its timing but leaves the pose to the animation.
         if (weaponFollowsHand)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(handAttackDuration);
             swinging = false;
             swingRoutine = null;
             yield break;

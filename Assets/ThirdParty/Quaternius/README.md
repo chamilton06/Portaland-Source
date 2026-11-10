@@ -16,6 +16,7 @@ In the Project window, open **Assets → ThirdParty → Quaternius**.
 | `FantasyOutfits/Models/Modular Parts` | Individual clothing pieces |
 | `FantasyOutfits/Textures` | Clothing and body textures, kept in the supplier's layout |
 | `AnimationLibrary/Models` | `UAL1_Standard.fbx`, the in-place animation file |
+| `AnimationLibrary2/Models` | `UAL2_Standard.fbx`, in-place combat animations (sword attacks, block, shield, hits), added 9 November 2026 |
 | `MedievalWeapons/Models` | 24 weapon and shield FBX files, added 9 November 2026 (see its README) |
 
 The root-motion `_RM` animation file, glTF/Unreal exports and original ZIPs weren't copied.

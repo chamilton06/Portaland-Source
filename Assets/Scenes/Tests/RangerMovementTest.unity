@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028292, g: 0.22571306, b: 0.30692118, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10544,6 +10544,7 @@ GameObject:
   - component: {fileID: 2005957536}
   - component: {fileID: 2005957546}
   - component: {fileID: 2005957547}
+  - component: {fileID: 2005957548}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10657,6 +10658,7 @@ MonoBehaviour:
     length: 0.9
     gripPoint: 0.12
     rotationOffset: {x: 0, y: 0, z: 0}
+  handAttackDuration: 0.36833337
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10835,6 +10837,19 @@ MonoBehaviour:
   characterAnimator: {fileID: 304127076}
   gripPosition: {x: 0, y: 0.08, z: 0.03}
   gripRotation: {x: 90, y: 0, z: 0}
+--- !u!114 &2005957548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8265b122e56c4f45b51dfc487768d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 304127076}
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0
