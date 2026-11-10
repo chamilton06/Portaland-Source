@@ -331,6 +331,10 @@ public static class PrepareCombatAnimations
                 EditorUtility.SetDirty(dummy);
             }
 
+            // Lock-on, in the test scenes only for now.
+            if (combat.GetComponent<PlayerLockOn>() == null)
+                combat.gameObject.AddComponent<PlayerLockOn>();
+
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);
             EditorSceneManager.MarkSceneDirty(scene);

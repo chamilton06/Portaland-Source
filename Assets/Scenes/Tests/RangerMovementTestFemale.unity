@@ -10547,6 +10547,7 @@ GameObject:
   - component: {fileID: 2005957546}
   - component: {fileID: 2005957547}
   - component: {fileID: 2005957548}
+  - component: {fileID: 2005957549}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10879,8 +10880,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 238919483}
+  autoGrip: 1
+  autoGripNudge: {x: 0, y: 0, z: 0}
+  autoGripTilt: {x: 0, y: 0, z: 0}
   gripPosition: {x: 0, y: 0.08, z: 0.03}
   gripRotation: {x: 90, y: 0, z: 0}
+  showGripMarker: 0
 --- !u!114 &2005957548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10899,6 +10904,26 @@ MonoBehaviour:
   guardRaiseTime: 0.12
   parryAnimationTime: 0.5
   hitAnimationTime: 0.3
+--- !u!114 &2005957549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75df9752a32464394aca040f437c7697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockButton: 2
+  lockKey: 99
+  lockRange: 15
+  breakRange: 20
+  turnSpeed: 720
+  switchFlick: 3
+  switchCooldown: 0.35
+  showMarker: 1
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0
