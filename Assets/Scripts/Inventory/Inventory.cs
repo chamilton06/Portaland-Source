@@ -4,6 +4,7 @@ using NUnit.Framework.Internal.Commands;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Inventory : MonoBehaviour
     public PlayerCombat playerCombat;
     public ItemInfoPanel infoPanel;             // stats panel on the right
     public JournalUI journal;
+    public event System.Action<Item, int> ItemAdded;   // quests listen
 
     public Item testItem;
     public Item testItem2;
@@ -22,8 +24,15 @@ public class Inventory : MonoBehaviour
     private List<Slot> allSlots = new List<Slot>();
     private int currentSelectedHotSlot;
 
-    bool moveMode;
-    Slot movingSlot;
+    private Slot infoSlot;   // slot the info panel is showing
+    private int gridWidth;
+    private int gridHeight;
+    private Slot[] coveredBy;   // which big item is sitting on each cell
+    public List<Slot> InventorySlots => inventorySlots;   // for drag
+    public int GridWidth => gridWidth;
+
+    //bool moveMode;
+    //Slot movingSlot;
 
     private void Awake(){
         if (playerCombat == null)
@@ -33,10 +42,15 @@ public class Inventory : MonoBehaviour
         inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<Slot>(true));
         hotbarSlots.AddRange(hotbarObject.GetComponentsInChildren<HotbarSlot>(true));
         allSlots.AddRange(inventorySlots);
+        // read grid size so can add slots in the editor later
+        GridLayoutGroup grid = inventorySlotParent.GetComponent<GridLayoutGroup>();
+        gridWidth = grid != null ? grid.constraintCount : 6;
+        gridHeight = Mathf.CeilToInt(inventorySlots.Count / (float)gridWidth);
+        coveredBy = new Slot[inventorySlots.Count];
         currentSelectedHotSlot = 0;
         playerCombat.inventoryOpen = inventorySlotParent.activeSelf;
-        moveMode = false;
-        movingSlot = null;
+        //moveMode = false;
+        //movingSlot = null;
     }
 
     // start closed (in Start so slots wake up first)
@@ -94,24 +108,24 @@ public class Inventory : MonoBehaviour
             }
         } else
         {
-            Slot hoveredSlot = GetHoveredInventorySlot();
+            //Slot hoveredSlot = GetHoveredInventorySlot();
             if (Input.GetKeyDown(KeyCode.Alpha1)){  // set item in hotbar slot 1
-                if (hoveredSlot != null) hotbarSlots[0].SetItem(hoveredSlot);
+                AssignHotbar(0);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2)){  // set item in hotbar slot 2
-                if (hoveredSlot != null) hotbarSlots[1].SetItem(hoveredSlot);
+                AssignHotbar(1);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)){  // set item in hotbar slot 3
-                if (hoveredSlot != null) hotbarSlots[2].SetItem(hoveredSlot);
+                AssignHotbar(2);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)){  // set item in hotbar slot 4
-                if (hoveredSlot != null) hotbarSlots[3].SetItem(hoveredSlot);
+                AssignHotbar(3);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)){  // set item in hotbar slot 5
-                if (hoveredSlot != null) hotbarSlots[4].SetItem(hoveredSlot);
+                AssignHotbar(4);
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)){  // set item in hotbar slot 6
-                if (hoveredSlot != null) hotbarSlots[5].SetItem(hoveredSlot);
+                AssignHotbar(5);
             }
         }
     }
@@ -131,6 +145,24 @@ public class Inventory : MonoBehaviour
             playerCombat.SetEquippedWeapon(null);
         }
     }
+
+    // put hovered item on a hotbar key, one key per item
+    private void AssignHotbar(int index)
+    {
+        Slot hoveredSlot = GetHoveredInventorySlot();
+        if (hoveredSlot == null || !hoveredSlot.HasItem()) return;
+
+        foreach (HotbarSlot hotSlot in hotbarSlots)
+        {
+            if (hotSlot.slotRef == hoveredSlot) hotSlot.ClearRef();
+        }
+        hotbarSlots[index].SetItem(hoveredSlot);
+        if (hotbarSlots[currentSelectedHotSlot].isSelected)
+        {
+            ChangeCurrentSelectedHotbarSlot(currentSelectedHotSlot);   // re-equip in case the active key changed
+        }
+    }
+
     public bool IsOpen()
     {
         return inventorySlotParent.activeSelf;
@@ -141,6 +173,7 @@ public class Inventory : MonoBehaviour
         if (open && journal != null && journal.IsOpen())
         {
             journal.Close();
+            infoSlot = null;
         }
 
         inventorySlotParent.SetActive(open);
@@ -158,6 +191,7 @@ public class Inventory : MonoBehaviour
     }
 
     public void AddItem(Item item, int amount = 1){
+        ItemAdded?.Invoke(item, amount);
         if (journal != null)
         {
             journal.Discover(item);  // add to journal
@@ -170,7 +204,11 @@ public class Inventory : MonoBehaviour
                 int toAdd = Mathf.Min(space, remaining);
                 slot.SetItem(item, slot.GetAmount() + toAdd);
                 remaining -= toAdd;
-                if (remaining <= 0) return;
+                if (remaining <= 0)
+                {
+                    RetargetHotbar(null, null);   // update hotbar numbers
+                    return;
+                }
             }
         }
 
@@ -178,8 +216,13 @@ public class Inventory : MonoBehaviour
             if (!slot.HasItem() && CheckValidSlotForItem(slot, item)){
                 int toAdd = Mathf.Min(item.maxStackSize, remaining);
                 slot.SetItem(item, toAdd);
+                RefreshBlocked();
                 remaining -= toAdd;
-                if (remaining <= 0) return;
+                if (remaining <= 0)
+                {
+                    RetargetHotbar(null, null);   // update hotbar numbers
+                    return;
+                }
             }
         }
 
@@ -188,45 +231,69 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    // move or stack an item, false if it doesnt fit
+    public bool TryMoveItem(Slot from, Slot to)
+    {
+        if (from == null || to == null || from == to || !from.HasItem())
+        {
+            return false;
+        }
+
+        Item item = from.GetItem();
+        int amount = from.GetAmount();
+
+        if (to.HasItem() && to.GetItem() == item && to.GetAmount() < item.maxStackSize)
+        {
+            int toAdd = Mathf.Min(item.maxStackSize - to.GetAmount(), amount);
+            to.AddAmount(toAdd);
+            from.RemoveAmount(toAdd);   // clears it if everything fit, no more dupe
+        }
+        else if (CheckValidSlotForItem(to, item, from))
+        {
+            from.ClearSlot();
+            to.SetItem(item, amount);
+        }
+        else
+        {
+            return false;
+        }
+
+        RefreshBlocked();
+        RetargetHotbar(from, to);
+        return true;
+    }
+
+    // covered cell -> the big item sitting on it
+    public Slot GetOwner(Slot slot)
+    {
+        int index = inventorySlots.IndexOf(slot);
+        return index >= 0 && coveredBy[index] != null ? coveredBy[index] : slot;
+    }
+
+    // hotbar follows the item when it moves + updates stack numbers
+    private void RetargetHotbar(Slot from, Slot to)
+    {
+        foreach (HotbarSlot hotSlot in hotbarSlots)
+        {
+            if (hotSlot.slotRef == null) continue;
+            hotSlot.SetItem(hotSlot.slotRef == from && !from.HasItem() ? to : hotSlot.slotRef);
+        }
+    }
+
     private void OnSlotClicked(Slot slot, PointerEventData.InputButton button)
     {
-        if (infoPanel == null || !IsOpen()) return;
+        if (infoPanel == null || !IsOpen() || button != PointerEventData.InputButton.Left) return;
 
-        if (slot.HasItem() && button == PointerEventData.InputButton.Right)
+        // click same item again to close
+        if (slot.HasItem() && slot != infoSlot || !infoPanel.IsShowing)
         {
             infoPanel.Show(slot.GetItem());
-        } 
+            infoSlot = slot;
+        }
         else
         {
             infoPanel.Hide();
-        }
-
-        if (slot.HasItem() && button == PointerEventData.InputButton.Left && !moveMode)
-        {
-            moveMode = true;
-            movingSlot = slot;
-        } 
-        else if (button == PointerEventData.InputButton.Left && moveMode && slot != movingSlot)
-        {
-            Item item = movingSlot.GetItem();
-            int remaining = movingSlot.GetAmount();
-            if (slot.HasItem() && slot.GetItem() == item && slot.GetAmount() < item.maxStackSize){
-                int space = item.maxStackSize - slot.GetAmount();
-                int toAdd = Mathf.Min(space, remaining);
-                slot.SetItem(item, slot.GetAmount() + toAdd);
-                remaining -= toAdd;
-                if (remaining > 0)
-                {
-                    movingSlot.RemoveAmount(movingSlot.GetAmount() - remaining);
-                }
-            }
-            else if (!slot.HasItem() && CheckValidSlotForItem(slot, item))
-            {
-                int toAdd = Mathf.Min(item.maxStackSize, remaining);
-                slot.SetItem(item, toAdd);
-                movingSlot.ClearSlot();
-            }
-            moveMode = false;
+            infoSlot = null;
         }
     }
 
@@ -256,18 +323,42 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
-    private bool CheckValidSlotForItem(Slot slot, Item item)
+
+    // hide cells a big item is sitting on, works off grid index so closed inventory is fine
+    
+    private void RefreshBlocked()
     {
-        // Check if the slot is blocked
-        if (slot.IsBlocked)
+        System.Array.Clear(coveredBy, 0, coveredBy.Length);
+        foreach (Slot slot in inventorySlots)
         {
-            return false;
+            slot.SetBlocked(false);
         }
 
-        Vector2Int itemSize = item.inventorySize;
-        const int inventoryWidth = 6;
-        const int inventoryHeight = 4;
+        for (int i = 0; i < inventorySlots.Count; i++)
+        {
+            Item item = inventorySlots[i].GetItem();
+            if (item == null) continue;
 
+            int startX = i % gridWidth;
+            int startY = i / gridWidth;
+            for (int y = startY; y < startY + item.inventorySize.y; y++)
+            {
+                for (int x = startX; x < startX + item.inventorySize.x && x < gridWidth; x++)
+                {
+                    int index = y * gridWidth + x;
+                    if (index != i && index < inventorySlots.Count)
+                    {
+                        coveredBy[index] = inventorySlots[i];
+                        inventorySlots[index].SetBlocked(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private bool CheckValidSlotForItem(Slot slot, Item item, Slot ignore = null)
+    {
+        Vector2Int itemSize = item.inventorySize;
         if (itemSize.x <= 0 || itemSize.y <= 0)
         {
             return false;
@@ -279,34 +370,36 @@ public class Inventory : MonoBehaviour
             return false;
         }
 
-        int startX = startIndex % inventoryWidth;
-        int startY = startIndex / inventoryWidth;
-        if (startX + itemSize.x > inventoryWidth || startY + itemSize.y > inventoryHeight)
+        int startX = startIndex % gridWidth;
+        int startY = startIndex / gridWidth;
+        if (startX + itemSize.x > gridWidth || startY + itemSize.y > gridHeight)
         {
             return false;
         }
 
-        int requiredSlots = itemSize.x * itemSize.y;
-        int overlappingSlots = 0;
         for (int y = startY; y < startY + itemSize.y; y++)
         {
             for (int x = startX; x < startX + itemSize.x; x++)
             {
-                int index = y * inventoryWidth + x;
-                if (index >= inventorySlots.Count || inventorySlots[index].IsBlocked || inventorySlots[index].HasItem())
+                int index = y * gridWidth + x;
+                if (index >= inventorySlots.Count || !IsCellFree(index, ignore))
                 {
                     return false;
                 }
-
-                overlappingSlots++;
             }
         }
 
-        if (overlappingSlots != requiredSlots)
-        {
-            return false;
-        }
-
         return true;
+    }
+
+    // empty and not under another item (ignore = the item being moved)
+    private bool IsCellFree(int index, Slot ignore)
+    {
+        Slot cell = inventorySlots[index];
+        if (ignore != null && (cell == ignore || coveredBy[index] == ignore))
+        {
+            return true;
+        }
+        return !cell.HasItem() && coveredBy[index] == null;
     }
 }
