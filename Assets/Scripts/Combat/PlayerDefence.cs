@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStats), typeof(PlayerCombat))]
 public class PlayerDefence : MonoBehaviour
 {
-    public enum HitResult { Ignored, Damaged, Blocked, Parried, Dodged, GuardBroken }
+    // Poised: the hit did damage, but the attack's poise kept the player from flinching.
+    public enum HitResult { Ignored, Damaged, Blocked, Parried, Dodged, GuardBroken, Poised }
 
     [Min(0f)] public float parryWindow = 0.2f;
     [Range(1f, 180f)] public float blockAngle = 120f;
@@ -128,6 +129,8 @@ public class PlayerDefence : MonoBehaviour
         }
 
         stats.TakeDamage(damage);
+        if (combat != null && combat.AbsorbHit(damage))
+            return HitResult.Poised;
         if (hitStunDuration > 0f)
         {
             if (combat != null) combat.CancelAttack();

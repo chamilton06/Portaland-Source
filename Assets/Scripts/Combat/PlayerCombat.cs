@@ -56,6 +56,7 @@ public class PlayerCombat : MonoBehaviour
     private float comboEndTime = -100f;
     private bool holdingAttack;
     private float holdStartTime;
+    private float poiseDamageTaken;
 
     public bool IsAttacking => swinging;
     // The hand attack being played, or null for the single default attack.
@@ -98,6 +99,15 @@ public class PlayerCombat : MonoBehaviour
     private void OnDisable()
     {
         CancelAttack();
+    }
+
+    // Called by PlayerDefence when a hit lands. True if the current attack's poise soaks it up,
+    // so the attack carries on instead of flinching. Poise breaks once enough damage adds up.
+    public bool AbsorbHit(float damage)
+    {
+        if (!swinging || CurrentAttack == null || CurrentAttack.poise <= 0f) return false;
+        poiseDamageTaken += damage;
+        return poiseDamageTaken < CurrentAttack.poise;
     }
 
     public void SetEquippedWeapon(Weapon weapon)
@@ -218,6 +228,7 @@ public class PlayerCombat : MonoBehaviour
 
         nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
         CurrentAttack = attack;
+        poiseDamageTaken = 0f;
 
         if (restartsChain) comboStep = 0;
         else if (lightAttacks != null && lightAttacks.Length > 0) comboStep = (comboStep + 1) % lightAttacks.Length;

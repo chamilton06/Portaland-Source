@@ -35,6 +35,10 @@ public static class PrepareCombatAnimations
     private static readonly (string clip, float hitPoint, float damage, float stamina) CrouchAttack =
         ("Sword_Regular_B", 0.42f, 1f, 10f);
 
+    // Damage each attack can take without flinching (light, sprint and crouch attacks have none).
+    private const float HeavyPoise = 25f;
+    private const float JumpPoise = 15f;
+
     // Held guard, quick parry and the stagger when stamina runs out while blocking.
     private const string BlockClipName = "Sword_Block";
     private const string GuardBreakClipName = "Idle_Shield_Break";
@@ -307,6 +311,11 @@ public static class PrepareCombatAnimations
                 combat.sprintAttack = MakeAttack(sprintClip, SprintAttack);
             if (combat.crouchAttack == null || string.IsNullOrEmpty(combat.crouchAttack.name))
                 combat.crouchAttack = MakeAttack(crouchClip, CrouchAttack);
+
+            // Poise: the heavy carries on through two dummy hits, the jump attack through one.
+            // Only set while 0, so values tuned in the Inspector are kept.
+            if (combat.heavyAttack.poise <= 0f) combat.heavyAttack.poise = HeavyPoise;
+            if (combat.jumpAttack.poise <= 0f) combat.jumpAttack.poise = JumpPoise;
 
             // Blocking costs stamina in the test scenes only; Prototype keeps the unlimited guard.
             PlayerDefence defence = combat.GetComponent<PlayerDefence>();

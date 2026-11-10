@@ -15,4 +15,7 @@ public class HandAttack
     [Min(0f)] public float damageMultiplier = 1f;
     [Tooltip("Stamina spent when the attack starts. Not enough stamina means no attack.")]
     [Min(0f)] public float staminaCost = 10f;
+    [Tooltip("Poise: damage the player can take during this attack without flinching, so a heavy swing " +
+             "carries on through light hits. 0 = any hit interrupts it (needs Hit Stun on PlayerDefence).")]
+    [Min(0f)] public float poise = 0f;
 }
