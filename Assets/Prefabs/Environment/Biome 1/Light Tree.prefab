@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1781159822730954, guid: 796a8142bd2966640821b474e7fd3ed6, type: 3}
       propertyPath: m_Name
-      value: Tree2 Variant
+      value: Light Tree
       objectReference: {fileID: 0}
     - target: {fileID: 4859187054875864, guid: 796a8142bd2966640821b474e7fd3ed6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50,6 +50,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4859187054875864, guid: 796a8142bd2966640821b474e7fd3ed6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23020497884420254, guid: 796a8142bd2966640821b474e7fd3ed6, type: 3}
+      propertyPath: m_SelectedEditorRenderState
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
