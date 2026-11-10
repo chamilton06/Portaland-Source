@@ -46,6 +46,7 @@ public static class PrepareCombatAnimations
     private const string DeathClipName = "Death01";
     private const string DeathLayerName = "Death";
     private const float TestHitStunDuration = 0.4f;
+    private const float TestStaggerDuration = 1.5f;
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -319,6 +320,15 @@ public static class PrepareCombatAnimations
             {
                 defence.hitStunDuration = TestHitStunDuration;
                 EditorUtility.SetDirty(defence);
+            }
+
+            // Parries stagger the test dummies so the player can riposte. Prototype's dummies don't.
+            foreach (DummyAttacker dummy in scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<DummyAttacker>(true)))
+            {
+                if (dummy.staggerDuration > 0f) continue;
+                dummy.staggerDuration = TestStaggerDuration;
+                EditorUtility.SetDirty(dummy);
             }
 
             EditorUtility.SetDirty(combat);

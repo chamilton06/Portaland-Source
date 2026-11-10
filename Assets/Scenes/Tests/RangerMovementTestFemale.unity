@@ -8966,6 +8966,8 @@ MonoBehaviour:
   windUpDuration: 0.6
   recoveryDuration: 1
   showAttackLabel: 1
+  staggerDuration: 1.5
+  parryPushback: 0.4
 --- !u!114 &1619024567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10700,6 +10702,7 @@ MonoBehaviour:
     staminaCost: 10
   heavyHoldTime: 0.3
   comboWindow: 0.6
+  riposteMultiplier: 3
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0

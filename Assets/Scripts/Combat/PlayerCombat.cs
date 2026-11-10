@@ -36,6 +36,8 @@ public class PlayerCombat : MonoBehaviour
     [Min(0.05f)] public float heavyHoldTime = 0.3f;
     [Tooltip("Seconds after a light attack ends to tap again and carry on the chain.")]
     [Min(0f)] public float comboWindow = 0.6f;
+    [Tooltip("Damage multiplier for a riposte: hitting an enemy that a parry has staggered.")]
+    [Min(1f)] public float riposteMultiplier = 3f;
 
     // ------------------------------------------------------------------------
     // State
@@ -246,6 +248,14 @@ public class PlayerCombat : MonoBehaviour
 
             if (targetHealth != null)
             {
+                // Hitting a parried, staggered enemy is a riposte: a critical hit that ends the opening.
+                IStaggerable staggerable = hit.collider.GetComponentInParent<IStaggerable>();
+                if (staggerable != null && staggerable.IsStaggered)
+                {
+                    multiplier *= riposteMultiplier;
+                    staggerable.EndStagger();
+                }
+
                 targetHealth.TakeDamage(Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier));
             }
         }

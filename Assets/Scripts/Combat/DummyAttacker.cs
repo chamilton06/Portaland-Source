@@ -3,7 +3,7 @@ using UnityEngine;
 // Stationary combat test opponent. Turns toward the player during preparation,
 // then locks its direction for the strike so movement can make it miss.
 [RequireComponent(typeof(Health))]
-public class DummyAttacker : MonoBehaviour
+public class DummyAttacker : MonoBehaviour, IStaggerable
 {
     public PlayerStats player;
     public Weapon weapon;
@@ -18,7 +18,13 @@ public class DummyAttacker : MonoBehaviour
     [Min(0.1f)] public float recoveryDuration = 1f;
     public bool showAttackLabel = true;
 
-    private enum AttackState { Idle, WindUp, Swing, Return, Recovery }
+    [Header("Parry stagger")]
+    [Tooltip("Seconds the dummy is knocked off balance after the player parries it. Hit it then for a riposte. 0 = parries don't stagger.")]
+    [Min(0f)] public float staggerDuration = 0f;
+    [Tooltip("Metres a parry pushes the dummy back.")]
+    [Min(0f)] public float parryPushback = 0.4f;
+
+    private enum AttackState { Idle, WindUp, Swing, Return, Recovery, Staggered }
     private AttackState state;
     private float stateEndsAt;
     private Health health;
@@ -28,6 +34,8 @@ public class DummyAttacker : MonoBehaviour
     private Quaternion raisedRotation;
     private Quaternion strikeRotation;
     private GameObject weaponInstance;
+
+    public bool IsStaggered => !dead && state == AttackState.Staggered;
 
     private void Awake()
     {
@@ -117,7 +125,11 @@ public class DummyAttacker : MonoBehaviour
                 stateEndsAt = Time.time + recoveryDuration;
             }
             else
+            {
+                // Recovery or a stagger has ended.
+                ResetPose();
                 state = AttackState.Idle;
+            }
         }
     }
 
@@ -158,7 +170,9 @@ public class DummyAttacker : MonoBehaviour
         PlayerDefence defence = player.GetComponent<PlayerDefence>();
         if (defence != null && defence.isActiveAndEnabled)
         {
-            Report("Strike: " + defence.ReceiveHit(damage, transform.position));
+            PlayerDefence.HitResult result = defence.ReceiveHit(damage, transform.position);
+            Report("Strike: " + result);
+            if (result == PlayerDefence.HitResult.Parried && staggerDuration > 0f) Stagger();
         }
         else
         {
@@ -166,6 +180,25 @@ public class DummyAttacker : MonoBehaviour
             player.TakeDamage(damage);
             Report("Strike: Damaged");
         }
+    }
+
+    // Knocked off balance by a parry: pushed back with its weapon thrown up, open to a riposte.
+    private void Stagger()
+    {
+        state = AttackState.Staggered;
+        stateEndsAt = Time.time + staggerDuration;
+        transform.position -= transform.forward * parryPushback;
+        if (weaponPivot != null) weaponPivot.localRotation = raisedRotation * Quaternion.Euler(-40f, 0f, 0f);
+        Report("Staggered");
+    }
+
+    public void EndStagger()
+    {
+        if (state != AttackState.Staggered) return;
+        ResetPose();
+        state = AttackState.Recovery;
+        stateEndsAt = Time.time + recoveryDuration;
+        Report("Riposted");
     }
 
     private void Report(string result)
@@ -203,7 +236,8 @@ public class DummyAttacker : MonoBehaviour
         Vector3 point = viewCamera.WorldToScreenPoint(transform.position + Vector3.up * 1.5f);
         if (point.z <= 0f) return;
         string label = state == AttackState.WindUp ? "Preparing attack..."
-            : state == AttackState.Swing || state == AttackState.Return ? "Striking!" : "";
+            : state == AttackState.Swing || state == AttackState.Return ? "Striking!"
+            : state == AttackState.Staggered ? "Staggered! Attack for a riposte" : "";
         if (!string.IsNullOrEmpty(label))
             GUI.Box(new Rect(point.x - 120f, Screen.height - point.y, 240f, 30f), label);
     }
