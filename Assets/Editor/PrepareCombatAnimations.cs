@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public static class PrepareCombatAnimations
 {
     private const string LibraryPath = "Assets/ThirdParty/Quaternius/AnimationLibrary2/Models/UAL2_Standard.fbx";
+    private const string FirstLibraryPath = "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx";
     private const string ControllerPath = "Assets/Animations/Player/RangerDirectional.controller";
     private const string MaskPath = "Assets/Animations/Player/UpperBody.mask";
     private const string AttackClipName = "Sword_Regular_A";
@@ -25,6 +26,9 @@ public static class PrepareCombatAnimations
     };
     private static readonly (string clip, float hitPoint, float damage, float stamina) HeavyAttack =
         ("Sword_Regular_C", 0.4f, 2f, 25f);
+    // Overhead swing from the first library, used when attacking in the air.
+    private static readonly (string clip, float hitPoint, float damage, float stamina) JumpAttack =
+        ("Sword_Attack", 0.35f, 1.5f, 15f);
     private static readonly string[] ScenePaths =
     {
         "Assets/Scenes/Tests/RangerMovementTest.unity",
@@ -45,10 +49,11 @@ public static class PrepareCombatAnimations
             AddCombatLayer(attack, mask);
             AnimationClip[] lightClips = LightAttacks.Select(hit => FindClip(hit.clip)).ToArray();
             AnimationClip heavyClip = FindClip(HeavyAttack.clip);
-            AddAttackStates(lightClips.Append(heavyClip).ToArray());
+            AnimationClip jumpClip = FindClip(JumpAttack.clip, FirstLibraryPath);
+            AddAttackStates(lightClips.Append(heavyClip).Append(jumpClip).ToArray());
             AssetDatabase.SaveAssets();
-            AddToTestScenes(attack, lightClips, heavyClip);
-            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks and hold it for a heavy attack.");
+            AddToTestScenes(attack, lightClips, heavyClip, jumpClip);
+            Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks, hold it for a heavy attack, or click in the air for a jump attack.");
         }
         catch (Exception error)
         {
@@ -86,11 +91,11 @@ public static class PrepareCombatAnimations
             throw new InvalidOperationException("UAL2 didn't import as a valid Humanoid. Check its Rig tab in the Inspector.");
     }
 
-    private static AnimationClip FindClip(string clipName)
+    private static AnimationClip FindClip(string clipName, string path = LibraryPath)
     {
-        AnimationClip clip = AssetDatabase.LoadAllAssetsAtPath(LibraryPath).OfType<AnimationClip>()
+        AnimationClip clip = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
             .FirstOrDefault(c => !c.name.StartsWith("__preview__") && (c.name == clipName || c.name.EndsWith("|" + clipName)));
-        if (clip == null) throw new InvalidOperationException("Couldn't find the " + clipName + " clip in " + LibraryPath);
+        if (clip == null) throw new InvalidOperationException("Couldn't find the " + clipName + " clip in " + path);
         return clip;
     }
 
@@ -189,7 +194,7 @@ public static class PrepareCombatAnimations
         };
     }
 
-    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip)
+    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip, AnimationClip jumpClip)
     {
         foreach (string path in ScenePaths)
         {
@@ -217,6 +222,8 @@ public static class PrepareCombatAnimations
                 combat.lightAttacks = lightClips.Select((clip, i) => MakeAttack(clip, LightAttacks[i])).ToArray();
             if (combat.heavyAttack == null || string.IsNullOrEmpty(combat.heavyAttack.name))
                 combat.heavyAttack = MakeAttack(heavyClip, HeavyAttack);
+            if (combat.jumpAttack == null || string.IsNullOrEmpty(combat.jumpAttack.name))
+                combat.jumpAttack = MakeAttack(jumpClip, JumpAttack);
 
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);

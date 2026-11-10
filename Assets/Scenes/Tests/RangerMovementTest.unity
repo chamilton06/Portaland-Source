@@ -10677,6 +10677,12 @@ MonoBehaviour:
     hitDelay: 0.8
     damageMultiplier: 2
     staminaCost: 25
+  jumpAttack:
+    name: Sword_Attack
+    duration: 1.3033334
+    hitDelay: 0.5366667
+    damageMultiplier: 1.5
+    staminaCost: 15
   heavyHoldTime: 0.3
   comboWindow: 0.6
 --- !u!114 &2005957540

@@ -26,6 +26,8 @@ public class PlayerCombat : MonoBehaviour
     public HandAttack[] lightAttacks;
     [Tooltip("Hold left click: a slow, strong attack. Leave its Name empty to have no heavy attack.")]
     public HandAttack heavyAttack;
+    [Tooltip("Left click in the air. Leave its Name empty to use the normal attacks in the air too.")]
+    public HandAttack jumpAttack;
     [Tooltip("Seconds left click must be held for a heavy attack instead of a light one.")]
     [Min(0.05f)] public float heavyHoldTime = 0.3f;
     [Tooltip("Seconds after a light attack ends to tap again and carry on the chain.")]
@@ -152,8 +154,16 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
+        // In the air, left click goes straight into the jump attack.
+        if (weaponFollowsHand && movement != null && !movement.IsGrounded && IsSet(jumpAttack))
+        {
+            holdingAttack = false;
+            if (Input.GetMouseButtonDown(0)) StartAttack(jumpAttack, true);
+            return;
+        }
+
         // In the hand with a heavy attack set: tap left click for light, hold it for heavy.
-        if (weaponFollowsHand && HasHeavyAttack)
+        if (weaponFollowsHand && IsSet(heavyAttack))
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -179,10 +189,11 @@ public class PlayerCombat : MonoBehaviour
             StartAttack(weaponFollowsHand ? NextLightAttack() : null, false);
     }
 
-    private bool HasHeavyAttack => heavyAttack != null && !string.IsNullOrEmpty(heavyAttack.name);
+    private static bool IsSet(HandAttack attack) => attack != null && !string.IsNullOrEmpty(attack.name);
 
     // Starts an attack if the cooldown is over and there's enough stamina for it.
-    private void StartAttack(HandAttack attack, bool heavy)
+    // Heavy and jump attacks restart the light chain; a light attack moves it on.
+    private void StartAttack(HandAttack attack, bool restartsChain)
     {
         if (Time.time < nextAttackTime) return;
         float staminaCost = attack != null ? attack.staminaCost : 0f;
@@ -191,8 +202,7 @@ public class PlayerCombat : MonoBehaviour
         nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
         CurrentAttack = attack;
 
-        // A heavy attack restarts the light chain; a light one moves it on.
-        if (heavy) comboStep = 0;
+        if (restartsChain) comboStep = 0;
         else if (lightAttacks != null && lightAttacks.Length > 0) comboStep = (comboStep + 1) % lightAttacks.Length;
 
         swingRoutine = StartCoroutine(SwingWeapon());
