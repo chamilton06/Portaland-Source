@@ -1746,7 +1746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4862fd0a6ce470241af003cff7a890e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScene: UI Update
+  gameScene: MERGED
   continueButton: {fileID: 214593614}
   quitButton: {fileID: 2109244291}
   settingsPanel: {fileID: 0}
