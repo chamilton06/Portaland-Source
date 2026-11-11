@@ -53,7 +53,13 @@ public class PlayerDeathHandler : MonoBehaviour
         Scene scene = gameObject.scene;
         if (!Application.CanStreamedLevelBeLoaded(scene.path))
         {
+#if UNITY_EDITOR
+            // In the editor, test scenes respawn without having to be added to Build Settings.
+            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
+                scene.path, new LoadSceneParameters(LoadSceneMode.Single));
+#else
             Debug.LogError("Add " + scene.path + " to enabled Scenes In Build for respawn.", this);
+#endif
             yield break;
         }
         SceneManager.LoadScene(scene.path);

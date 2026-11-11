@@ -8,11 +8,12 @@ To try it, open `Assets/Scenes/Tests/RangerMovementTest.unity` and press Play.
 
 ## What's in this folder
 
-- **Player:** `PlayerCombat`, `PlayerDefence`, `PlayerLockOn`, `PlayerDeathHandler`, `HandAttack`
-- **Enemies:** `EnemyMelee`, `EnemyAttack`, `EnemyHealthBars`, `DummyAttacker`
-- **Shared:** `Health`, `DamageFlash`, `HeldWeaponModel`, and the `IStaggerable`,
-  `IBackstabbable` and `IHitReceiver` interfaces
-- **Item Drops:** food and item pickups that enemies can drop when they die
+- **`Player/`:** everything that goes on the Player. `PlayerCombat`, `PlayerDefence`,
+  `PlayerLockOn`, `PlayerDeathHandler`, `EnemyHealthBars` and `HandAttack`
+- **`Enemies/`:** `EnemyMelee`, `EnemyAttack` and the training `DummyAttacker`
+- **This folder:** things both sides use. `Health`, `DamageFlash`, `HeldWeaponModel`, and the
+  `IStaggerable`, `IBackstabbable` and `IHitReceiver` interfaces
+- **`Item Drops/`:** food and item pickups that enemies can drop when they die
 
 ## Things worth knowing
 
@@ -27,6 +28,6 @@ The player and enemies flash red when they take damage. Blocked, parried and dod
 flash. Health regenerates while hunger is above 90, so if you want to see damage stick, press P
 to drop your hunger or set Health Regen to 0 on PlayerStats while you test.
 
-When the player dies, "You died" shows and the scene reloads after 3 seconds. The reload only
-works for scenes listed in **File → Build Settings**, so a test scene that isn't listed won't
-respawn you.
+When the player dies, "You died" shows and the scene reloads after 3 seconds. In the editor
+this works in any scene, so test scenes don't need to be in Build Settings. In a built game it
+only works for scenes listed in **File → Build Settings**, so any real level needs adding there.

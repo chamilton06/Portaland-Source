@@ -74,7 +74,8 @@ if you hit it between attacks but swings through your hits while attacking. It h
 
 ## Where the code is
 
-Combat scripts are in `Assets/Scripts/Combat`, the animation side is in `Assets/Scripts/Animation`.
+Combat scripts are in `Assets/Scripts/Combat`: player scripts in `Player/`, enemy scripts in
+`Enemies/`, and the shared ones at the top. The animation side is in `Assets/Scripts/Animation`.
 
 | Script | What it does |
 | --- | --- |
