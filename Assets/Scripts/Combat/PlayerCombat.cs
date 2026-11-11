@@ -261,13 +261,19 @@ public class PlayerCombat : MonoBehaviour
             {
                 // Hitting a parried, staggered enemy is a riposte: a critical hit that ends the opening.
                 IStaggerable staggerable = hit.collider.GetComponentInParent<IStaggerable>();
-                if (staggerable != null && staggerable.IsStaggered)
+                bool riposte = staggerable != null && staggerable.IsStaggered;
+                if (riposte)
                 {
                     multiplier *= riposteMultiplier;
                     staggerable.EndStagger();
                 }
 
-                targetHealth.TakeDamage(Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier));
+                int damage = Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier);
+                targetHealth.TakeDamage(damage);
+
+                // Lets enemies flinch or lose poise. A riposte already has its own reaction.
+                IHitReceiver receiver = hit.collider.GetComponentInParent<IHitReceiver>();
+                if (!riposte && receiver != null) receiver.OnHit(damage);
             }
         }
     }

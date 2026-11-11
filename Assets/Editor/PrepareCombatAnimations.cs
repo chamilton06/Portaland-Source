@@ -80,7 +80,8 @@ public static class PrepareCombatAnimations
             AddGuardStates(FindClip(BlockClipName));
             AddDeathLayer(FindClip(DeathClipName, FirstLibraryPath));
             AssetDatabase.SaveAssets();
-            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip);
+            GameObject enemy = GetOrCreateDarkRanger(lightClips[0], lightClips[1], jumpClip, heavyClip);
+            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip, enemy);
             Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
         }
         catch (Exception error)
@@ -277,7 +278,7 @@ public static class PrepareCombatAnimations
     }
 
     private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip,
-        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip)
+        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip, GameObject enemyPrefab)
     {
         foreach (string path in ScenePaths)
         {
@@ -344,11 +345,111 @@ public static class PrepareCombatAnimations
             if (combat.GetComponent<PlayerLockOn>() == null)
                 combat.gameObject.AddComponent<PlayerLockOn>();
 
+            // One Dark Ranger a little way in front of the player, if the scene has no enemy yet.
+            bool hasEnemy = scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EnemyMelee>(true) != null);
+            if (!hasEnemy)
+            {
+                GameObject enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemyPrefab, scene);
+                Transform player = combat.transform;
+                enemy.transform.position = player.position + player.forward * EnemyStartDistance;
+                enemy.transform.rotation = Quaternion.LookRotation(-player.forward, Vector3.up);
+                EnemyMelee melee = enemy.GetComponent<EnemyMelee>();
+                melee.player = combat.GetComponent<PlayerStats>();
+                EditorUtility.SetDirty(melee);
+            }
+
             EditorUtility.SetDirty(combat);
             EditorUtility.SetDirty(animation);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             if (!wasOpen) EditorSceneManager.CloseScene(scene, true);
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // Dark Ranger enemy
+    // ------------------------------------------------------------------------
+
+    private const string EnemyPrefabPath = "Assets/Prefabs/Combat/DarkRanger.prefab";
+    private const string EnemyModelPath = "Assets/Art/Characters/Player/PlayerRangerMale.prefab";
+    private const string EnemyWeaponPath = "Assets/ThirdParty/Quaternius/MedievalWeapons/Models/Sword.fbx";
+    private const float EnemyStartDistance = 14f;
+
+    // The player's Ranger, darkened, with the player's controller and a sword. Built once;
+    // after that, changes made to the prefab are kept. Delete the prefab to rebuild it.
+    private static GameObject GetOrCreateDarkRanger(AnimationClip quick, AnimationClip followUp,
+        AnimationClip overhead, AnimationClip delayed)
+    {
+        GameObject existing = AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefabPath);
+        if (existing != null) return existing;
+
+        GameObject modelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EnemyModelPath);
+        if (modelPrefab == null) throw new InvalidOperationException("Missing " + EnemyModelPath);
+        RuntimeAnimatorController controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(ControllerPath);
+
+        GameObject root = new GameObject("DarkRanger");
+        try
+        {
+            // Same capsule and model placement as the Player in the test scenes.
+            CharacterController capsule = root.AddComponent<CharacterController>();
+            capsule.height = 2f;
+            capsule.radius = 0.5f;
+            capsule.center = Vector3.zero;
+            root.AddComponent<Health>().maxHealth = 250;
+            root.AddComponent<DamageFlash>();
+
+            GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(modelPrefab, root.transform);
+            model.name = "DarkRangerModel";
+            model.transform.localPosition = new Vector3(0f, -0.892421f, 0f);
+            model.transform.localScale = Vector3.one * 1.0124681f;
+            Animator animator = model.GetComponent<Animator>();
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+
+            EnemyMelee enemy = root.AddComponent<EnemyMelee>();
+            enemy.characterAnimator = animator;
+            enemy.weaponModel = AssetDatabase.LoadAssetAtPath<GameObject>(EnemyWeaponPath);
+            enemy.attacks = new[]
+            {
+                // 0: quick slash that may carry on into a second slash.
+                EnemyMove("Quick slash", quick, 0.42f, 12f, 2.3f, 0.6f, 0.5f, followUp: 1),
+                // 1: the follow-up, also used on its own.
+                EnemyMove("Backhand slash", followUp, 0.42f, 12f, 2.3f, 0.4f, 0.7f),
+                // 2: slow, hard-hitting overhead that lunges in.
+                EnemyMove("Overhead smash", overhead, 0.35f, 22f, 2.6f, 1.2f, 1f, track: 0.7f),
+                // 3: holds its wind-up, so rolling on reflex gets punished.
+                EnemyMove("Delayed slash", delayed, 0.4f, 18f, 2.5f, 0.8f, 0.9f, track: 1f, hold: 0.6f),
+            };
+
+            return PrefabUtility.SaveAsPrefabAsset(root, EnemyPrefabPath);
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(root);
+        }
+    }
+
+    // hitPoint is how far through the clip the blade connects; track is the share of the
+    // wind-up the enemy keeps turning; hold is how long a delayed swing freezes at the top.
+    private static EnemyAttack EnemyMove(string label, AnimationClip clip, float hitPoint, float damage, float reach,
+        float lunge, float recovery, float track = 0.6f, float hold = 0f, int followUp = -1)
+    {
+        float hitTime = clip.length * hitPoint;
+        return new EnemyAttack
+        {
+            label = label,
+            state = ShortName(clip),
+            damage = damage,
+            reach = reach,
+            hitTime = hitTime,
+            duration = clip.length * 0.85f,
+            trackUntil = hitTime * track,
+            lunge = lunge,
+            holdAt = hold > 0f ? hitTime * 0.6f : 0f,
+            holdFor = hold,
+            recovery = recovery,
+            followUp = followUp,
+            followUpChance = 0.5f,
+        };
     }
 }

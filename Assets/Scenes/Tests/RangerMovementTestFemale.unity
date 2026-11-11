@@ -2444,6 +2444,67 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &449098248
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5128878500816405731, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 2005957535}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483056371014104052, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_Name
+      value: DarkRanger
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
 --- !u!1 &469621498
 GameObject:
   m_ObjectHideFlags: 0
@@ -10672,35 +10733,41 @@ MonoBehaviour:
     hitDelay: 0.18200001
     damageMultiplier: 1
     staminaCost: 10
+    poise: 0
   - name: Sword_Regular_B
     duration: 0.45333338
     hitDelay: 0.224
     damageMultiplier: 1
     staminaCost: 10
+    poise: 0
   heavyAttack:
     name: Sword_Regular_C
     duration: 1.7
     hitDelay: 0.8
     damageMultiplier: 2
     staminaCost: 25
+    poise: 25
   jumpAttack:
     name: Sword_Attack
     duration: 1.3033334
     hitDelay: 0.5366667
     damageMultiplier: 1.5
     staminaCost: 15
+    poise: 15
   sprintAttack:
     name: Sword_Dash
     duration: 1.3316667
     hitDelay: 0.54833335
     damageMultiplier: 1.25
     staminaCost: 15
+    poise: 0
   crouchAttack:
     name: Sword_Regular_B
     duration: 0.45333338
     hitDelay: 0.224
     damageMultiplier: 1
     staminaCost: 10
+    poise: 0
   heavyHoldTime: 0.3
   comboWindow: 0.6
   riposteMultiplier: 3
@@ -11506,3 +11573,4 @@ SceneRoots:
   - {fileID: 1619024564}
   - {fileID: 483179085}
   - {fileID: 1787581826}
+  - {fileID: 449098248}

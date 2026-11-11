@@ -30,9 +30,7 @@ public class WeaponHandSocket : MonoBehaviour
     private PlayerCombat combat;
     private Transform hand;
     private bool hasFistGrip;
-    private Vector3 fistCentre;        // In the hand bone's local space.
-    private Quaternion fistRotation;   // Pivot rotation in the hand bone's local space.
-    private Vector3 knuckleAxis, bladeAxis, palmAxis;
+    private FistGrip fist;
 
     private void Awake()
     {
@@ -49,7 +47,7 @@ public class WeaponHandSocket : MonoBehaviour
             return;
         }
 
-        hasFistGrip = MeasureFist();
+        hasFistGrip = FistGrip.TryMeasure(characterAnimator, hand, out fist);
         if (autoGrip && !hasFistGrip)
             Debug.LogWarning("Auto Grip needs the right hand's index, middle and little finger bones. Using Grip Position and Grip Rotation instead.", this);
 
@@ -57,46 +55,6 @@ public class WeaponHandSocket : MonoBehaviour
         combat.weaponFollowsHand = true;
         combat.weaponPivot.SetParent(hand, false);
         ApplyGrip();
-    }
-
-    // Finds the fist from where the knuckles sit on the hand. The knuckles don't move relative to
-    // the hand bone, whatever the fingers do, so this is measured once.
-    private bool MeasureFist()
-    {
-        Transform index = FindFinger(HumanBodyBones.RightIndexProximal, "index_01");
-        Transform middle = FindFinger(HumanBodyBones.RightMiddleProximal, "middle_01");
-        Transform little = FindFinger(HumanBodyBones.RightLittleProximal, "pinky_01");
-        Transform thumb = FindFinger(HumanBodyBones.RightThumbProximal, "thumb_01");
-        if (index == null || middle == null || little == null) return false;
-
-        Vector3 middleKnuckle = hand.InverseTransformPoint(middle.position);
-        Vector3 knuckles = middleKnuckle.normalized;
-        Vector3 across = hand.InverseTransformPoint(index.position) - hand.InverseTransformPoint(little.position);
-        Vector3 blade = Vector3.ProjectOnPlane(across, knuckles).normalized;
-        if (blade.sqrMagnitude < 0.5f) return false;
-
-        // The palm is on the thumb's side of the hand.
-        Vector3 palm = Vector3.Cross(knuckles, blade);
-        if (thumb != null && Vector3.Dot(hand.InverseTransformPoint(thumb.position), palm) < 0f) palm = -palm;
-
-        knuckleAxis = knuckles;
-        bladeAxis = blade;
-        palmAxis = palm;
-        // The handle sits just short of the knuckles, a little into the palm.
-        fistCentre = middleKnuckle * 0.8f + palm * (middleKnuckle.magnitude * 0.25f);
-        // Pivot Y runs along the blade (see HeldWeaponModel); pivot X faces the knuckles, so the edge leads the swing.
-        fistRotation = Quaternion.LookRotation(Vector3.Cross(knuckles, blade), blade);
-        return true;
-    }
-
-    private Transform FindFinger(HumanBodyBones bone, string nameStart)
-    {
-        Transform finger = characterAnimator.GetBoneTransform(bone);
-        if (finger != null) return finger;
-        // Some avatars don't map fingers; look for the bone by name under the hand.
-        foreach (Transform child in hand.GetComponentsInChildren<Transform>())
-            if (child.name.StartsWith(nameStart) && child.name.EndsWith("_r")) return child;
-        return null;
     }
 
     // Applied every frame so the grip can be tuned live in the Inspector.
@@ -115,9 +73,9 @@ public class WeaponHandSocket : MonoBehaviour
 
         if (autoGrip && hasFistGrip)
         {
-            Vector3 nudge = knuckleAxis * autoGripNudge.x + bladeAxis * autoGripNudge.y + palmAxis * autoGripNudge.z;
-            combat.weaponPivot.localPosition = fistCentre + Vector3.Scale(nudge, metresToLocal);
-            combat.weaponPivot.localRotation = fistRotation * Quaternion.Euler(autoGripTilt);
+            Vector3 nudge = fist.knuckleAxis * autoGripNudge.x + fist.bladeAxis * autoGripNudge.y + fist.palmAxis * autoGripNudge.z;
+            combat.weaponPivot.localPosition = fist.centre + Vector3.Scale(nudge, metresToLocal);
+            combat.weaponPivot.localRotation = fist.rotation * Quaternion.Euler(autoGripTilt);
             return;
         }
 
