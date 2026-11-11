@@ -39,6 +39,15 @@ public static class PrepareCombatAnimations
     private const float HeavyPoise = 25f;
     private const float JumpPoise = 15f;
 
+    // Weapon art (G): a three-hit flurry. Hit points are shares of the clip; tune in the Inspector.
+    private const string WeaponArtClipName = "Sword_Heavy_Combo";
+    private static readonly float[] WeaponArtHitPoints = { 0.25f, 0.5f, 0.72f };
+    private const float WeaponArtStamina = 35f;
+    private const float WeaponArtPoise = 30f;
+    // Full-body stumble when an enemy is backstabbed.
+    private const string KnockbackClipName = "Hit_Knockback";
+    private const float TestBackstabMultiplier = 3f;
+
     // Held guard, quick parry and the stagger when stamina runs out while blocking.
     private const string BlockClipName = "Sword_Block";
     private const string GuardBreakClipName = "Idle_Shield_Break";
@@ -76,12 +85,14 @@ public static class PrepareCombatAnimations
             AnimationClip crouchClip = FindClip(CrouchAttack.clip);
             AnimationClip guardBreakClip = FindClip(GuardBreakClipName);
             AnimationClip hitClip = FindClip(HitClipName, FirstLibraryPath);
-            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip, hitClip }).Distinct().ToArray());
+            AnimationClip weaponArtClip = FindClip(WeaponArtClipName);
+            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip, hitClip, weaponArtClip }).Distinct().ToArray());
             AddGuardStates(FindClip(BlockClipName));
             AddDeathLayer(FindClip(DeathClipName, FirstLibraryPath));
+            AddFullBodyReaction(FindClip(KnockbackClipName));
             AssetDatabase.SaveAssets();
             GameObject enemy = GetOrCreateDarkRanger(lightClips[0], lightClips[1], jumpClip, heavyClip);
-            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip, enemy);
+            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip, weaponArtClip, enemy);
             Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
         }
         catch (Exception error)
@@ -263,6 +274,24 @@ public static class PrepareCombatAnimations
         EditorUtility.SetDirty(controller);
     }
 
+    // A whole-body reaction on the Death layer (which has no mask) that returns to Empty when done.
+    private static void AddFullBodyReaction(AnimationClip clip)
+    {
+        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        AnimatorStateMachine machine = controller.layers.First(layer => layer.name == DeathLayerName).stateMachine;
+        string stateName = ShortName(clip);
+        if (machine.states.Any(child => child.state.name == stateName)) return;
+
+        AnimatorState empty = machine.states.Select(child => child.state).First(state => state.name == "Empty");
+        AnimatorState reaction = machine.AddState(stateName);
+        reaction.motion = clip;
+        AnimatorStateTransition finish = reaction.AddTransition(empty);
+        finish.hasExitTime = true;
+        finish.exitTime = 0.9f;
+        finish.duration = 0.2f;
+        EditorUtility.SetDirty(controller);
+    }
+
     private static string ShortName(AnimationClip clip) => clip.name.Split('|').Last();
 
     private static HandAttack MakeAttack(AnimationClip clip, (string clip, float hitPoint, float damage, float stamina) settings)
@@ -278,7 +307,7 @@ public static class PrepareCombatAnimations
     }
 
     private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip,
-        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip, GameObject enemyPrefab)
+        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip, AnimationClip weaponArtClip, GameObject enemyPrefab)
     {
         foreach (string path in ScenePaths)
         {
@@ -317,6 +346,24 @@ public static class PrepareCombatAnimations
             // Only set while 0, so values tuned in the Inspector are kept.
             if (combat.heavyAttack.poise <= 0f) combat.heavyAttack.poise = HeavyPoise;
             if (combat.jumpAttack.poise <= 0f) combat.jumpAttack.poise = JumpPoise;
+
+            // Weapon art on G, plus backstabs and Elden Ring style stamina, in the test scenes only.
+            if (combat.weaponArt == null || string.IsNullOrEmpty(combat.weaponArt.name))
+            {
+                float length = weaponArtClip.length;
+                combat.weaponArt = new HandAttack
+                {
+                    name = ShortName(weaponArtClip),
+                    duration = length * 0.9f,
+                    hitDelay = length * WeaponArtHitPoints[0],
+                    extraHitTimes = WeaponArtHitPoints.Skip(1).Select(point => length * point).ToArray(),
+                    damageMultiplier = 1f,
+                    staminaCost = WeaponArtStamina,
+                    poise = WeaponArtPoise,
+                };
+            }
+            if (combat.backstabMultiplier <= 1f) combat.backstabMultiplier = TestBackstabMultiplier;
+            combat.pauseStaminaRegenInCombat = true;
 
             // Blocking costs stamina in the test scenes only; Prototype keeps the unlimited guard.
             PlayerDefence defence = combat.GetComponent<PlayerDefence>();

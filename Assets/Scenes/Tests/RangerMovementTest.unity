@@ -10735,12 +10735,14 @@ MonoBehaviour:
     damageMultiplier: 1
     staminaCost: 10
     poise: 0
+    extraHitTimes: []
   - name: Sword_Regular_B
     duration: 0.45333338
     hitDelay: 0.224
     damageMultiplier: 1
     staminaCost: 10
     poise: 0
+    extraHitTimes: []
   heavyAttack:
     name: Sword_Regular_C
     duration: 1.7
@@ -10748,6 +10750,7 @@ MonoBehaviour:
     damageMultiplier: 2
     staminaCost: 25
     poise: 25
+    extraHitTimes: []
   jumpAttack:
     name: Sword_Attack
     duration: 1.3033334
@@ -10755,6 +10758,7 @@ MonoBehaviour:
     damageMultiplier: 1.5
     staminaCost: 15
     poise: 15
+    extraHitTimes: []
   sprintAttack:
     name: Sword_Dash
     duration: 1.3316667
@@ -10762,6 +10766,7 @@ MonoBehaviour:
     damageMultiplier: 1.25
     staminaCost: 15
     poise: 0
+    extraHitTimes: []
   crouchAttack:
     name: Sword_Regular_B
     duration: 0.45333338
@@ -10769,9 +10774,25 @@ MonoBehaviour:
     damageMultiplier: 1
     staminaCost: 10
     poise: 0
+    extraHitTimes: []
   heavyHoldTime: 0.3
   comboWindow: 0.6
   riposteMultiplier: 3
+  weaponArt:
+    name: Sword_Heavy_Combo
+    duration: 3.9
+    hitDelay: 1.0833334
+    damageMultiplier: 1
+    staminaCost: 35
+    poise: 30
+    extraHitTimes:
+    - 2.1666667
+    - 3.1200001
+  weaponArtKey: 103
+  backstabMultiplier: 3
+  backstabRange: 1.8
+  backstabAngle: 90
+  pauseStaminaRegenInCombat: 1
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0

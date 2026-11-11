@@ -18,4 +18,6 @@ public class HandAttack
     [Tooltip("Poise: damage the player can take during this attack without flinching, so a heavy swing " +
              "carries on through light hits. 0 = any hit interrupts it (needs Hit Stun on PlayerDefence).")]
     [Min(0f)] public float poise = 0f;
+    [Tooltip("For multi-hit attacks: seconds into the attack for each hit after the first. Leave empty for a single hit.")]
+    public float[] extraHitTimes;
 }

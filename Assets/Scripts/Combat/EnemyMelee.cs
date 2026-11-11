@@ -8,7 +8,7 @@ using UnityEngine;
 // Uses the same Animator controller as the player (Speed/MoveX/MoveZ for walking, Combat and Death layers).
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(CharacterController))]
-public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver
+public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabbable
 {
     [Tooltip("Found automatically if left empty.")]
     public PlayerStats player;
@@ -45,6 +45,8 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver
     [Min(0f)] public float parryPushback = 0.5f;
     [Tooltip("Seconds a flinch interrupts it when hit outside an attack.")]
     [Min(0f)] public float flinchTime = 0.35f;
+    [Tooltip("Seconds it's knocked down after a backstab.")]
+    [Min(0.1f)] public float backstabDownTime = 2f;
 
     [Header("Look")]
     [Tooltip("Sword model to hold in the right hand. Its blade should point along its Y axis.")]
@@ -82,8 +84,11 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver
     private static readonly int StaggerState = Animator.StringToHash("Idle_Shield_Break");
     private static readonly int HitState = Animator.StringToHash("Hit_Chest");
     private static readonly int DeathState = Animator.StringToHash("Death01");
+    private static readonly int KnockbackState = Animator.StringToHash("Hit_Knockback");
 
     public bool IsStaggered => state == State.Staggered;
+    // Open to a backstab unless it's mid-swing, already staggered or dead.
+    public bool CanBeBackstabbed => state != State.Attack && state != State.Staggered && state != State.Dead;
 
     private void Awake()
     {
@@ -316,6 +321,17 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver
         SetState(State.Recover, 1f);
         PlayCombatState(HitState, 0.05f);
         Report("Riposted");
+    }
+
+    // Stabbed in the back: knocked stumbling (whole body) and slow to recover.
+    public void OnBackstabbed()
+    {
+        SetState(State.Recover, backstabDownTime);
+        if (characterAnimator != null && deathLayer >= 0 && characterAnimator.HasState(deathLayer, KnockbackState))
+            characterAnimator.CrossFadeInFixedTime(KnockbackState, 0.05f, deathLayer, 0f);
+        else
+            PlayCombatState(HitState, 0.05f);
+        Report("Backstabbed");
     }
 
     private void Die()

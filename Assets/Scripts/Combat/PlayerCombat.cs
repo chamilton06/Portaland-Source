@@ -38,6 +38,21 @@ public class PlayerCombat : MonoBehaviour
     [Min(0f)] public float comboWindow = 0.6f;
     [Tooltip("Damage multiplier for a riposte: hitting an enemy that a parry has staggered.")]
     [Min(1f)] public float riposteMultiplier = 3f;
+    [Tooltip("A weapon art: a special move on its own key, e.g. a flurry of slashes. Leave its Name empty for none.")]
+    public HandAttack weaponArt;
+    public KeyCode weaponArtKey = KeyCode.G;
+
+    [Header("Backstab")]
+    [Tooltip("Damage multiplier for hitting an enemy from behind while it isn't attacking. 1 = no backstabs.")]
+    [Min(1f)] public float backstabMultiplier = 1f;
+    [Tooltip("How close behind the enemy the player must be, in metres.")]
+    [Min(0.5f)] public float backstabRange = 1.8f;
+    [Tooltip("Width in degrees of the zone behind the enemy that counts as its back.")]
+    [Range(10f, 180f)] public float backstabAngle = 90f;
+
+    [Header("Stamina")]
+    [Tooltip("Stamina doesn't refill while attacking or blocking (and for PlayerStats' Regen Delay after), like in Elden Ring.")]
+    public bool pauseStaminaRegenInCombat = false;
 
     // ------------------------------------------------------------------------
     // State
@@ -158,6 +173,10 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
+        // Spending 0 stamina restarts PlayerStats' regen delay without costing anything.
+        if (pauseStaminaRegenInCombat && playerStats != null && (swinging || (defence != null && defence.IsBlocking)))
+            playerStats.TryUseStamina(0f);
+
         if (!weaponEquipped || equippedWeapon == null || equippedWeapon.stats == null
             || weaponPivot == null || weaponInstance == null || swinging)
         {
@@ -167,6 +186,13 @@ public class PlayerCombat : MonoBehaviour
         if (defence != null && (defence.IsBlocking || defence.IsStaggered))
         {
             holdingAttack = false;
+            return;
+        }
+
+        if (weaponFollowsHand && IsSet(weaponArt) && Input.GetKeyDown(weaponArtKey))
+        {
+            holdingAttack = false;
+            StartAttack(weaponArt, true);
             return;
         }
 
@@ -268,14 +294,33 @@ public class PlayerCombat : MonoBehaviour
                     staggerable.EndStagger();
                 }
 
+                // Striking an enemy in the back while it isn't attacking is a backstab: another critical hit.
+                IBackstabbable back = hit.collider.GetComponentInParent<IBackstabbable>();
+                bool backstab = !riposte && backstabMultiplier > 1f && back != null && back.CanBeBackstabbed
+                    && IsBehind(((Component)back).transform);
+                if (backstab)
+                {
+                    multiplier *= backstabMultiplier;
+                    back.OnBackstabbed();
+                }
+
                 int damage = Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier);
                 targetHealth.TakeDamage(damage);
 
-                // Lets enemies flinch or lose poise. A riposte already has its own reaction.
+                // Lets enemies flinch or lose poise. Ripostes and backstabs already have their own reaction.
                 IHitReceiver receiver = hit.collider.GetComponentInParent<IHitReceiver>();
-                if (!riposte && receiver != null) receiver.OnHit(damage);
+                if (!riposte && !backstab && receiver != null) receiver.OnHit(damage);
             }
         }
+    }
+
+    // True if the player stands close behind the target, inside the zone at its back.
+    private bool IsBehind(Transform target)
+    {
+        Vector3 fromTarget = transform.position - target.position;
+        fromTarget.y = 0f;
+        if (fromTarget.magnitude > backstabRange) return false;
+        return Vector3.Angle(-target.forward, fromTarget) <= backstabAngle * 0.5f;
     }
 
     // ------------------------------------------------------------------------
@@ -316,9 +361,21 @@ public class PlayerCombat : MonoBehaviour
             HandAttack attack = CurrentAttack;
             float attackDuration = attack != null ? attack.duration : handAttackDuration;
             float hitDelay = Mathf.Min(attack != null ? attack.hitDelay : handHitDelay, attackDuration);
+            float multiplier = attack != null ? attack.damageMultiplier : 1f;
             yield return new WaitForSeconds(hitDelay);
-            DealDamage(attack != null ? attack.damageMultiplier : 1f);
-            yield return new WaitForSeconds(attackDuration - hitDelay);
+            DealDamage(multiplier);
+
+            // Multi-hit attacks, like a weapon art flurry, strike again at each extra hit time.
+            float attackClock = hitDelay;
+            if (attack != null && attack.extraHitTimes != null)
+                foreach (float hitTime in attack.extraHitTimes)
+                {
+                    float at = Mathf.Min(hitTime, attackDuration);
+                    if (at > attackClock) yield return new WaitForSeconds(at - attackClock);
+                    attackClock = Mathf.Max(attackClock, at);
+                    DealDamage(multiplier);
+                }
+            yield return new WaitForSeconds(Mathf.Max(0f, attackDuration - attackClock));
             comboEndTime = Time.time;
             swinging = false;
             swingRoutine = null;
