@@ -144,23 +144,54 @@ public class PlayerLockOn : MonoBehaviour
         candidate.onDeath.AddListener(() => dead.Add(candidate));
     }
 
-    // Middle of the target's body, for the marker and line-of-sight checks.
-    private static Vector3 AimPoint(Health target)
+    // The target's chest (like the Souls games), or the middle of its body if it has no skeleton.
+    public static Vector3 AimPoint(Health target)
     {
+        Animator animator = target.GetComponentInChildren<Animator>();
+        if (animator != null && animator.isHuman)
+        {
+            Transform chest = animator.GetBoneTransform(HumanBodyBones.UpperChest);
+            if (chest == null) chest = animator.GetBoneTransform(HumanBodyBones.Chest);
+            if (chest != null) return chest.position;
+        }
         Collider body = target.GetComponentInChildren<Collider>();
         return body != null ? body.bounds.center : target.transform.position + Vector3.up;
     }
 
+    [Tooltip("Lock-on dot size as a share of the screen height.")]
+    [Range(0.005f, 0.05f)] public float markerSize = 0.014f;
+    private static Texture2D dotTexture;
+
+    // A small soft white dot with a faint glow, centred on the target's chest.
     private void OnGUI()
     {
         if (!showMarker || !IsLockedOn || viewCamera == null) return;
         Vector3 point = viewCamera.WorldToScreenPoint(AimPoint(Target));
         if (point.z <= 0f) return;
+        if (dotTexture == null) dotTexture = MakeDot(64);
+
+        float size = Screen.height * markerSize;
+        Vector2 centre = new Vector2(point.x, Screen.height - point.y);
         Color previous = GUI.color;
+        GUI.color = new Color(1f, 1f, 1f, 0.35f);
+        GUI.DrawTexture(new Rect(centre.x - size, centre.y - size, size * 2f, size * 2f), dotTexture);
         GUI.color = Color.white;
-        GUI.DrawTexture(new Rect(point.x - 6f, Screen.height - point.y - 6f, 12f, 12f), Texture2D.whiteTexture);
-        GUI.color = new Color(0.8f, 0.1f, 0.1f);
-        GUI.DrawTexture(new Rect(point.x - 3f, Screen.height - point.y - 3f, 6f, 6f), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(centre.x - size * 0.5f, centre.y - size * 0.5f, size, size), dotTexture);
         GUI.color = previous;
+    }
+
+    // A white circle that fades out at its edge.
+    private static Texture2D MakeDot(int resolution)
+    {
+        Texture2D texture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+        float radius = resolution * 0.5f;
+        for (int y = 0; y < resolution; y++)
+            for (int x = 0; x < resolution; x++)
+            {
+                float distance = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(radius, radius)) / radius;
+                texture.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01((1f - distance) * 3f)));
+            }
+        texture.Apply();
+        return texture;
     }
 }

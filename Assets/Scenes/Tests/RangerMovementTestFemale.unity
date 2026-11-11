@@ -10609,6 +10609,7 @@ GameObject:
   - component: {fileID: 2005957547}
   - component: {fileID: 2005957548}
   - component: {fileID: 2005957549}
+  - component: {fileID: 2005957550}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10991,6 +10992,25 @@ MonoBehaviour:
   switchFlick: 3
   switchCooldown: 0.35
   showMarker: 1
+  markerSize: 0.014
+--- !u!114 &2005957550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89d6aa55ade143e983b3a8772156fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showTime: 6
+  comboTime: 2
+  chipDelay: 0.6
+  maxDistance: 30
+  barWidth: 0.11
+  heightAboveHead: 0.35
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

@@ -344,6 +344,9 @@ public static class PrepareCombatAnimations
             // Lock-on, in the test scenes only for now.
             if (combat.GetComponent<PlayerLockOn>() == null)
                 combat.gameObject.AddComponent<PlayerLockOn>();
+            // Souls-style enemy health bars.
+            if (combat.GetComponent<EnemyHealthBars>() == null)
+                combat.gameObject.AddComponent<EnemyHealthBars>();
 
             // One Dark Ranger a little way in front of the player, if the scene has no enemy yet.
             bool hasEnemy = scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EnemyMelee>(true) != null);
