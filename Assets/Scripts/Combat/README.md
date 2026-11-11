@@ -1,40 +1,32 @@
-# Combat prototype
+# Combat scripts
 
-Open `Assets/Scenes/CombatDefenceTest.unity`and press Play. I made this as a dupilcated copy of Prototype for testing combat without changing the shared scene. 
+The full guide is in [`docs/combat`](../../../docs/combat/README.md): controls, how fights
+work, the setup tool and tuning. If you're adding enemies to a level, read
+[Adding enemies](../../../docs/combat/adding-enemies.md).
 
-## Controls
+To try it, open `Assets/Scenes/Tests/RangerMovementTest.unity` and press Play.
 
+## What's in this folder
 
-- Hold right click to block. There is no stamina cost or time limit for blocking.
-- Press right click just before a hit lands to parry. The window is 0.2 seconds, and a successful parry shows a "Parried".
-- Q to dodge/roll. Hold a movement direction to roll that way, or stand still to roll forward.
+- **Player:** `PlayerCombat`, `PlayerDefence`, `PlayerLockOn`, `PlayerDeathHandler`, `HandAttack`
+- **Enemies:** `EnemyMelee`, `EnemyAttack`, `EnemyHealthBars`, `DummyAttacker`
+- **Shared:** `Health`, `DamageFlash`, `HeldWeaponModel`, and the `IStaggerable`,
+  `IBackstabbable` and `IHitReceiver` interfaces
+- **Item Drops:** food and item pickups that enemies can drop when they die
 
+## Things worth knowing
 
-Blocking and parrying only protect the front of the player.
+The player's attacks hit whatever is straight in front of the player, within the weapon's range.
+They don't aim through the camera, so there's no crosshair.
 
-## The two dummies
+Weapons are equipped through `PlayerCombat.SetEquippedWeapon(Weapon)`. That's what the inventory
+calls. In the Ranger test scenes the sword sits in the character's right hand. Prototype still
+uses the old floating weapon pivot.
 
-`StillDummy` is the passive target for checking weapon swings, damage and the red hit flash.
+The player and enemies flash red when they take damage. Blocked, parried and dodged hits don't
+flash. Health regenerates while hunger is above 90, so if you want to see damage stick, press P
+to drop your hunger or set Health Regen to 0 on PlayerStats while you test.
 
-`AttackingDummy` has a weapon and attacks when you get close. It shows "Preparing attack...", then "Striking!" as it swings. Step out of range or move around it during the strike to make it miss. Its facing direction locks during the swing.
-
-## Weapons and rolling
-
-Player attacks check straight ahead from the player, rather than aiming through the camera crosshair. So if you wish you may now remove the crosshair as it is not needed.
-
-The equipped model is created under the player's WeaponPivot using the weapon asset's Weapon Prefab reference. The combat side still uses `SetEquippedWeapon(Weapon)` so inventory can select the weapon through that method. Inventory selection and unequipping interactions are being handled separately by James. New models should have their grip at the prefab origin and use a consistent orientation.
-
-
-
-## Taking damage and respawning
-
-Both the player and dummies flash red when they take damage. Blocked, parried and dodged hits do not trigger the player's damage flash. Fall damage and starvation can also make the player flash.
-
-At zero health, player actions stop and "You died" appears. After 3 seconds, the whole test scene reloads. This resets health, stamina, equipment to its scene setup, both dummies and dropped items; it does not preserve progress.
-
-For respawn to work, add `CombatDefenceTest` to File > Build Settings > Scenes In Build and keep it enabled. The saved Build Settings may still point only at the archived movement scene, so check this before testing or building.
-
-Health regenerates while hunger is above 90, so it can recover between enemy hits. For testing, P reduces hunger by 25% and F restores 25 hunger. You can also temporarily set Health Regen to 0 during Play mode to make damage easier to see.
-
-
-
+When the player dies, "You died" shows and the scene reloads after 3 seconds. The reload only
+works for scenes listed in **File → Build Settings**, so a test scene that isn't listed won't
+respawn you.

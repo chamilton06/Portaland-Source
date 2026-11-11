@@ -1,8 +1,8 @@
-# Character setup for the group
+# Guide for combat animations in scenes
 
-This is the practical handover for bringing the character work into another scene or main.
-Updated 4 November 2026. The work is still on `feature/player-character-animation-23`.
-Directional clips, final jump checks, combat animations and female gameplay checks remain.
+This is the practical handover for bringing the character and combat work into another scene
+or into main. Updated 11 November 2026. Everything is on `feature/combat-animation-weapons`,
+which builds on the earlier `feature/player-character-animation-23` branch.
 
 ## Keep these folders together
 
@@ -15,7 +15,8 @@ Directional clips, final jump checks, combat animations and female gameplay chec
 | `Assets/Scripts/Animation` | Scene-independent animation scripts |
 | `Assets/Editor` | Optional preparation tools, excluded from game builds by Unity |
 | `Assets/Scenes/Tests` | Character tests, kept separate from the shared Prototype |
-| `docs/character-animation` | Setup, test results and remaining work |
+| `Assets/Prefabs/Combat` | The Dark Ranger enemy and the training dummy |
+| `docs/character-animation`, `docs/combat` | These notes |
 
 Always include the matching `.meta` files. They keep prefab, mesh, clip and script GUIDs
 consistent on everyone's machines. Don't regenerate the prepared assets after a merge just
@@ -46,7 +47,14 @@ The visual prefabs don't contain the full gameplay Player.
    **Player Locomotion Animation**, assign **CharacterVisual** as **Roll Facing**.
 7. Keep the existing CameraFollow target and weapon pivot references. Don't parent the
    camera or weapon pivot under CharacterVisual; that wrapper turns towards the roll direction.
-8. Save the scene and test movement, crouching, jumps, collisions, equipment and damage.
+8. For the combat animations, add **Player Combat Animation** and **Weapon Hand Socket** to
+   Player and use `RangerDirectional.controller`. The quickest way to get the attack settings
+   is from the test scene: right-click **Player Combat** on its Player, choose **Copy Component**,
+   then on your Player choose **Paste Component Values**. Do the same for **Player Defence**.
+   Check **Weapon Pivot** afterwards: links to objects in another scene don't copy across, so
+   point it back at your own Player's WeaponPivot.
+   Add **Player Lock On** and **Enemy Health Bars** too if you want them.
+9. Save the scene and test movement, crouching, jumps, collisions, equipment and damage.
    For scene reload on death, add the destination scene to enabled Build Settings.
 
 The runtime animation scripts don't load a scene by path or search for a Player by name.
@@ -55,16 +63,24 @@ it's a convenience for producing our test, not the runtime integration mechanism
 
 ## When merging with main
 
-- Review `Playermovement.cs` with Uliana: the crouch option, height/centre storage, ceiling
-  origin and roll readiness check are the movement-side edits. The option defaults to off.
-  Preserve any new movement logic from main when resolving conflicts.
-- Keep main's latest shared scene. Bring the character into that scene using the steps above
-  rather than replacing it wholesale with our test copy.
-- Review any animation-library `.meta` conflict carefully: our clips use Humanoid imports
-  and loop/root settings. Losing those settings can break the controllers.
-- Keep the user's unrelated Prototype preview edits, combat README edits and spare supplier
-  prefab out of a character PR unless they're reviewed and intentionally included.
-- Test both models and existing gameplay after resolving conflicts. Current tests aren't
-  evidence that a future merge against newer movement code works automatically.
+- Go over `Playermovement.cs` with Uliana. The crouch option, the stored height and centre,
+  the ceiling check and the roll check are the changes on the movement side. The crouch option
+  is off by default. If main has newer movement code, keep it when you sort out conflicts.
+- Keep main's version of the shared scene and add the character to it using the steps above.
+  Don't replace it with our test scene.
+- Be careful with `.meta` conflicts on the animation files. Our clips rely on their Humanoid,
+  loop and root settings, and losing them breaks the controllers.
+- The setup tools never commit, push or merge anything. That's always done separately.
 
-No merge, push or commit is performed by these tools. Git actions remain separate from setup.
+## Check before merging
+
+Play each test scene, then the merged scene, and make sure that:
+
+- walking, sprinting, strafing, crouching, jumping and rolling all look right, with both models
+- the sword stays in the hand through every attack
+- light, heavy, jump, sprint and crouch attacks and the weapon art (G) all play and do damage
+- blocking, parrying and getting hit play their animations
+- lock-on works, and enemies show health bars when hit
+- the Dark Ranger chases, attacks, staggers and dies
+- the player dies and the scene reloads
+- the Console has no red errors
