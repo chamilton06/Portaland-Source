@@ -45,4 +45,10 @@ public class HotbarSlot : Slot
         slotRef = inventorySlot;
         UpdateSlot(slotRef);
     }
+
+    public void ClearRef()
+    {
+        slotRef = null;
+        UpdateSlot(this);
+    }
 }

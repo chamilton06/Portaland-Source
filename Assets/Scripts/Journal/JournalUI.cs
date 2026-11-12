@@ -23,10 +23,12 @@ public class JournalUI : MonoBehaviour
     public TextMeshProUGUI entryTitle;
     public TextMeshProUGUI entryText;
     public string emptyTabText = "Nothing written here yet...";
+    
 
     public string newTag = " <color=#B22222>NEW!</color>";
     public TextMeshProUGUI newEntryPopup;       // optional popup
     public float popupTime = 3f;
+    public event System.Action<JournalEntry> EntryShown;   // pin button listens
 
     private readonly HashSet<JournalEntry> unlocked = new HashSet<JournalEntry>();
     private readonly HashSet<JournalEntry> unread = new HashSet<JournalEntry>();
@@ -35,9 +37,19 @@ public class JournalUI : MonoBehaviour
     private string[] tabNames;
     private JournalTab currentTab = JournalTab.Notes;
     private float popupHideTime;
+    private ScrollRect textScroll;   // the scroll box around entryText
 
     void Awake()
     {
+        // grab every entry + quest in Resources/Journal, no hand filling the list
+        foreach (JournalEntry entry in Resources.LoadAll<JournalEntry>("Journal"))
+        {
+            if (!entries.Contains(entry))
+            {
+                entries.Add(entry);
+            }
+        }
+
         foreach (JournalEntry entry in entries)
         {
             if (entry != null && entry.startsUnlocked)
@@ -58,6 +70,8 @@ public class JournalUI : MonoBehaviour
         {
             Debug.LogError("JournalUI: some fields on UIManager are still None, fill them all in");
         }
+        textScroll = entryText.GetComponentInParent<ScrollRect>();
+        entryPicture.preserveAspect = true;   // keep pictures from stretching to the page width
         if (journalRoot == gameObject)
         {
             Debug.LogError("JournalUI must sit on an object that stays active, not on journalRoot itself (J would stop working).");
@@ -218,7 +232,14 @@ public class JournalUI : MonoBehaviour
             button.onClick.AddListener(() => ShowEntry(captured));
         }
 
-        ShowEntry(first, false);   // not read till clicked
+        // blank page till something is picked
+        ShowEntry(null);
+        if (first != null)
+        {
+            entryTitle.text = "";
+            entryText.text = "";
+            if (textScroll != null) textScroll.gameObject.SetActive(false);
+        }
     }
 
     public void ShowEntry(JournalEntry entry)
@@ -228,8 +249,11 @@ public class JournalUI : MonoBehaviour
 
     void ShowEntry(JournalEntry entry, bool markRead)
     {
+        if (textScroll != null) textScroll.gameObject.SetActive(true);
+        EntryShown?.Invoke(entry);
         if (entry == null)
         {
+
             entryTitle.text = currentTab.ToString();
             entryText.text = emptyTabText;
             entryPicture.gameObject.SetActive(false);   // hide so the layout closes the gap
@@ -242,8 +266,9 @@ public class JournalUI : MonoBehaviour
             unread.Remove(entry);
         }
 
-        entryTitle.text = entry.title;
-        entryText.text = entry.loreText;
+        entryTitle.text = entry.GetDisplayTitle();
+        //entryText.text = entry.loreText;
+        entryText.text = entry.GetPageText();
         entryPicture.sprite = entry.picture;
         entryPicture.gameObject.SetActive(entry.picture != null);
         RefreshLabels();
@@ -254,7 +279,7 @@ public class JournalUI : MonoBehaviour
     {
         foreach (KeyValuePair<JournalEntry, TextMeshProUGUI> pair in entryLabels)
         {
-            pair.Value.text = pair.Key.title + (unread.Contains(pair.Key) ? newTag : "");
+            pair.Value.text = pair.Key.GetDisplayTitle() + (unread.Contains(pair.Key) ? newTag : "");
         }
 
         for (int i = 0; i < tabButtons.Length; i++)
