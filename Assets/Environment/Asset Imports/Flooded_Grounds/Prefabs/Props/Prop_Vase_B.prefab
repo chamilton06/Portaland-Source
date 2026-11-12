@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 446794}
   - component: {fileID: 3395130}
   - component: {fileID: 2340862}
-  - component: {fileID: 6590944}
+  - component: {fileID: 5410153230635603694}
   m_Layer: 8
   m_Name: lo_Prop_Vase_B_LOD0
   m_TagString: Untagged
@@ -141,8 +141,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6590944
-BoxCollider:
+--- !u!64 &5410153230635603694
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -159,9 +159,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.33391368, y: 0.77241653, z: 0.33241004}
-  m_Center: {x: 0.006248653, y: 0.38887164, z: -0.0006618574}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300004, guid: 6be9ebbcf714925409f0be3e8b8d01fb, type: 3}
 --- !u!1 &149744
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +174,7 @@ GameObject:
   - component: {fileID: 472486}
   - component: {fileID: 3311064}
   - component: {fileID: 2329222}
-  - component: {fileID: 6523468}
+  - component: {fileID: 2776538089436096792}
   m_Layer: 8
   m_Name: lo_Prop_Vase_B_LOD1
   m_TagString: Untagged
@@ -246,8 +247,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6523468
-BoxCollider:
+--- !u!64 &2776538089436096792
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -264,6 +265,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.33391368, y: 0.77241653, z: 0.29068637}
-  m_Center: {x: 0.006248653, y: 0.38887164, z: -0.0006618574}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300002, guid: 6be9ebbcf714925409f0be3e8b8d01fb, type: 3}
