@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Archives/UI Update.unity
     guid: 3fc8d206c6c84c8489401d60fd2d775a
   - enabled: 1
-    path: Assets/Scenes/MERGED.unity
+    path: Assets/Scenes/Main Game.unity
     guid: 8b7126a57c60a4591aa2890662e2dae7
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
