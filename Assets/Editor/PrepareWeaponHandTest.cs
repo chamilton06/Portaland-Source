@@ -24,42 +24,12 @@ public static class PrepareWeaponHandTest
 
         try
         {
-            Weapon sword = Load<Weapon>("Assets/Items/Sword.asset");
-            Weapon axe = Load<Weapon>("Assets/Items/Axe.asset");
-            GameObject swordModel = Load<GameObject>(Models + "Sword.fbx");
-            GameObject axeModel = Load<GameObject>(Models + "Axe.fbx");
-
             foreach (string path in ScenePaths)
             {
                 Scene scene = SceneManager.GetSceneByPath(path);
                 bool wasOpen = scene.isLoaded;
                 if (!wasOpen) scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
-
-                PlayerCombat[] players = scene.GetRootGameObjects()
-                    .SelectMany(root => root.GetComponentsInChildren<PlayerCombat>(true)).ToArray();
-                if (players.Length != 1)
-                    throw new InvalidOperationException("Expected one Player with PlayerCombat in " + path + "; found " + players.Length);
-                PlayerCombat combat = players[0];
-
-                WeaponHandSocket socket = combat.GetComponent<WeaponHandSocket>();
-                if (socket == null) socket = combat.gameObject.AddComponent<WeaponHandSocket>();
-                PlayerLocomotionAnimation locomotion = combat.GetComponent<PlayerLocomotionAnimation>();
-                if (socket.characterAnimator == null && locomotion != null)
-                    socket.characterAnimator = locomotion.characterAnimator;
-
-                // Leave existing entries alone so re-running doesn't undo any grip tuning.
-                if (combat.heldWeaponModels == null || combat.heldWeaponModels.Length == 0)
-                {
-                    combat.heldWeaponModels = new[]
-                    {
-                        new HeldWeaponModel { weapon = sword, model = swordModel, length = 1f, gripPoint = 0.08f },
-                        new HeldWeaponModel { weapon = axe, model = axeModel, length = 0.9f, gripPoint = 0.12f },
-                    };
-                }
-
-                EditorUtility.SetDirty(combat);
-                EditorUtility.SetDirty(socket);
-                EditorSceneManager.MarkSceneDirty(scene);
+                SetUpScene(scene);
                 EditorSceneManager.SaveScene(scene);
                 if (!wasOpen) EditorSceneManager.CloseScene(scene, true);
             }
@@ -70,6 +40,42 @@ public static class PrepareWeaponHandTest
         {
             Debug.LogError("Weapon hand test setup stopped: " + error.Message);
         }
+    }
+
+    // Puts the weapon in the Player's hand in one open scene. Also used by
+    // PrepareCombatAnimations.AddCombatPlayerToOpenScene. The caller saves the scene.
+    internal static void SetUpScene(Scene scene)
+    {
+        Weapon sword = Load<Weapon>("Assets/Items/Sword.asset");
+        Weapon axe = Load<Weapon>("Assets/Items/Axe.asset");
+        GameObject swordModel = Load<GameObject>(Models + "Sword.fbx");
+        GameObject axeModel = Load<GameObject>(Models + "Axe.fbx");
+
+        PlayerCombat[] players = scene.GetRootGameObjects()
+            .SelectMany(root => root.GetComponentsInChildren<PlayerCombat>(true)).ToArray();
+        if (players.Length != 1)
+            throw new InvalidOperationException("Expected one Player with PlayerCombat in " + scene.path + "; found " + players.Length);
+        PlayerCombat combat = players[0];
+
+        WeaponHandSocket socket = combat.GetComponent<WeaponHandSocket>();
+        if (socket == null) socket = combat.gameObject.AddComponent<WeaponHandSocket>();
+        PlayerLocomotionAnimation locomotion = combat.GetComponent<PlayerLocomotionAnimation>();
+        if (socket.characterAnimator == null && locomotion != null)
+            socket.characterAnimator = locomotion.characterAnimator;
+
+        // Leave existing entries alone so re-running doesn't undo any grip tuning.
+        if (combat.heldWeaponModels == null || combat.heldWeaponModels.Length == 0)
+        {
+            combat.heldWeaponModels = new[]
+            {
+                new HeldWeaponModel { weapon = sword, model = swordModel, length = 1f, gripPoint = 0.08f },
+                new HeldWeaponModel { weapon = axe, model = axeModel, length = 0.9f, gripPoint = 0.12f },
+            };
+        }
+
+        EditorUtility.SetDirty(combat);
+        EditorUtility.SetDirty(socket);
+        EditorSceneManager.MarkSceneDirty(scene);
     }
 
     private static T Load<T>(string path) where T : UnityEngine.Object

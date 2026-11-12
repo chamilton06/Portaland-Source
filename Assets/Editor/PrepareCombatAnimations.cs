@@ -74,31 +74,87 @@ public static class PrepareCombatAnimations
 
         try
         {
-            ImportAsHumanoid();
-            AnimationClip attack = FindClip(AttackClipName);
-            AvatarMask mask = GetOrCreateUpperBodyMask();
-            AddCombatLayer(attack, mask);
-            AnimationClip[] lightClips = LightAttacks.Select(hit => FindClip(hit.clip)).ToArray();
-            AnimationClip heavyClip = FindClip(HeavyAttack.clip);
-            AnimationClip jumpClip = FindClip(JumpAttack.clip, FirstLibraryPath);
-            AnimationClip sprintClip = FindClip(SprintAttack.clip);
-            AnimationClip crouchClip = FindClip(CrouchAttack.clip);
-            AnimationClip guardBreakClip = FindClip(GuardBreakClipName);
-            AnimationClip hitClip = FindClip(HitClipName, FirstLibraryPath);
-            AnimationClip weaponArtClip = FindClip(WeaponArtClipName);
-            AddAttackStates(lightClips.Concat(new[] { heavyClip, jumpClip, sprintClip, crouchClip, guardBreakClip, hitClip, weaponArtClip }).Distinct().ToArray());
-            AddGuardStates(FindClip(BlockClipName));
-            AddDeathLayer(FindClip(DeathClipName, FirstLibraryPath));
-            AddFullBodyReaction(FindClip(KnockbackClipName));
-            AssetDatabase.SaveAssets();
-            GameObject enemy = GetOrCreateDarkRanger(lightClips[0], lightClips[1], jumpClip, heavyClip);
-            AddToTestScenes(attack, lightClips, heavyClip, jumpClip, sprintClip, crouchClip, weaponArtClip, enemy);
+            Clips clips = BuildAnimations();
+            GameObject enemy = GetOrCreateDarkRanger(clips.light[0], clips.light[1], clips.jump, clips.heavy);
+            foreach (string path in ScenePaths)
+            {
+                Scene scene = SceneManager.GetSceneByPath(path);
+                bool wasOpen = scene.isLoaded;
+                if (!wasOpen) scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
+                SetUpPlayer(scene, clips, enemy, true);
+                EditorSceneManager.SaveScene(scene);
+                if (!wasOpen) EditorSceneManager.CloseScene(scene, true);
+            }
             Debug.Log("Combat animations ready. Open a Ranger movement test scene, press Play, tap left click for light attacks or hold it for heavy. Click while jumping, sprinting or crouched for those attacks.");
         }
         catch (Exception error)
         {
             Debug.LogError("Combat animation setup stopped: " + error.Message);
         }
+    }
+
+    // Gives the Player in whichever scene is open the same combat setup as the test scenes:
+    // sword in hand, combat animations, attacks, lock-on and health bars, plus one Dark Ranger
+    // if the scene has none. Nothing else in the scene is changed. The Player needs the Ranger already.
+    [MenuItem("Tools/Portaland/Add Combat Player To Open Scene")]
+    public static void AddCombatPlayerToOpenScene()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+        Scene scene = SceneManager.GetActiveScene();
+        if (string.IsNullOrEmpty(scene.path))
+        {
+            Debug.LogError("Save the scene first, then run this again.");
+            return;
+        }
+
+        try
+        {
+            PlayerLocomotionAnimation[] rangers = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<PlayerLocomotionAnimation>(true)).ToArray();
+            if (rangers.Length != 1 || rangers[0].characterAnimator == null)
+                throw new InvalidOperationException("The Player in " + scene.name + " needs the Ranger character (PlayerLocomotionAnimation with its Animator set) first.");
+
+            Clips clips = BuildAnimations();
+            GameObject enemy = GetOrCreateDarkRanger(clips.light[0], clips.light[1], clips.jump, clips.heavy);
+            PrepareWeaponHandTest.SetUpScene(scene);
+            SetUpPlayer(scene, clips, enemy, false);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("Combat player ready in " + scene.name + ". If there wasn't an enemy already, a Dark Ranger is " + EnemyStartDistance + " m in front of the Player. Move it wherever you like.");
+        }
+        catch (Exception error)
+        {
+            Debug.LogError("Adding the combat player stopped: " + error.Message);
+        }
+    }
+
+    private class Clips
+    {
+        public AnimationClip attack, heavy, jump, sprint, crouch, weaponArt;
+        public AnimationClip[] light;
+    }
+
+    // Makes sure the controller has every combat state. Safe to run again.
+    private static Clips BuildAnimations()
+    {
+        ImportAsHumanoid();
+        Clips clips = new Clips();
+        clips.attack = FindClip(AttackClipName);
+        AvatarMask mask = GetOrCreateUpperBodyMask();
+        AddCombatLayer(clips.attack, mask);
+        clips.light = LightAttacks.Select(hit => FindClip(hit.clip)).ToArray();
+        clips.heavy = FindClip(HeavyAttack.clip);
+        clips.jump = FindClip(JumpAttack.clip, FirstLibraryPath);
+        clips.sprint = FindClip(SprintAttack.clip);
+        clips.crouch = FindClip(CrouchAttack.clip);
+        AnimationClip guardBreakClip = FindClip(GuardBreakClipName);
+        AnimationClip hitClip = FindClip(HitClipName, FirstLibraryPath);
+        clips.weaponArt = FindClip(WeaponArtClipName);
+        AddAttackStates(clips.light.Concat(new[] { clips.heavy, clips.jump, clips.sprint, clips.crouch, guardBreakClip, hitClip, clips.weaponArt }).Distinct().ToArray());
+        AddGuardStates(FindClip(BlockClipName));
+        AddDeathLayer(FindClip(DeathClipName, FirstLibraryPath));
+        AddFullBodyReaction(FindClip(KnockbackClipName));
+        AssetDatabase.SaveAssets();
+        return clips;
     }
 
     // Same import style as the first library: Humanoid, in place, keeping the original height.
@@ -306,80 +362,82 @@ public static class PrepareCombatAnimations
         };
     }
 
-    private static void AddToTestScenes(AnimationClip attack, AnimationClip[] lightClips, AnimationClip heavyClip,
-        AnimationClip jumpClip, AnimationClip sprintClip, AnimationClip crouchClip, AnimationClip weaponArtClip, GameObject enemyPrefab)
+    // Sets up the Player in one open scene and places a Dark Ranger if there's no enemy yet.
+    // In the test scenes it also makes the training dummies stagger on a parry.
+    private static void SetUpPlayer(Scene scene, Clips clips, GameObject enemyPrefab, bool testScene)
     {
-        foreach (string path in ScenePaths)
+        AnimationClip attack = clips.attack, heavyClip = clips.heavy, jumpClip = clips.jump,
+            sprintClip = clips.sprint, crouchClip = clips.crouch, weaponArtClip = clips.weaponArt;
+        AnimationClip[] lightClips = clips.light;
+        string path = scene.path;
+        PlayerCombat[] players = scene.GetRootGameObjects()
+            .SelectMany(root => root.GetComponentsInChildren<PlayerCombat>(true)).ToArray();
+        if (players.Length != 1)
+            throw new InvalidOperationException("Expected one Player with PlayerCombat in " + path + "; found " + players.Length);
+        PlayerCombat combat = players[0];
+
+        PlayerCombatAnimation animation = combat.GetComponent<PlayerCombatAnimation>();
+        if (animation == null) animation = combat.gameObject.AddComponent<PlayerCombatAnimation>();
+        PlayerLocomotionAnimation locomotion = combat.GetComponent<PlayerLocomotionAnimation>();
+        if (animation.characterAnimator == null && locomotion != null)
+            animation.characterAnimator = locomotion.characterAnimator;
+
+        // Attacks last about as long as the animation, until it starts blending back out.
+        combat.handAttackDuration = attack.length * 0.85f;
+
+        // Filled once; after that, tweaks made in the Inspector are kept.
+        if (combat.lightAttacks == null || combat.lightAttacks.Length == 0)
+            combat.lightAttacks = lightClips.Select((clip, i) => MakeAttack(clip, LightAttacks[i])).ToArray();
+        if (combat.heavyAttack == null || string.IsNullOrEmpty(combat.heavyAttack.name))
+            combat.heavyAttack = MakeAttack(heavyClip, HeavyAttack);
+        if (combat.jumpAttack == null || string.IsNullOrEmpty(combat.jumpAttack.name))
+            combat.jumpAttack = MakeAttack(jumpClip, JumpAttack);
+        if (combat.sprintAttack == null || string.IsNullOrEmpty(combat.sprintAttack.name))
+            combat.sprintAttack = MakeAttack(sprintClip, SprintAttack);
+        if (combat.crouchAttack == null || string.IsNullOrEmpty(combat.crouchAttack.name))
+            combat.crouchAttack = MakeAttack(crouchClip, CrouchAttack);
+
+        // Poise: the heavy carries on through two dummy hits, the jump attack through one.
+        // Only set while 0, so values tuned in the Inspector are kept.
+        if (combat.heavyAttack.poise <= 0f) combat.heavyAttack.poise = HeavyPoise;
+        if (combat.jumpAttack.poise <= 0f) combat.jumpAttack.poise = JumpPoise;
+
+        // Weapon art on G, plus backstabs and Elden Ring style stamina. Prototype keeps them off.
+        if (combat.weaponArt == null || string.IsNullOrEmpty(combat.weaponArt.name))
         {
-            Scene scene = SceneManager.GetSceneByPath(path);
-            bool wasOpen = scene.isLoaded;
-            if (!wasOpen) scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
-
-            PlayerCombat[] players = scene.GetRootGameObjects()
-                .SelectMany(root => root.GetComponentsInChildren<PlayerCombat>(true)).ToArray();
-            if (players.Length != 1)
-                throw new InvalidOperationException("Expected one Player with PlayerCombat in " + path + "; found " + players.Length);
-            PlayerCombat combat = players[0];
-
-            PlayerCombatAnimation animation = combat.GetComponent<PlayerCombatAnimation>();
-            if (animation == null) animation = combat.gameObject.AddComponent<PlayerCombatAnimation>();
-            PlayerLocomotionAnimation locomotion = combat.GetComponent<PlayerLocomotionAnimation>();
-            if (animation.characterAnimator == null && locomotion != null)
-                animation.characterAnimator = locomotion.characterAnimator;
-
-            // Attacks last about as long as the animation, until it starts blending back out.
-            combat.handAttackDuration = attack.length * 0.85f;
-
-            // Filled once; after that, tweaks made in the Inspector are kept.
-            if (combat.lightAttacks == null || combat.lightAttacks.Length == 0)
-                combat.lightAttacks = lightClips.Select((clip, i) => MakeAttack(clip, LightAttacks[i])).ToArray();
-            if (combat.heavyAttack == null || string.IsNullOrEmpty(combat.heavyAttack.name))
-                combat.heavyAttack = MakeAttack(heavyClip, HeavyAttack);
-            if (combat.jumpAttack == null || string.IsNullOrEmpty(combat.jumpAttack.name))
-                combat.jumpAttack = MakeAttack(jumpClip, JumpAttack);
-            if (combat.sprintAttack == null || string.IsNullOrEmpty(combat.sprintAttack.name))
-                combat.sprintAttack = MakeAttack(sprintClip, SprintAttack);
-            if (combat.crouchAttack == null || string.IsNullOrEmpty(combat.crouchAttack.name))
-                combat.crouchAttack = MakeAttack(crouchClip, CrouchAttack);
-
-            // Poise: the heavy carries on through two dummy hits, the jump attack through one.
-            // Only set while 0, so values tuned in the Inspector are kept.
-            if (combat.heavyAttack.poise <= 0f) combat.heavyAttack.poise = HeavyPoise;
-            if (combat.jumpAttack.poise <= 0f) combat.jumpAttack.poise = JumpPoise;
-
-            // Weapon art on G, plus backstabs and Elden Ring style stamina, in the test scenes only.
-            if (combat.weaponArt == null || string.IsNullOrEmpty(combat.weaponArt.name))
+            float length = weaponArtClip.length;
+            combat.weaponArt = new HandAttack
             {
-                float length = weaponArtClip.length;
-                combat.weaponArt = new HandAttack
-                {
-                    name = ShortName(weaponArtClip),
-                    duration = length * 0.9f,
-                    hitDelay = length * WeaponArtHitPoints[0],
-                    extraHitTimes = WeaponArtHitPoints.Skip(1).Select(point => length * point).ToArray(),
-                    damageMultiplier = 1f,
-                    staminaCost = WeaponArtStamina,
-                    poise = WeaponArtPoise,
-                };
-            }
-            if (combat.backstabMultiplier <= 1f) combat.backstabMultiplier = TestBackstabMultiplier;
-            combat.pauseStaminaRegenInCombat = true;
+                name = ShortName(weaponArtClip),
+                duration = length * 0.9f,
+                hitDelay = length * WeaponArtHitPoints[0],
+                extraHitTimes = WeaponArtHitPoints.Skip(1).Select(point => length * point).ToArray(),
+                damageMultiplier = 1f,
+                staminaCost = WeaponArtStamina,
+                poise = WeaponArtPoise,
+            };
+        }
+        if (combat.backstabMultiplier <= 1f) combat.backstabMultiplier = TestBackstabMultiplier;
+        combat.pauseStaminaRegenInCombat = true;
 
-            // Blocking costs stamina in the test scenes only; Prototype keeps the unlimited guard.
-            PlayerDefence defence = combat.GetComponent<PlayerDefence>();
-            if (defence != null && defence.blockStaminaCost <= 0f)
-            {
-                defence.blockStaminaCost = TestBlockStaminaCost;
-                EditorUtility.SetDirty(defence);
-            }
-            // Same for hit stun: a hit that lands interrupts the player, in the test scenes only.
-            if (defence != null && defence.hitStunDuration <= 0f)
-            {
-                defence.hitStunDuration = TestHitStunDuration;
-                EditorUtility.SetDirty(defence);
-            }
+        // Blocking costs stamina. Prototype isn't set up by this tool, so it keeps the unlimited guard.
+        PlayerDefence defence = combat.GetComponent<PlayerDefence>();
+        if (defence != null && defence.blockStaminaCost <= 0f)
+        {
+            defence.blockStaminaCost = TestBlockStaminaCost;
+            EditorUtility.SetDirty(defence);
+        }
+        // Same for hit stun: a hit that lands interrupts the player.
+        if (defence != null && defence.hitStunDuration <= 0f)
+        {
+            defence.hitStunDuration = TestHitStunDuration;
+            EditorUtility.SetDirty(defence);
+        }
 
-            // Parries stagger the test dummies so the player can riposte. Prototype's dummies don't.
+        // Test scenes only: parries stagger the training dummies so the player can riposte.
+        // Other scenes' dummies belong to whoever built the scene, so they're left alone.
+        if (testScene)
+        {
             foreach (DummyAttacker dummy in scene.GetRootGameObjects()
                 .SelectMany(root => root.GetComponentsInChildren<DummyAttacker>(true)))
             {
@@ -387,33 +445,43 @@ public static class PrepareCombatAnimations
                 dummy.staggerDuration = TestStaggerDuration;
                 EditorUtility.SetDirty(dummy);
             }
-
-            // Lock-on, in the test scenes only for now.
-            if (combat.GetComponent<PlayerLockOn>() == null)
-                combat.gameObject.AddComponent<PlayerLockOn>();
-            // Souls-style enemy health bars.
-            if (combat.GetComponent<EnemyHealthBars>() == null)
-                combat.gameObject.AddComponent<EnemyHealthBars>();
-
-            // One Dark Ranger a little way in front of the player, if the scene has no enemy yet.
-            bool hasEnemy = scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EnemyMelee>(true) != null);
-            if (!hasEnemy)
-            {
-                GameObject enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemyPrefab, scene);
-                Transform player = combat.transform;
-                enemy.transform.position = player.position + player.forward * EnemyStartDistance;
-                enemy.transform.rotation = Quaternion.LookRotation(-player.forward, Vector3.up);
-                EnemyMelee melee = enemy.GetComponent<EnemyMelee>();
-                melee.player = combat.GetComponent<PlayerStats>();
-                EditorUtility.SetDirty(melee);
-            }
-
-            EditorUtility.SetDirty(combat);
-            EditorUtility.SetDirty(animation);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-            if (!wasOpen) EditorSceneManager.CloseScene(scene, true);
         }
+
+        // Lock-on.
+        if (combat.GetComponent<PlayerLockOn>() == null)
+            combat.gameObject.AddComponent<PlayerLockOn>();
+        // Souls-style enemy health bars.
+        if (combat.GetComponent<EnemyHealthBars>() == null)
+            combat.gameObject.AddComponent<EnemyHealthBars>();
+
+        // One Dark Ranger a little way in front of the player, if there's none yet.
+        bool hasEnemy = scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EnemyMelee>(true) != null);
+        if (!hasEnemy && enemyPrefab != null)
+        {
+            GameObject enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemyPrefab, scene);
+            Transform player = combat.transform;
+            enemy.transform.position = GroundPoint(scene, player.position + player.forward * EnemyStartDistance);
+            enemy.transform.rotation = Quaternion.LookRotation(-player.forward, Vector3.up);
+            EnemyMelee melee = enemy.GetComponent<EnemyMelee>();
+            melee.player = combat.GetComponent<PlayerStats>();
+            EditorUtility.SetDirty(melee);
+        }
+
+        EditorUtility.SetDirty(combat);
+        EditorUtility.SetDirty(animation);
+        EditorSceneManager.MarkSceneDirty(scene);
+    }
+
+    // Stands the enemy on whatever is under the spot, so it works on hills too. The prefab's
+    // pivot is the middle of its 2 m capsule, hence the 1 m lift.
+    private static Vector3 GroundPoint(Scene scene, Vector3 spot)
+    {
+        Physics.SyncTransforms();
+        PhysicsScene physics = scene.GetPhysicsScene();
+        Vector3 from = spot + Vector3.up * 100f;
+        if (physics.Raycast(from, Vector3.down, out RaycastHit hit, 300f, ~0, QueryTriggerInteraction.Ignore))
+            return hit.point + Vector3.up * 1f;
+        return spot;
     }
 
     // ------------------------------------------------------------------------
