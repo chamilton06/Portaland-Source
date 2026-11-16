@@ -4,7 +4,7 @@ The full guide is in [`docs/combat`](../../../docs/combat/README.md): controls, 
 work, the setup tool and tuning. If you're adding enemies to a level, read
 [Adding enemies](../../../docs/combat/adding-enemies.md).
 
-To try it, open `Assets/Scenes/Tests/RangerMovementTest.unity` and press Play.
+To try it, open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` and press Play.
 
 ## What's in this folder
 

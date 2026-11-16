@@ -62,8 +62,8 @@ public static class PrepareCombatAnimations
     private const float TestStaggerDuration = 1.5f;
     private static readonly string[] ScenePaths =
     {
-        "Assets/Scenes/Tests/RangerMovementTest.unity",
-        "Assets/Scenes/Tests/RangerMovementTestFemale.unity",
+        "Assets/Scenes/Archives/Tests/RangerMovementTest.unity",
+        "Assets/Scenes/Archives/Tests/RangerMovementTestFemale.unity",
     };
 
     [MenuItem("Tools/Portaland/Prepare Combat Animations")]

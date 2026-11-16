@@ -14,7 +14,7 @@ which builds on the earlier `feature/player-character-animation-23` branch.
 | `Assets/Animations/Player` | Shared controllers and clip-choice assets |
 | `Assets/Scripts/Animation` | Scene-independent animation scripts |
 | `Assets/Editor` | Optional preparation tools, excluded from game builds by Unity |
-| `Assets/Scenes/Tests` | Character tests, kept separate from the shared Prototype |
+| `Assets/Scenes/Archives/Tests` | Character tests, kept separate from the shared Prototype |
 | `Assets/Prefabs/Combat` | The Dark Ranger enemy and the training dummy |
 | `docs/character-animation`, `docs/combat` | These notes |
 

@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 // Keep the first gameplay test in its own scene so the group's Prototype stays intact.
 public static class PrepareRangerMovementTest
 {
-    private const string ScenePath = "Assets/Scenes/Tests/RangerMovementTest.unity";
+    private const string ScenePath = "Assets/Scenes/Archives/Tests/RangerMovementTest.unity";
     private const string ControllerPath = "Assets/Animations/Player/RangerLocomotion.controller";
 
 
@@ -42,7 +42,7 @@ public static class PrepareRangerMovementTest
             string prefabPath = "Assets/Art/Characters/Player/PlayerRangerMale.prefab";
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
             if (prefab == null) throw new InvalidOperationException("Prepare the Ranger prefabs first.");
-            if (!AssetDatabase.IsValidFolder("Assets/Scenes/Tests"))
+            if (!AssetDatabase.IsValidFolder("Assets/Scenes/Archives/Tests"))
                 throw new InvalidOperationException("Prepare the animation test first to create the test folders.");
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) == null)
             {

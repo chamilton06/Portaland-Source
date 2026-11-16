@@ -22,7 +22,7 @@ animated:
 
 The sword sits in the character's right hand and follows every animation.
 
-To see it, open `Assets/Scenes/Tests/RangerMovementTest.unity` (male) or
+To see it, open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` (male) or
 `RangerMovementTestFemale.unity` (female) and press Play. Prototype still has the old capsule.
 We'll bring the character into it as a group.
 
@@ -35,7 +35,7 @@ We'll bring the character into it as a group.
 | `Assets/Scripts/Animation` | Scripts that drive the Animator from the gameplay scripts |
 | `Assets/Editor` | Setup tools, all under **Tools → Portaland** |
 | `Assets/ThirdParty` | The downloaded models and animations, with their licences |
-| `Assets/Scenes/Tests` | The test scenes |
+| `Assets/Scenes/Archives/Tests` | The test scenes |
 
 The models and most animations are from Quaternius, and the sideways and backwards walks are
 from KayKit. Both are CC0, so we can use them freely. Details are in

@@ -10,8 +10,8 @@ using Object = UnityEngine.Object;
 // Reuse the same animation setup for male and female gameplay tests.
 public static class PrepareRangerRollTest
 {
-    private const string MaleScene = "Assets/Scenes/Tests/RangerMovementTest.unity";
-    private const string FemaleScene = "Assets/Scenes/Tests/RangerMovementTestFemale.unity";
+    private const string MaleScene = "Assets/Scenes/Archives/Tests/RangerMovementTest.unity";
+    private const string FemaleScene = "Assets/Scenes/Archives/Tests/RangerMovementTestFemale.unity";
     private const string DirectionalController = "Assets/Animations/Player/RangerDirectional.controller";
 
     [MenuItem("Tools/Portaland/Prepare Ranger Roll Tests")]

@@ -11,8 +11,8 @@ public static class PrepareWeaponHandTest
 {
     private static readonly string[] ScenePaths =
     {
-        "Assets/Scenes/Tests/RangerMovementTest.unity",
-        "Assets/Scenes/Tests/RangerMovementTestFemale.unity",
+        "Assets/Scenes/Archives/Tests/RangerMovementTest.unity",
+        "Assets/Scenes/Archives/Tests/RangerMovementTestFemale.unity",
     };
     private const string Models = "Assets/ThirdParty/Quaternius/MedievalWeapons/Models/";
 

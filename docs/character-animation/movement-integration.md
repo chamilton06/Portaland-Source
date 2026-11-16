@@ -20,7 +20,7 @@ This is a ground-movement checkpoint; it doesn't mean all character animations a
 | --- | --- |
 | `Assets/Editor/PrepareRangerMovementTest.cs` | Copies the saved Prototype and sets up the character in the copy |
 | `Assets/Scripts/Animation/PlayerLocomotionAnimation.cs` | Reads CharacterController velocity and sends horizontal speed to the Animator |
-| `Assets/Scenes/Tests/RangerMovementTest.unity` | Generated gameplay test scene |
+| `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` | Generated gameplay test scene |
 | `Assets/Animations/Player/RangerLocomotion.controller` | Generated copy of the preview controller, with movement-speed thresholds |
 | Hierarchy: `Player → CharacterVisual → PlayerRangerMale` | Generated character placement in the test scene |
 

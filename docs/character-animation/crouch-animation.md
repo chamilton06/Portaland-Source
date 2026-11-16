@@ -14,7 +14,7 @@ before testing again. Kartikeya subsequently confirmed the correction works in U
 
 ## Where it is
 
-- Scene: `Assets/Scenes/Tests/RangerMovementTest.unity`.
+- Scene: `Assets/Scenes/Archives/Tests/RangerMovementTest.unity`.
 - On **Player → Player Movement**, the new **Resize Controller For Crouch** option enables
   capsule resizing instead of scaling the whole Player. It defaults to off for other scenes.
 - `Assets/Scripts/Movement/Playermovement.cs` handles collider height and the ceiling check.

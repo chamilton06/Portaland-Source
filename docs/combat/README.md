@@ -10,7 +10,7 @@ If you want to add an enemy, skip ahead to [Adding enemies](adding-enemies.md).
 
 ## Trying it out
 
-Open `Assets/Scenes/Tests/RangerMovementTest.unity` (or `RangerMovementTestFemale.unity` for the
+Open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` (or `RangerMovementTestFemale.unity` for the
 female Ranger) and press Play. There's a Dark Ranger enemy about 14 metres in front of you and
 the two training dummies off to the side.
 
