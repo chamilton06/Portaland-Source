@@ -40,7 +40,7 @@ public class JournalToast : MonoBehaviour
             // loads at once, one card for all of them
             if (waiting.Count > maxWaiting)
             {
-                headingText.text = "Journal updated";
+                headingText.text = "Journal updated!";
                 lineText.text = waiting.Count + " new entries";
                 waiting.Clear();
             }
