@@ -231,6 +231,24 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    // take some off a slot (crafting, eating, dropping), keeps grid + hotbar + info panel right
+    public void RemoveFromSlot(Slot slot, int amount)
+    {
+        slot.RemoveAmount(amount);
+        RefreshBlocked();
+        RetargetHotbar(null, null);
+
+        if (hotbarSlots[currentSelectedHotSlot].isSelected)
+        {
+            ChangeCurrentSelectedHotbarSlot(currentSelectedHotSlot);   // unequip if the held weapon got used up
+        }
+        if (infoSlot == slot && !slot.HasItem())
+        {
+            infoPanel.Hide();
+            infoSlot = null;
+        }
+    }
+
     // move or stack an item, false if it doesnt fit
     public bool TryMoveItem(Slot from, Slot to)
     {
@@ -276,7 +294,9 @@ public class Inventory : MonoBehaviour
         foreach (HotbarSlot hotSlot in hotbarSlots)
         {
             if (hotSlot.slotRef == null) continue;
-            hotSlot.SetItem(hotSlot.slotRef == from && !from.HasItem() ? to : hotSlot.slotRef);
+            Slot target = hotSlot.slotRef == from && !from.HasItem() ? to : hotSlot.slotRef;
+            if (target.HasItem()) hotSlot.SetItem(target);
+            else hotSlot.ClearRef();   // item is gone, empty the key
         }
     }
 
@@ -285,7 +305,7 @@ public class Inventory : MonoBehaviour
         if (infoPanel == null || !IsOpen() || button != PointerEventData.InputButton.Left) return;
 
         // click same item again to close
-        if (slot.HasItem() && slot != infoSlot || !infoPanel.IsShowing)
+        if (slot.HasItem() && (slot != infoSlot || !infoPanel.IsShowing))
         {
             infoPanel.Show(slot.GetItem());
             infoSlot = slot;
