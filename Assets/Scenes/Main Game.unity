@@ -28713,7 +28713,7 @@ GameObject:
   - component: {fileID: 1425611246}
   - component: {fileID: 1425611245}
   - component: {fileID: 1425611244}
-  - component: {fileID: 1425611243}
+  - component: {fileID: 1425611248}
   m_Layer: 5
   m_Name: PinButton
   m_TagString: Untagged
@@ -28742,18 +28742,6 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: -60}
   m_SizeDelta: {x: 140, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1425611243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425611241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afcff9878f1e3aa40984b339e948c67a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1425611244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28856,6 +28844,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425611241}
   m_CullTransparentMesh: 1
+--- !u!114 &1425611248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425611241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39dbe6886dba7437386111f9bbd1ded7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  journal: {fileID: 1313025765}
+  tracker: {fileID: 1313025767}
 --- !u!1001 &1434782703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31139,6 +31141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossName: Servant of Dracula
+  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
   wakeRange: 10
   sameFloorHeight: 2.5
   damageMultiplier: 1.2
@@ -31163,7 +31166,6 @@ MonoBehaviour:
   barWidth: 0.55
   barHeight: 0.74
   chipDelay: 0.6
-  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
 --- !u!1 &1555018037
 GameObject:
   m_ObjectHideFlags: 0
@@ -38489,6 +38491,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnDelay: 5
   font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
+  deathText: YOU DIED
+  textColour: {r: 0.62, g: 0.06, b: 0.06, a: 1}
 --- !u!114 &1913253704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38816,22 +38820,6 @@ MonoBehaviour:
   damage: 1
   terrainResources: {fileID: 0}
   inventory: {fileID: 1452135253}
---- !u!114 &1913253719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913253701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b90aeeeb3fa3747758bf3730fceaae42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bank: {fileID: 11400000, guid: e964fa47c58514b5bb3a27ceac4c9c49, type: 2}
-  masterVolume: 1
-  pitchVariation: 0.08
-  voices: 8
 --- !u!114 &1913253715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38908,6 +38896,22 @@ MonoBehaviour:
   gripPosition: {x: 0, y: 0.08, z: 0.03}
   gripRotation: {x: 90, y: 0, z: 0}
   showGripMarker: 0
+--- !u!114 &1913253719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90aeeeb3fa3747758bf3730fceaae42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bank: {fileID: 11400000, guid: e964fa47c58514b5bb3a27ceac4c9c49, type: 2}
+  masterVolume: 1
+  pitchVariation: 0.08
+  voices: 8
 --- !u!1 &1916000725
 GameObject:
   m_ObjectHideFlags: 0
