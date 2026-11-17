@@ -1,24 +1,22 @@
-// ============================================================================
-// NPCInteractable.cs
-// Controls the opening of an NPC interaction (player closeness)
-//
-// To use, drag onto any NPC GameObject, and set Prompt to the same NPC's canvas
-// ============================================================================
-
 using UnityEngine;
-using UnityEngine.Events;
 
-public class NPCInteractable : MonoBehaviour {
-    public GameObject prompt;            // the "Press E" canvas
-    public UnityEvent onInteract;        // dialogue
+public class NPCInteractable : MonoBehaviour
+{
+    public GameObject prompt;
+    public string offerText = "I'll forge you the best sword in the land, but you have to gather some materials first. Interested?";
+
+    [Header("Quest given on Accept")]
+    public Quest quest;
+    public QuestTracker tracker;
+    public JournalUI journal;
 
     bool playerInRange;
 
-    public string offerText = "I'll forge you a fine sword. Interested?";
+    bool QuestAccepted => quest != null && QuestLog.Instance.IsAccepted(quest);
 
     void Update()
     {
-        if (!playerInRange || OfferPopup.Instance.IsOpen) return;
+        if (!playerInRange || OfferPopup.Instance.IsOpen || QuestAccepted) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -27,20 +25,25 @@ public class NPCInteractable : MonoBehaviour {
         }
     }
 
-    // debug statements (DELETE)
-    void OnAccept() => Debug.Log($"{name}: offer accepted");
+    void OnAccept()
+    {
+        QuestLog.Instance.Accept(quest);
+        journal.DiscoverEntry(quest);
+        tracker.Pin(quest);
+    }
+
     void OnReject() => Debug.Log($"{name}: offer rejected");
 
     void OnClosed()
     {
-        if (playerInRange) prompt.SetActive(true);
+        if (playerInRange && !QuestAccepted) prompt.SetActive(true);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (!other.transform.root.CompareTag("Player")) return;
         playerInRange = true;
-        if (!OfferPopup.Instance.IsOpen) prompt.SetActive(true);
+        if (!OfferPopup.Instance.IsOpen && !QuestAccepted) prompt.SetActive(true);
     }
 
     void OnTriggerExit(Collider other)

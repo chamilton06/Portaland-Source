@@ -173,8 +173,13 @@ public class JournalUI : MonoBehaviour
     // on pickup, adds it as NEW!
     public void Discover(Item item)
     {
-        JournalEntry entry = GetEntry(item);
-        if (unlocked.Contains(entry))
+        DiscoverEntry(GetEntry(item));
+    }
+
+    // any entry or quest, adds it as NEW! with the popup
+    public void DiscoverEntry(JournalEntry entry)
+    {
+        if (entry == null || unlocked.Contains(entry))
         {
             return;
         }
@@ -184,7 +189,8 @@ public class JournalUI : MonoBehaviour
 
         if (newEntryPopup != null)
         {
-            newEntryPopup.text = "Journal updated: " + entry.title;
+            // separate message for Quests
+            newEntryPopup.text = (entry is Quest ? "New quest: " : "Journal updated: ") + entry.title;
             newEntryPopup.gameObject.SetActive(true);
             popupHideTime = Time.unscaledTime + popupTime;
         }

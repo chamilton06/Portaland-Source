@@ -11,6 +11,15 @@ public class QuestLog : MonoBehaviour
 
     private readonly Dictionary<Quest, HashSet<int>> doneTasks = new Dictionary<Quest, HashSet<int>>();
 
+    private readonly HashSet<Quest> accepted = new HashSet<Quest>();
+
+    public bool IsAccepted(Quest quest) => accepted.Contains(quest);
+
+    public void Accept(Quest quest)
+    {
+        if (quest != null && accepted.Add(quest)) Changed?.Invoke(quest);
+    }
+
     void Awake()
     {
         Instance = this;
