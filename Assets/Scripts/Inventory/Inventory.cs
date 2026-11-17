@@ -77,7 +77,7 @@ public class Inventory : MonoBehaviour
             SetOpen(!IsOpen());
         }
 
-        if (Input.GetKeyDown(KeyCode.E)){ // spawn axe
+        if (Input.GetKeyDown(KeyCode.Y)){ // spawn axe
             AddItem(testItem, 1);
         }
         if (Input.GetKeyDown(KeyCode.R)){ // spawn sword
