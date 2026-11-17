@@ -93,4 +93,4 @@ with the updated driver because directional parameters are only used when presen
 
 The copied controller keeps jump, falling, landing and crouch transitions. The window assigns
 only the Animator reference on the selected scene Player, so it doesn't depend on a scene name.
-See the [group handover guide](group-handover.md) for moving the setup to another scene.
+See the [guide for combat animations in scenes](guide-for-combat-animations-in-scenes.md) for moving the setup to another scene.

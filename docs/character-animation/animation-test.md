@@ -18,7 +18,7 @@ compilation. Scene generation and a working test were subsequently confirmed.
 | `Assets/Scripts/Animation/RangerAnimationPreview.cs` | Switches both test characters between idle, walk, jog and sprint |
 | `Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx` | Original in-place animation file |
 | `Assets/Animations/Player/RangerPreview.controller` | Generated test controller; not wired to gameplay |
-| `Assets/Scenes/Tests/RangerAnimationTest.unity` | Generated side-by-side test scene |
+| `Assets/Scenes/Archives/Tests/RangerAnimationTest.unity` | Generated side-by-side test scene |
 
 The last two files are created by the Editor setup. Run it explicitly from
 **Tools → Portaland → Prepare Ranger Animation Test** outside Play mode.

@@ -24,6 +24,7 @@ public class Health : MonoBehaviour
     // ------------------------------------------------------------------------
 
     private int currentHealth;
+    public int CurrentHealth => currentHealth; // Read-only, for health bars.
     public UnityEvent onDeath = new UnityEvent();
     private DamageFlash damageFlash;
 // new method to flash the object when it takes damage

@@ -6,7 +6,7 @@ but jumping still needs completing and its quality checks aren't marked as passe
 
 ## Where to find it
 
-- Scene: `Assets/Scenes/Tests/RangerMovementTest.unity`.
+- Scene: `Assets/Scenes/Archives/Tests/RangerMovementTest.unity`.
 - Controller: `Assets/Animations/Player/RangerLocomotion.controller`.
 - Driver: `Assets/Scripts/Animation/PlayerLocomotionAnimation.cs`, on **Player**.
 - Editor setup: `Assets/Editor/PrepareRangerMovementTest.cs`.

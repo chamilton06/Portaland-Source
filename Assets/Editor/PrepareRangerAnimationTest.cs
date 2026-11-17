@@ -12,7 +12,7 @@ public static class PrepareRangerAnimationTest
 {
     private const string AnimationPath = "Assets/ThirdParty/Quaternius/AnimationLibrary/Models/UAL1_Standard.fbx";
     private const string ControllerPath = "Assets/Animations/Player/RangerPreview.controller";
-    private const string ScenePath = "Assets/Scenes/Tests/RangerAnimationTest.unity";
+    private const string ScenePath = "Assets/Scenes/Archives/Tests/RangerAnimationTest.unity";
 
 
     [MenuItem("Tools/Portaland/Prepare Ranger Animation Test")]
@@ -23,7 +23,7 @@ public static class PrepareRangerAnimationTest
         {
             ConfigureAnimations();
             MakeFolder("Assets/Animations/Player");
-            MakeFolder("Assets/Scenes/Tests");
+            MakeFolder("Assets/Scenes/Archives/Tests");
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
             if (controller == null) controller = CreateController();
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) == null) CreateScene(controller);

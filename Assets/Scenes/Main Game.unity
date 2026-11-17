@@ -8711,6 +8711,106 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d278e5a775df80147a4b3fdc06308dfb, type: 3}
+--- !u!1001 &435264397
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -238.4917
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 24.176031
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 511.3346
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.81512773
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5792813
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: poise
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: aggroRange
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: giveUpRange
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: riposteBonus
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: waitToBeWoken
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: staggerDuration
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: secondPhaseBelow
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: secondPhaseSpeed
+      value: 1.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: gapCloserCooldown
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_Name
+      value: Vampire (Boss)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4608083503857523093, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: maxHealth
+      value: 350
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1553946875}
+  m_SourcePrefab: {fileID: 100100000, guid: 496a9f29d971846ef970371f13058894, type: 3}
 --- !u!1 &435582653
 GameObject:
   m_ObjectHideFlags: 0
@@ -31021,6 +31121,49 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5115856311888761736, guid: 884860f7cb1e4c845aaed518cb0f3ae5, type: 3}
   m_PrefabInstance: {fileID: 1545842448}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1553946874 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+  m_PrefabInstance: {fileID: 435264397}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1553946875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553946874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1f52ed344b994bd38cd0d59b8054ccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Servant of Dracula
+  wakeRange: 10
+  sameFloorHeight: 2.5
+  damageMultiplier: 1.2
+  circleTimeScale: 0.6
+  recoveryScale: 1
+  poise: 100
+  poiseBreakCooldown: 8
+  retaliateAfterHits: 3
+  barriers:
+  - {fileID: 2145589797}
+  - {fileID: 1769700156}
+  music: {fileID: 8300000, guid: a354137e7f19948efac1702ad4f9c1e7, type: 3}
+  musicVolume: 0.6
+  musicFade: 2
+  victorySound: {fileID: 0}
+  victoryText: VANQUISHED
+  bannerTime: 4
+  reward: {fileID: 11400000, guid: f02a7a0efb4446c2955af8e7d85e09dc, type: 2}
+  rewardAmount: 1
+  rewardDelay: 2.5
+  rewardPopupTime: 3.5
+  barWidth: 0.55
+  barHeight: 0.74
+  chipDelay: 0.6
+  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
 --- !u!1 &1555018037
 GameObject:
   m_ObjectHideFlags: 0
@@ -32743,6 +32886,8 @@ MonoBehaviour:
   windUpDuration: 0.6
   recoveryDuration: 1
   showAttackLabel: 1
+  staggerDuration: 0
+  parryPushback: 0.4
 --- !u!114 &1619024567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35735,6 +35880,80 @@ MonoBehaviour:
   hovering: 0
   slotIndex: 0
   isSelected: 0
+--- !u!1 &1769700156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1769700159}
+  - component: {fileID: 1769700158}
+  - component: {fileID: 1769700157}
+  m_Layer: 0
+  m_Name: Boss Barrier (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1769700157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769700156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092716c5e3ffa4bdabfaad4721522a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colour: {r: 0.6, g: 0.03, b: 0.05, a: 0.85}
+  opacity: 0.85
+  brightness: 1.8
+  swirlSpeed: 0.12
+  appearSound: {fileID: 0}
+  appearVolume: 0.8
+  fadeInTime: 0.8
+  fadeOutTime: 1.5
+--- !u!65 &1769700158
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769700156}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.9, y: 4.8, z: 0.3}
+  m_Center: {x: 0, y: 1.6, z: 0}
+--- !u!4 &1769700159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769700156}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -239.21, y: 23.75, z: 486.08}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1777752796
 GameObject:
   m_ObjectHideFlags: 0
@@ -38228,6 +38447,11 @@ GameObject:
   - component: {fileID: 1913253703}
   - component: {fileID: 1913253702}
   - component: {fileID: 1913253714}
+  - component: {fileID: 1913253718}
+  - component: {fileID: 1913253717}
+  - component: {fileID: 1913253716}
+  - component: {fileID: 1913253715}
+  - component: {fileID: 1913253719}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -38263,7 +38487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e175147cf64b40919c3e66d04b519a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnDelay: 3
+  respawnDelay: 5
+  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
 --- !u!114 &1913253704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38293,6 +38518,9 @@ MonoBehaviour:
   parryWindow: 0.2
   blockAngle: 120
   parryMessageDuration: 0.75
+  blockStaminaCost: 15
+  guardBreakDuration: 1
+  hitStunDuration: 0.4
 --- !u!114 &1913253706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38312,6 +38540,85 @@ MonoBehaviour:
   guardPositionOffset: {x: -0.25, y: 0.25, z: 0.15}
   guardRotationOffset: {x: -20, y: 0, z: 65}
   guardTransitionTime: 0.12
+  weaponFollowsHand: 0
+  heldWeaponModels:
+  - weapon: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+    model: {fileID: 919132149155446097, guid: 94ff9598bd289445daeb1c3e680088dd, type: 3}
+    length: 1
+    gripPoint: 0.08
+    rotationOffset: {x: 0, y: 0, z: 0}
+  - weapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+    model: {fileID: 919132149155446097, guid: 0f73923bda55f4f7f94f29618a13300e, type: 3}
+    length: 0.9
+    gripPoint: 0.12
+    rotationOffset: {x: 0, y: 0, z: 0}
+  handAttackDuration: 0.36833337
+  handHitDelay: 0.18
+  lightAttacks:
+  - name: Sword_Regular_A
+    duration: 0.36833337
+    hitDelay: 0.18200001
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  - name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyAttack:
+    name: Sword_Regular_C
+    duration: 1.7
+    hitDelay: 0.8
+    damageMultiplier: 2
+    staminaCost: 25
+    poise: 25
+    extraHitTimes: []
+  jumpAttack:
+    name: Sword_Attack
+    duration: 1.3033334
+    hitDelay: 0.5366667
+    damageMultiplier: 1.5
+    staminaCost: 15
+    poise: 15
+    extraHitTimes: []
+  sprintAttack:
+    name: Sword_Dash
+    duration: 1.3316667
+    hitDelay: 0.54833335
+    damageMultiplier: 1.25
+    staminaCost: 15
+    poise: 0
+    extraHitTimes: []
+  crouchAttack:
+    name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyHoldTime: 0.3
+  comboWindow: 0.6
+  riposteMultiplier: 3
+  weaponArt:
+    name: Sword_Heavy_Combo
+    duration: 3.9
+    hitDelay: 1.0833334
+    damageMultiplier: 1
+    staminaCost: 35
+    poise: 30
+    extraHitTimes:
+    - 2.1666667
+    - 3.1200001
+  weaponArtKey: 103
+  backstabMultiplier: 3
+  backstabRange: 1.8
+  backstabAngle: 90
+  pauseStaminaRegenInCombat: 1
 --- !u!114 &1913253707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38331,8 +38638,8 @@ MonoBehaviour:
   sprintHungerMult: 3
   sprintStaminaCost: 20
   jumpStaminaCost: 10
-  staminaRegen: 15
-  regenDelay: 1
+  staminaRegen: 40
+  regenDelay: 0.6
   sprintAgainAt: 20
   starveDamage: 1
   safeFallSpeed: 14
@@ -38392,7 +38699,7 @@ MonoBehaviour:
   rollKey: 113
   rollDuration: 0.45
   rollSpeed: 8
-  rollStaminaCost: 25
+  rollStaminaCost: 18
   rollCooldown: 0.35
   dodgeWindowStart: 0.08
   dodgeWindowEnd: 0.28
@@ -38509,6 +38816,98 @@ MonoBehaviour:
   damage: 1
   terrainResources: {fileID: 0}
   inventory: {fileID: 1452135253}
+--- !u!114 &1913253719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90aeeeb3fa3747758bf3730fceaae42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bank: {fileID: 11400000, guid: e964fa47c58514b5bb3a27ceac4c9c49, type: 2}
+  masterVolume: 1
+  pitchVariation: 0.08
+  voices: 8
+--- !u!114 &1913253715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89d6aa55ade143e983b3a8772156fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showTime: 6
+  comboTime: 2
+  chipDelay: 0.6
+  maxDistance: 30
+  barWidth: 0.11
+  heightAboveHead: 0.35
+--- !u!114 &1913253716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75df9752a32464394aca040f437c7697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockButton: 2
+  lockKey: 99
+  lockRange: 15
+  breakRange: 20
+  turnSpeed: 720
+  switchFlick: 3
+  switchCooldown: 0.35
+  showMarker: 1
+  markerSize: 0.014
+--- !u!114 &1913253717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8265b122e56c4f45b51dfc487768d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 214464222}
+  blendIn: 0.05
+  guardPose: 0.35
+  guardRaiseTime: 0.12
+  parryAnimationTime: 0.5
+  hitAnimationTime: 0.3
+--- !u!114 &1913253718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6fb5f51543ca4e43971a868ce94e1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 214464222}
+  autoGrip: 1
+  autoGripNudge: {x: 0, y: 0, z: 0}
+  autoGripTilt: {x: 0, y: 0, z: 0}
+  gripPosition: {x: 0, y: 0.08, z: 0.03}
+  gripRotation: {x: 90, y: 0, z: 0}
+  showGripMarker: 0
 --- !u!1 &1916000725
 GameObject:
   m_ObjectHideFlags: 0
@@ -42203,6 +42602,80 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20ec5eb37359be745a735bf255de880e, type: 3}
+--- !u!1 &2145589797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2145589800}
+  - component: {fileID: 2145589799}
+  - component: {fileID: 2145589798}
+  m_Layer: 0
+  m_Name: Boss Barrier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2145589798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145589797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092716c5e3ffa4bdabfaad4721522a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colour: {r: 0.6, g: 0.03, b: 0.05, a: 0.85}
+  opacity: 0.85
+  brightness: 1.8
+  swirlSpeed: 0.12
+  appearSound: {fileID: 0}
+  appearVolume: 0.8
+  fadeInTime: 0.8
+  fadeOutTime: 1.5
+--- !u!65 &2145589799
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145589797}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.5, y: 4.2, z: 0.2}
+  m_Center: {x: 0, y: 1.6, z: 0}
+--- !u!4 &2145589800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145589797}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -232.85, y: 23.24, z: 515.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -42218,3 +42691,6 @@ SceneRoots:
   - {fileID: 1210565982}
   - {fileID: 1814668210}
   - {fileID: 1375429025}
+  - {fileID: 435264397}
+  - {fileID: 2145589800}
+  - {fileID: 1769700159}

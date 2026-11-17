@@ -64,6 +64,8 @@ public class DamageFlash : MonoBehaviour
 
     private void RestoreAppearance()
     {
+        // Nothing cached yet if it's disabled before Awake has run.
+        if (renderers == null) return;
         for (int i = 0; i < renderers.Length; i++)
         {
             if (renderers[i] != null)

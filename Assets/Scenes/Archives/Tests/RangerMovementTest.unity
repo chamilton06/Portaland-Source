@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028292, g: 0.22571306, b: 0.30692118, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -451,6 +451,7 @@ MonoBehaviour:
   journal: {fileID: 938379326}
   testItem: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
   testItem2: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+  testItem3: {fileID: 0}
 --- !u!114 &49294145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2443,6 +2444,67 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &449098248
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5128878500816405731, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 2005957535}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995891111702721104, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483056371014104052, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
+      propertyPath: m_Name
+      value: DarkRanger
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 40ae1a95e56b84aacb4a5f47c6d39fcd, type: 3}
 --- !u!1 &469621498
 GameObject:
   m_ObjectHideFlags: 0
@@ -5317,6 +5379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleKey: 109
+  pauseGameWhileOpen: 1
   mapRoot: {fileID: 1762709654}
   mapArea: {fileID: 912971111}
   playerIcon: {fileID: 1501807629}
@@ -5359,8 +5422,7 @@ MonoBehaviour:
   entryText: {fileID: 162036115}
   emptyTabText: Nothing written here yet...
   newTag: ' <color=#B22222>NEW!</color>'
-  newEntryPopup: {fileID: 1437442671}
-  popupTime: 3
+  toast: {fileID: 0}
 --- !u!1 &948473025
 GameObject:
   m_ObjectHideFlags: 0
@@ -8965,6 +9027,8 @@ MonoBehaviour:
   windUpDuration: 0.6
   recoveryDuration: 1
   showAttackLabel: 1
+  staggerDuration: 1.5
+  parryPushback: 0.4
 --- !u!114 &1619024567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10542,6 +10606,11 @@ GameObject:
   - component: {fileID: 2005957537}
   - component: {fileID: 2005957536}
   - component: {fileID: 2005957546}
+  - component: {fileID: 2005957547}
+  - component: {fileID: 2005957548}
+  - component: {fileID: 2005957549}
+  - component: {fileID: 2005957550}
+  - component: {fileID: 2005957551}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10568,8 +10637,8 @@ MonoBehaviour:
   sprintHungerMult: 3
   sprintStaminaCost: 20
   jumpStaminaCost: 10
-  staminaRegen: 15
-  regenDelay: 1
+  staminaRegen: 40
+  regenDelay: 0.6
   sprintAgainAt: 20
   starveDamage: 1
   safeFallSpeed: 14
@@ -10594,7 +10663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e175147cf64b40919c3e66d04b519a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnDelay: 3
+  respawnDelay: 5
+  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
 --- !u!114 &2005957537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10624,6 +10694,9 @@ MonoBehaviour:
   parryWindow: 0.2
   blockAngle: 120
   parryMessageDuration: 0.75
+  blockStaminaCost: 15
+  guardBreakDuration: 1
+  hitStunDuration: 0.4
 --- !u!114 &2005957539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10643,6 +10716,85 @@ MonoBehaviour:
   guardPositionOffset: {x: -0.25, y: 0.25, z: 0.15}
   guardRotationOffset: {x: -20, y: 0, z: 65}
   guardTransitionTime: 0.12
+  weaponFollowsHand: 0
+  heldWeaponModels:
+  - weapon: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+    model: {fileID: 919132149155446097, guid: 94ff9598bd289445daeb1c3e680088dd, type: 3}
+    length: 1
+    gripPoint: 0.08
+    rotationOffset: {x: 0, y: 0, z: 0}
+  - weapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+    model: {fileID: 919132149155446097, guid: 0f73923bda55f4f7f94f29618a13300e, type: 3}
+    length: 0.9
+    gripPoint: 0.12
+    rotationOffset: {x: 0, y: 0, z: 0}
+  handAttackDuration: 0.36833337
+  handHitDelay: 0.18
+  lightAttacks:
+  - name: Sword_Regular_A
+    duration: 0.36833337
+    hitDelay: 0.18200001
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  - name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyAttack:
+    name: Sword_Regular_C
+    duration: 1.7
+    hitDelay: 0.8
+    damageMultiplier: 2
+    staminaCost: 25
+    poise: 25
+    extraHitTimes: []
+  jumpAttack:
+    name: Sword_Attack
+    duration: 1.3033334
+    hitDelay: 0.5366667
+    damageMultiplier: 1.5
+    staminaCost: 15
+    poise: 15
+    extraHitTimes: []
+  sprintAttack:
+    name: Sword_Dash
+    duration: 1.3316667
+    hitDelay: 0.54833335
+    damageMultiplier: 1.25
+    staminaCost: 15
+    poise: 0
+    extraHitTimes: []
+  crouchAttack:
+    name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyHoldTime: 0.3
+  comboWindow: 0.6
+  riposteMultiplier: 3
+  weaponArt:
+    name: Sword_Heavy_Combo
+    duration: 3.9
+    hitDelay: 1.0833334
+    damageMultiplier: 1
+    staminaCost: 35
+    poise: 30
+    extraHitTimes:
+    - 2.1666667
+    - 3.1200001
+  weaponArtKey: 103
+  backstabMultiplier: 3
+  backstabRange: 1.8
+  backstabAngle: 90
+  pauseStaminaRegenInCombat: 1
 --- !u!114 &2005957540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10690,7 +10842,7 @@ MonoBehaviour:
   rollKey: 113
   rollDuration: 0.45
   rollSpeed: 8
-  rollStaminaCost: 25
+  rollStaminaCost: 18
   rollCooldown: 0.35
   dodgeWindowStart: 0.08
   dodgeWindowEnd: 0.28
@@ -10806,6 +10958,98 @@ MonoBehaviour:
   blendTime: 0.12
   groundGraceTime: 0.08
   rollFacing: {fileID: 1169247183}
+--- !u!114 &2005957547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6fb5f51543ca4e43971a868ce94e1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 304127076}
+  autoGrip: 1
+  autoGripNudge: {x: 0, y: 0, z: 0}
+  autoGripTilt: {x: 0, y: 0, z: 0}
+  gripPosition: {x: 0, y: 0.08, z: 0.03}
+  gripRotation: {x: 90, y: 0, z: 0}
+  showGripMarker: 0
+--- !u!114 &2005957548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8265b122e56c4f45b51dfc487768d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 304127076}
+  blendIn: 0.05
+  guardPose: 0.35
+  guardRaiseTime: 0.12
+  parryAnimationTime: 0.5
+  hitAnimationTime: 0.3
+--- !u!114 &2005957549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75df9752a32464394aca040f437c7697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockButton: 2
+  lockKey: 99
+  lockRange: 15
+  breakRange: 20
+  turnSpeed: 720
+  switchFlick: 3
+  switchCooldown: 0.35
+  showMarker: 1
+  markerSize: 0.014
+--- !u!114 &2005957550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89d6aa55ade143e983b3a8772156fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showTime: 6
+  comboTime: 2
+  chipDelay: 0.6
+  maxDistance: 30
+  barWidth: 0.11
+  heightAboveHead: 0.35
+--- !u!114 &2005957551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90aeeeb3fa3747758bf3730fceaae42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bank: {fileID: 11400000, guid: e964fa47c58514b5bb3a27ceac4c9c49, type: 2}
+  masterVolume: 1
+  pitchVariation: 0.08
+  voices: 8
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0
@@ -11388,3 +11632,4 @@ SceneRoots:
   - {fileID: 1619024564}
   - {fileID: 483179085}
   - {fileID: 1787581826}
+  - {fileID: 449098248}

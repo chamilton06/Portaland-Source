@@ -28,6 +28,7 @@ public class PlayerLocomotionAnimation : MonoBehaviour
     private bool hasDirectionalParameters;
     private bool hasCrouchDirections;
     private bool hasRollParameters;
+    private bool hasDeathLayer;
     private Quaternion restingVisualRotation;
 
     void Awake()
@@ -59,6 +60,7 @@ public class PlayerLocomotionAnimation : MonoBehaviour
             hasDirectionalParameters = hasMoveX && hasMoveZ;
             hasCrouchDirections = hasCrouchX && hasCrouchZ;
             hasRollParameters = hasRolling && hasRollRate;
+            hasDeathLayer = characterAnimator.GetLayerIndex("Death") >= 0;
             if (!hasCrouchParameters)
                 Debug.LogWarning("Ranger crouch setup is missing. Stop Play mode and run Tools > Portaland > Prepare Ranger Movement Test, then save the test scene.", this);
         }
@@ -68,7 +70,9 @@ public class PlayerLocomotionAnimation : MonoBehaviour
     {
         if (characterAnimator == null) return;
         bool canAnimate = movement.isActiveAndEnabled && (stats == null || !stats.IsDead());
-        characterAnimator.speed = canAnimate ? 1f : 0f;
+        // Freeze on death, unless the controller has a Death layer to play the death animation.
+        bool dead = stats != null && stats.IsDead();
+        characterAnimator.speed = canAnimate || (dead && hasDeathLayer) ? 1f : 0f;
         float verticalSpeed = canAnimate ? controller.velocity.y : 0f;
         timeInAir = controller.isGrounded ? 0f : timeInAir + Time.deltaTime;
         // Tiny drops on slopes shouldn't flicker into the falling pose. Jumps respond straight away.

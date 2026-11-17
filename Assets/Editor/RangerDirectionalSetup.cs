@@ -25,7 +25,7 @@ public class RangerDirectionalSetup : EditorWindow
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             throw new InvalidOperationException("Stop Play mode before preparing the test.");
-        const string scenePath = "Assets/Scenes/Tests/RangerMovementTest.unity";
+        const string scenePath = "Assets/Scenes/Archives/Tests/RangerMovementTest.unity";
         Scene scene = SceneManager.GetSceneByPath(scenePath);
         bool wasOpen = scene.IsValid() && scene.isLoaded;
         if (wasOpen && scene.isDirty)

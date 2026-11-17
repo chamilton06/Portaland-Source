@@ -1,0 +1,264 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8483056371014104052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6995891111702721104}
+  - component: {fileID: 4876963876876142620}
+  - component: {fileID: 6158167114480157776}
+  - component: {fileID: 5669213173243013945}
+  - component: {fileID: 5128878500816405731}
+  m_Layer: 0
+  m_Name: DarkRanger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6995891111702721104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483056371014104052}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6631756989234860717}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &4876963876876142620
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483056371014104052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6158167114480157776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483056371014104052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc69d64cc5a043b88434edfe146d6d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 250
+  dropPrefab: {fileID: 0}
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5669213173243013945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483056371014104052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 078233116827c4046812b129c53d75b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.12
+--- !u!114 &5128878500816405731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483056371014104052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910368c71267e4b8f830829e0c18b8fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  characterAnimator: {fileID: 2131011052822814301}
+  aggroRange: 12
+  giveUpRange: 25
+  runSpeed: 4
+  strafeSpeed: 1.6
+  turnSpeed: 360
+  circleDistance: 3.5
+  circleTime: {x: 0.8, y: 2.2}
+  gravity: 20
+  attacks:
+  - label: Quick slash
+    state: Sword_Regular_A
+    damage: 12
+    reach: 2.3
+    hitTime: 0.18200001
+    duration: 0.36833337
+    trackUntil: 0.10920001
+    lunge: 0.6
+    holdAt: 0
+    holdFor: 0
+    recovery: 0.5
+    followUp: 1
+    followUpChance: 0.5
+  - label: Backhand slash
+    state: Sword_Regular_B
+    damage: 12
+    reach: 2.3
+    hitTime: 0.224
+    duration: 0.45333338
+    trackUntil: 0.13440001
+    lunge: 0.4
+    holdAt: 0
+    holdFor: 0
+    recovery: 0.7
+    followUp: -1
+    followUpChance: 0.5
+  - label: Overhead smash
+    state: Sword_Attack
+    damage: 22
+    reach: 2.6
+    hitTime: 0.5366667
+    duration: 1.3033334
+    trackUntil: 0.37566668
+    lunge: 1.2
+    holdAt: 0
+    holdFor: 0
+    recovery: 1
+    followUp: -1
+    followUpChance: 0.5
+  - label: Delayed slash
+    state: Sword_Regular_C
+    damage: 18
+    reach: 2.5
+    hitTime: 0.8
+    duration: 1.7
+    trackUntil: 0.8
+    lunge: 0.8
+    holdAt: 0.48000002
+    holdFor: 0.6
+    recovery: 0.9
+    followUp: -1
+    followUpChance: 0.5
+  attackAngle: 100
+  poise: 45
+  poiseRecoverDelay: 3
+  staggerDuration: 1.5
+  parryPushback: 0.5
+  flinchTime: 0.35
+  weaponModel: {fileID: 919132149155446097, guid: 94ff9598bd289445daeb1c3e680088dd, type: 3}
+  weaponLength: 1
+  weaponGripPoint: 0.08
+  tint: {r: 0.35, g: 0.32, b: 0.42, a: 1}
+  logActions: 1
+--- !u!1001 &4694084719445640599
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6995891111702721104}
+    m_Modifications:
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.0124681
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.0124681
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.0124681
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.892421
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3118312260042929572, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_Name
+      value: DarkRangerModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6680635320088320970, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1137a4cfebdfd47238a876be848ceb3e, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+--- !u!95 &2131011052822814301 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6680635320088320970, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+  m_PrefabInstance: {fileID: 4694084719445640599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6631756989234860717 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2102062782998075194, guid: a1657d10691194fd08606b7d0c6d6891, type: 3}
+  m_PrefabInstance: {fileID: 4694084719445640599}
+  m_PrefabAsset: {fileID: 0}
