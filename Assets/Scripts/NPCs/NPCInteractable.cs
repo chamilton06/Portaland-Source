@@ -14,23 +14,38 @@ public class NPCInteractable : MonoBehaviour {
 
     bool playerInRange;
 
-    void Update() {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E)) {
-            Debug.Log($"Talking to {name}");
-            onInteract.Invoke();
+    public string offerText = "I'll forge you a fine sword. Interested?";
+
+    void Update()
+    {
+        if (!playerInRange || OfferPopup.Instance.IsOpen) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            prompt.SetActive(false);
+            OfferPopup.Instance.Show(offerText, OnAccept, OnReject, OnClosed);
         }
     }
 
-    void OnTriggerEnter(Collider other) {
-        Debug.Log($"Trigger entered by {other.name}, tag={other.tag}");
-        if (!other.CompareTag("Player")) return;
-        playerInRange = true;
-        prompt.SetActive(true);
+    // debug statements (DELETE)
+    void OnAccept() => Debug.Log($"{name}: offer accepted");
+    void OnReject() => Debug.Log($"{name}: offer rejected");
+
+    void OnClosed()
+    {
+        if (playerInRange) prompt.SetActive(true);
     }
 
-    void OnTriggerExit(Collider other) {
-        Debug.Log($"Trigger exited by {other.name}, tag={other.tag}");
-        if (!other.CompareTag("Player")) return;
+    void OnTriggerEnter(Collider other)
+    {
+        if (!other.transform.root.CompareTag("Player")) return;
+        playerInRange = true;
+        if (!OfferPopup.Instance.IsOpen) prompt.SetActive(true);
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (!other.transform.root.CompareTag("Player")) return;
         playerInRange = false;
         prompt.SetActive(false);
     }
