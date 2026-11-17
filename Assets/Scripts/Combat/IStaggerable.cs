@@ -5,6 +5,9 @@ public interface IStaggerable
 {
     bool IsStaggered { get; }
 
+    // Extra riposte damage on top of the player's riposte multiplier. 1 = none; bosses go higher.
+    float RiposteBonus { get; }
+
     // Called when a riposte lands, so one opening gives one critical hit.
     void EndStagger();
 }

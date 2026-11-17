@@ -19,6 +19,14 @@ public class BossEncounter : MonoBehaviour
     [Tooltip("Only counts if the player is within this many metres up or down, so walking under the floor or past the outside wall doesn't start it.")]
     [Min(0.5f)] public float sameFloorHeight = 2.5f;
 
+    [Header("Difficulty")]
+    [Tooltip("Multiplies the boss's attack damage.")]
+    [Min(0f)] public float damageMultiplier = 1.5f;
+    [Tooltip("Multiplies how long it circles before attacking. Lower = attacks more often.")]
+    [Range(0.1f, 1f)] public float circleTimeScale = 0.35f;
+    [Tooltip("Multiplies how long it stands open after attacking. Lower = more relentless, but smaller openings to punish.")]
+    [Range(0.1f, 1f)] public float recoveryScale = 0.7f;
+
     [Header("Arena")]
     [Tooltip("Optional. Switched on when the fight starts and off when the boss dies, e.g. something blocking the door.")]
     public GameObject barrier;
@@ -63,7 +71,13 @@ public class BossEncounter : MonoBehaviour
     {
         health = GetComponent<Health>();
         enemy = GetComponent<EnemyMelee>();
-        if (enemy != null) enemy.waitToBeWoken = true;
+        if (enemy != null)
+        {
+            enemy.waitToBeWoken = true;
+            enemy.damageMultiplier = damageMultiplier;
+            enemy.recoveryScale = recoveryScale;
+            enemy.circleTime *= circleTimeScale;
+        }
         bosses.Add(health);
         health.onDeath.AddListener(Win);
         if (barrier != null) barrier.SetActive(false);

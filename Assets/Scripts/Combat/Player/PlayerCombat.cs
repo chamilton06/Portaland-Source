@@ -290,8 +290,9 @@ public class PlayerCombat : MonoBehaviour
                 bool riposte = staggerable != null && staggerable.IsStaggered;
                 if (riposte)
                 {
-                    multiplier *= riposteMultiplier;
+                    multiplier *= riposteMultiplier * staggerable.RiposteBonus;
                     staggerable.EndStagger();
+                    StartCoroutine(HitStop());
                 }
 
                 // Striking an enemy in the back while it isn't attacking is a backstab: another critical hit.
@@ -415,5 +416,13 @@ public class PlayerCombat : MonoBehaviour
         swinging = false;
         swingRoutine = null;
     }
-}
 
+    // A split-second freeze when a riposte lands, so the big hit feels heavy.
+    private IEnumerator HitStop()
+    {
+        if (Time.timeScale < 1f) yield break; // Already slowed (paused or another hit stop).
+        Time.timeScale = 0.05f;
+        yield return new WaitForSecondsRealtime(0.12f);
+        if (Time.timeScale == 0.05f) Time.timeScale = 1f;
+    }
+}

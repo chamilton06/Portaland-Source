@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4608083503857523093}
   - component: {fileID: 8243734460656215645}
   - component: {fileID: 3514611351217574043}
+  - component: {fileID: 3968242843455197196}
   m_Layer: 0
   m_Name: Vampire
   m_TagString: Untagged
@@ -116,56 +117,74 @@ MonoBehaviour:
   circleTime: {x: 0.8, y: 2.2}
   gravity: 20
   attacks:
-  - label: Quick slash
+  - label: Claw swipe
     state: Sword_Regular_A
-    damage: 12
-    reach: 2.3
+    damage: 14
+    reach: 2
     hitTime: 0.18200001
     duration: 0.36833337
     trackUntil: 0.10920001
-    lunge: 0.6
+    lunge: 0.7
     holdAt: 0
     holdFor: 0
-    recovery: 0.5
+    closesFrom: 0
+    recovery: 0.45
     followUp: 1
-    followUpChance: 0.5
-  - label: Backhand slash
+    followUpChance: 0.6
+  - label: Backhand claw
     state: Sword_Regular_B
-    damage: 12
-    reach: 2.3
+    damage: 14
+    reach: 2
     hitTime: 0.224
     duration: 0.45333338
     trackUntil: 0.13440001
-    lunge: 0.4
+    lunge: 0.5
     holdAt: 0
     holdFor: 0
+    closesFrom: 0
     recovery: 0.7
     followUp: -1
     followUpChance: 0.5
-  - label: Overhead smash
+  - label: Overhead rend
     state: Sword_Attack
-    damage: 22
-    reach: 2.6
+    damage: 26
+    reach: 2.3
     hitTime: 0.5366667
     duration: 1.3033334
     trackUntil: 0.37566668
-    lunge: 1.2
+    lunge: 1.3
     holdAt: 0
     holdFor: 0
-    recovery: 1
+    closesFrom: 0
+    recovery: 1.1
     followUp: -1
     followUpChance: 0.5
-  - label: Delayed slash
+  - label: Delayed rake
     state: Sword_Regular_C
-    damage: 18
-    reach: 2.5
+    damage: 20
+    reach: 2.2
     hitTime: 0.8
     duration: 1.7
     trackUntil: 0.8
-    lunge: 0.8
+    lunge: 0.9
     holdAt: 0.48000002
-    holdFor: 0.6
+    holdFor: 0.7
+    closesFrom: 0
     recovery: 0.9
+    followUp: -1
+    followUpChance: 0.5
+  - label: Blood lunge
+    state: Sword_Dash
+    damage: 22
+    reach: 2.2
+    hitTime: 0.6423333
+    duration: 1.3316667
+    trackUntil: 0.51386666
+    lunge: 1.5
+    holdAt: 0
+    holdFor: 0
+    closesFrom: 9
+    recovery: 1
     followUp: -1
     followUpChance: 0.5
   attackAngle: 100
@@ -179,7 +198,33 @@ MonoBehaviour:
   weaponLength: 1
   weaponGripPoint: 0.08
   tint: {r: 1, g: 1, b: 1, a: 1}
+  riposteBonus: 1
+  riposteDownTime: 1.6
+  gapCloserCooldown: 6
+  secondPhaseBelow: 0
+  secondPhaseSpeed: 1.25
+  waitToBeWoken: 0
   logActions: 1
+--- !u!114 &3968242843455197196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3723245638846391472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed80b23478a64b9d8ae9be1f4b3a16b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trailMaterial: {fileID: 2100000, guid: 9827783b23adc4ef5b19c6f9bcf1f47e, type: 2}
+  colour: {r: 0.75, g: 0.02, b: 0.02, a: 1}
+  trailTime: 0.22
+  trailWidth: 0.12
+  handLights: 1
+  lightIntensity: 1.2
+  lightRange: 1.6
+  secondPhaseFlare: 1.8
 --- !u!1001 &7147589470358994301
 PrefabInstance:
   m_ObjectHideFlags: 0

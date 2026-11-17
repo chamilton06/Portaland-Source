@@ -36,6 +36,7 @@ public class DummyAttacker : MonoBehaviour, IStaggerable
     private GameObject weaponInstance;
 
     public bool IsStaggered => !dead && state == AttackState.Staggered;
+    public float RiposteBonus => 1f;
 
     private void Awake()
     {

@@ -25,6 +25,9 @@ public class EnemyAttack
     [Min(0f)] public float holdAt = 0f;
     [Tooltip("Real seconds the wind-up is held, to catch players who roll too early.")]
     [Min(0f)] public float holdFor = 0f;
+    [Header("Gap closer")]
+    [Tooltip("If above 0, the enemy can open with this from up to this far away, lunging across the gap instead of walking in. 0 = a normal attack.")]
+    [Min(0f)] public float closesFrom = 0f;
     [Header("Afterwards")]
     [Tooltip("Seconds the enemy stands open after the attack: the time to punish it.")]
     [Min(0f)] public float recovery = 0.6f;

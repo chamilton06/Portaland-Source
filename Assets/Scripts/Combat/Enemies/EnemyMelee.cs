@@ -34,6 +34,10 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
     [Header("Moveset")]
     public EnemyAttack[] attacks;
+    [Tooltip("Multiplies the damage of every attack.")]
+    [Min(0f)] public float damageMultiplier = 1f;
+    [Tooltip("Multiplies how long it stands open after each attack. Lower = more relentless.")]
+    [Range(0.1f, 2f)] public float recoveryScale = 1f;
     [Range(1f, 180f)] public float attackAngle = 100f;
 
     [Header("Poise and stagger")]
@@ -56,6 +60,21 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     [Tooltip("Multiplies the model's colours. Dark grey gives a shadowy invader look; white leaves it unchanged.")]
     public Color tint = new Color(0.35f, 0.32f, 0.42f);
 
+    [Tooltip("Riposte damage is multiplied by this on top of the player's riposte multiplier. Raise it on bosses so a parry really pays off.")]
+    [Min(1f)] public float riposteBonus = 1f;
+    [Tooltip("Seconds it's knocked down after a riposte lands.")]
+    [Min(0.1f)] public float riposteDownTime = 1.6f;
+
+    [Header("Gap closer")]
+    [Tooltip("Seconds between gap-closing attacks, so it doesn't spam them.")]
+    [Min(0f)] public float gapCloserCooldown = 6f;
+
+    [Header("Second phase")]
+    [Tooltip("Below this share of its health it enters a second phase: faster and more aggressive. 0 = no second phase.")]
+    [Range(0f, 1f)] public float secondPhaseBelow = 0f;
+    [Tooltip("Movement and attack speed in the second phase.")]
+    [Range(1f, 2f)] public float secondPhaseSpeed = 1.25f;
+
     [Header("Boss")]
     [Tooltip("Stands still and ignores the player until WakeUp() is called. BossEncounter uses this so a boss waits in its arena.")]
     public bool waitToBeWoken;
@@ -75,6 +94,10 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     private float verticalSpeed;
     private Vector3 velocity;
     private bool asleep;
+    private bool secondPhase;
+    private float attackSpeed = 1f;    // Animation speed during attacks; raised in the second phase.
+    private float lunge;               // This attack's lunge, longer for a gap closer.
+    private float nextGapCloser;
 
     private CharacterController controller;
     private Health health;
@@ -93,6 +116,11 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
     public bool IsStaggered => state == State.Staggered;
     public bool IsAsleep => asleep;
+    public bool IsAttacking => state == State.Attack;
+    public bool InSecondPhase => secondPhase;
+    public float RiposteBonus => riposteBonus;
+    // Fired once when it enters its second phase, e.g. so effects can flare up.
+    public event System.Action EnteredSecondPhase;
     // Open to a backstab unless it's mid-swing, already staggered or dead.
     public bool CanBeBackstabbed => state != State.Attack && state != State.Staggered && state != State.Dead;
 
@@ -143,6 +171,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         else
         {
             if (Time.time - lastHitTime > poiseRecoverDelay) poiseDamage = 0f;
+            CheckSecondPhase();
             Think();
         }
 
@@ -165,7 +194,8 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
             case State.Chase:
                 if (distance > giveUpRange) { SetState(State.Idle); break; }
                 Face(toPlayer);
-                velocity = Steer(toPlayer.normalized) * runSpeed;
+                if (TryGapCloser(distance)) break;
+                velocity = Steer(toPlayer.normalized) * runSpeed * Speedup;
                 if (distance <= circleDistance + 0.5f) StartCircling();
                 break;
 
@@ -175,7 +205,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
                 // Side-step around the player while holding the distance.
                 Vector3 side = Vector3.Cross(Vector3.up, toPlayer.normalized) * circleSide;
                 float closeIn = Mathf.Clamp(distance - circleDistance, -1f, 1f);
-                velocity = (side + toPlayer.normalized * closeIn).normalized * strafeSpeed;
+                velocity = (side + toPlayer.normalized * closeIn).normalized * strafeSpeed * Speedup;
                 if (Time.time >= stateEndsAt) ChooseAttack();
                 break;
 
@@ -183,7 +213,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
                 Face(toPlayer);
                 if (distance <= attack.reach * 0.85f) StartAttack(attack);
                 else if (Time.time >= stateEndsAt) StartCircling();
-                else velocity = Steer(toPlayer.normalized) * runSpeed;
+                else velocity = Steer(toPlayer.normalized) * runSpeed * Speedup;
                 break;
 
             case State.Attack:
@@ -207,16 +237,49 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         Report("Woken");
     }
 
+    private float Speedup => secondPhase ? secondPhaseSpeed : 1f;
+
+    // Lunges across the gap with a gap-closing attack when the player is too far away.
+    private bool TryGapCloser(float distance)
+    {
+        if (attacks == null || Time.time < nextGapCloser) return false;
+        foreach (EnemyAttack closer in attacks)
+        {
+            if (closer.closesFrom <= 0f || distance > closer.closesFrom || distance < closer.reach) continue;
+            nextGapCloser = Time.time + gapCloserCooldown;
+            StartAttack(closer);
+            lunge = Mathf.Max(closer.lunge, distance - closer.reach * 0.6f);
+            return true;
+        }
+        return false;
+    }
+
+    private void CheckSecondPhase()
+    {
+        if (secondPhase || secondPhaseBelow <= 0f || health.maxHealth <= 0) return;
+        if (health.CurrentHealth <= 0 || (float)health.CurrentHealth / health.maxHealth > secondPhaseBelow) return;
+        secondPhase = true;
+        attackSpeed = secondPhaseSpeed;
+        poiseDamage = 0f;
+        // A short pause to show the change before it comes back faster.
+        SetState(State.Recover, 1.2f);
+        PlayCombatState(StaggerState, 0.1f);
+        Report("Second phase");
+        EnteredSecondPhase?.Invoke();
+    }
+
     private void StartCircling()
     {
         circleSide = Random.value < 0.5f ? -1f : 1f;
-        SetState(State.Circle, Random.Range(circleTime.x, circleTime.y));
+        SetState(State.Circle, Random.Range(circleTime.x, circleTime.y) / (Speedup * Speedup));
     }
 
     private void ChooseAttack()
     {
         if (attacks == null || attacks.Length == 0) { StartCircling(); return; }
-        attack = attacks[Random.Range(0, attacks.Length)];
+        EnemyAttack[] normal = System.Array.FindAll(attacks, a => a.closesFrom <= 0f);
+        if (normal.Length == 0) normal = attacks;
+        attack = normal[Random.Range(0, normal.Length)];
         SetState(State.Approach, 3f);
     }
 
@@ -228,6 +291,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     {
         attack = next;
         attackTime = 0f;
+        lunge = next.lunge;
         holdEndsAt = float.NegativeInfinity;
         struck = false;
         SetState(State.Attack);
@@ -244,14 +308,14 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
             holdEndsAt = Time.time + attack.holdFor;
             holding = true;
         }
-        if (characterAnimator != null) characterAnimator.speed = holding ? 0.05f : 1f;
-        if (!holding) attackTime += Time.deltaTime;
+        if (characterAnimator != null) characterAnimator.speed = holding ? 0.05f : attackSpeed;
+        if (!holding) attackTime += Time.deltaTime * attackSpeed;
 
         if (attackTime < attack.trackUntil || holding) Face(toPlayer);
 
         // Lunge in during the wind-up, but don't walk through the player.
         if (!struck && !holding && attack.hitTime > 0f && distance > 1.2f)
-            velocity = transform.forward * (attack.lunge / attack.hitTime);
+            velocity = transform.forward * (lunge / attack.hitTime) * attackSpeed;
 
         if (!struck && attackTime >= attack.hitTime)
         {
@@ -262,9 +326,11 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
         if (attackTime >= attack.duration)
         {
-            bool combo = attack.followUp >= 0 && attack.followUp < attacks.Length && Random.value < attack.followUpChance;
+            // The second phase chains more often and recovers faster.
+            float chance = secondPhase ? Mathf.Min(1f, attack.followUpChance + 0.3f) : attack.followUpChance;
+            bool combo = attack.followUp >= 0 && attack.followUp < attacks.Length && Random.value < chance;
             if (combo) StartAttack(attacks[attack.followUp]);
-            else SetState(State.Recover, attack.recovery);
+            else SetState(State.Recover, attack.recovery * recoveryScale / Speedup);
         }
     }
 
@@ -288,13 +354,13 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
         if (playerDefence != null && playerDefence.isActiveAndEnabled)
         {
-            PlayerDefence.HitResult result = playerDefence.ReceiveHit(attack.damage, transform.position);
+            PlayerDefence.HitResult result = playerDefence.ReceiveHit(attack.damage * damageMultiplier, transform.position);
             Report("Strike: " + result);
             if (result == PlayerDefence.HitResult.Parried) Stagger(true);
         }
         else
         {
-            player.TakeDamage(attack.damage);
+            player.TakeDamage(attack.damage * damageMultiplier);
             Report("Strike: Damaged");
         }
     }
@@ -333,11 +399,15 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         Report("Staggered");
     }
 
+    // A riposte landed: knocked down hard (whole body), like a backstab.
     public void EndStagger()
     {
         if (state != State.Staggered) return;
-        SetState(State.Recover, 1f);
-        PlayCombatState(HitState, 0.05f);
+        SetState(State.Recover, riposteDownTime);
+        if (characterAnimator != null && deathLayer >= 0 && characterAnimator.HasState(deathLayer, KnockbackState))
+            characterAnimator.CrossFadeInFixedTime(KnockbackState, 0.05f, deathLayer, 0f);
+        else
+            PlayCombatState(HitState, 0.05f);
         Report("Riposted");
     }
 

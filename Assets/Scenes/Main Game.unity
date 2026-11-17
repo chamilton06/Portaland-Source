@@ -27222,8 +27222,20 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: riposteBonus
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
       propertyPath: waitToBeWoken
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: staggerDuration
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: secondPhaseBelow
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
       propertyPath: m_Name

@@ -41,6 +41,7 @@ public static class PrepareVampire
             GameObject prefab = GetOrCreatePrefab();
             KeepVisible();
             UseRescaledMesh();
+            SetUpClawsAndMoveset();
             Selection.activeObject = prefab;
             EditorGUIUtility.PingObject(prefab);
             Debug.Log("Vampire ready: " + PrefabPath + ". Drag it into a test scene to try it.");
@@ -129,28 +130,31 @@ public static class PrepareVampire
             Debug.LogError("No vampire in this scene. Place one first.");
             return;
         }
-        if (vampire.GetComponent<BossEncounter>() != null)
-        {
-            Debug.Log("The vampire is already the boss. Its settings are on the Boss Encounter component.");
-            Selection.activeGameObject = vampire.gameObject;
-            return;
-        }
-
-        Undo.RegisterCompleteObjectUndo(new UnityEngine.Object[] { vampire, vampire.GetComponent<Health>() }, "Make Vampire The Boss");
-        BossEncounter boss = Undo.AddComponent<BossEncounter>(vampire.gameObject);
-        boss.bossName = "Servant of Dracula";
-        vampire.waitToBeWoken = true;
-        vampire.aggroRange = 30f;    // Once awake, he doesn't lose interest inside the church.
-        vampire.giveUpRange = 60f;
-        vampire.poise = 70f;         // Takes a proper combo to stagger, not two hits.
         Health health = vampire.GetComponent<Health>();
-        health.maxHealth = 500;
-        vampire.name = "Vampire (Boss)";
+        Undo.RegisterCompleteObjectUndo(new UnityEngine.Object[] { vampire, health }, "Make Vampire The Boss");
+        bool isNew = vampire.GetComponent<BossEncounter>() == null;
+        if (isNew)
+        {
+            BossEncounter boss = Undo.AddComponent<BossEncounter>(vampire.gameObject);
+            boss.bossName = "Servant of Dracula";
+            vampire.waitToBeWoken = true;
+            vampire.aggroRange = 30f;    // Once awake, he doesn't lose interest inside the church.
+            vampire.giveUpRange = 60f;
+            vampire.poise = 70f;         // Takes a proper combo to stagger, not two hits.
+            health.maxHealth = 500;
+            vampire.name = "Vampire (Boss)";
+        }
+        // Boss-only extras, added in a later version of this tool. Each is only set while it's
+        // still at the normal enemy's default, so Inspector tuning is kept.
+        if (vampire.secondPhaseBelow <= 0f) vampire.secondPhaseBelow = 0.5f;
+        if (vampire.riposteBonus <= 1f) vampire.riposteBonus = 1.5f;       // A parried boss riposte hits for 4.5x.
+        if (Mathf.Approximately(vampire.staggerDuration, 1.5f)) vampire.staggerDuration = 2.2f; // Time to get the riposte in.
         EditorUtility.SetDirty(vampire);
         EditorUtility.SetDirty(health);
         Selection.activeGameObject = vampire.gameObject;
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(vampire.gameObject.scene);
-        Debug.Log("The vampire is now the boss: 500 health, waits until you're within 10 m on his floor. Save the scene to keep it.");
+        Debug.Log((isNew ? "The vampire is now the boss" : "Boss updated") + ": " + health.maxHealth + " health, second phase below "
+            + Mathf.RoundToInt(vampire.secondPhaseBelow * 100f) + "%, parry stagger " + vampire.staggerDuration + " s. Save the scene to keep it.");
     }
 
     private static EnemyMelee FindVampire()
@@ -432,6 +436,96 @@ public static class PrepareVampire
         {
             PrefabUtility.UnloadPrefabContents(contents);
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // Claws and moveset
+    // ------------------------------------------------------------------------
+
+    private const string TrailMaterialPath = MaterialFolder + "/BloodTrail.mat";
+
+    // Gives the prefab blood claws and its own moveset. The moveset only replaces the copy of the
+    // Dark Ranger's it started with, so a moveset tuned in the Inspector is kept.
+    private static void SetUpClawsAndMoveset()
+    {
+        Material trail = AssetDatabase.LoadAssetAtPath<Material>(TrailMaterialPath);
+        if (trail == null)
+        {
+            Shader shader = Shader.Find("Legacy Shaders/Particles/Additive") ?? Shader.Find("Sprites/Default");
+            trail = new Material(shader) { name = "BloodTrail" };
+            if (trail.HasProperty("_TintColor")) trail.SetColor("_TintColor", new Color(0.8f, 0.1f, 0.1f, 0.6f));
+            AssetDatabase.CreateAsset(trail, TrailMaterialPath);
+        }
+
+        GameObject contents = PrefabUtility.LoadPrefabContents(PrefabPath);
+        try
+        {
+            EnemyMelee enemy = contents.GetComponent<EnemyMelee>();
+            BloodClaws claws = contents.GetComponent<BloodClaws>();
+            if (claws == null) claws = contents.AddComponent<BloodClaws>();
+            if (claws.trailMaterial == null) claws.trailMaterial = trail;
+
+            bool copiedFromRanger = enemy.attacks == null || enemy.attacks.Length == 0 || enemy.attacks[0].label == "Quick slash";
+            if (copiedFromRanger)
+            {
+                enemy.attacks = new[]
+                {
+                    // 0: fast swipe that often carries on into a backhand.
+                    Move("Claw swipe", "Sword_Regular_A", 0.42f, 14f, 2.0f, 0.7f, 0.45f, followUp: 1, chance: 0.6f),
+                    // 1: the backhand, also used on its own.
+                    Move("Backhand claw", "Sword_Regular_B", 0.42f, 14f, 2.0f, 0.5f, 0.7f),
+                    // 2: slow two-handed overhead that hits hard and lunges in.
+                    Move("Overhead rend", "Sword_Attack", 0.35f, 26f, 2.3f, 1.3f, 1.1f, track: 0.7f),
+                    // 3: holds the claws back, to catch rolls made on reflex.
+                    Move("Delayed rake", "Sword_Regular_C", 0.4f, 20f, 2.2f, 0.9f, 0.9f, track: 1f, hold: 0.7f),
+                    // 4: gap closer. Rushes in from up to 9 m, so backing off to heal isn't safe.
+                    Move("Blood lunge", "Sword_Dash", 0.41f, 22f, 2.2f, 1.5f, 1.0f, track: 0.8f, closesFrom: 9f),
+                };
+                enemy.weaponModel = null;
+            }
+            PrefabUtility.SaveAsPrefabAsset(contents, PrefabPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(contents);
+        }
+    }
+
+    // hitPoint is how far through the clip the claws connect; track is the share of the wind-up
+    // it keeps turning to follow; hold is how long a delayed swing freezes at the top.
+    private static EnemyAttack Move(string label, string state, float hitPoint, float damage, float reach, float lunge,
+        float recovery, float track = 0.6f, float hold = 0f, int followUp = -1, float chance = 0.5f, float closesFrom = 0f)
+    {
+        float length = ClipLength(state);
+        float hitTime = length * hitPoint;
+        return new EnemyAttack
+        {
+            label = label,
+            state = state,
+            damage = damage,
+            reach = reach,
+            hitTime = hitTime,
+            duration = length * 0.85f,
+            trackUntil = hitTime * track,
+            lunge = lunge,
+            holdAt = hold > 0f ? hitTime * 0.6f : 0f,
+            holdFor = hold,
+            recovery = recovery,
+            followUp = followUp,
+            followUpChance = chance,
+            closesFrom = closesFrom,
+        };
+    }
+
+    // Length of the clip on the controller's Combat layer state with this name.
+    private static float ClipLength(string state)
+    {
+        var controller = AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(ControllerPath);
+        foreach (var layer in controller.layers)
+            foreach (var child in layer.stateMachine.states)
+                if (child.state.name == state && child.state.motion is AnimationClip clip)
+                    return clip.length;
+        throw new InvalidOperationException("No '" + state + "' state on " + ControllerPath + ". Run Prepare Combat Animations first.");
     }
 
     // Scales the model to ModelHeight and stands its feet on the bottom of the capsule.
