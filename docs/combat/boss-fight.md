@@ -1,81 +1,51 @@
 # The vampire boss
 
-The first boss of the game: the **Servant of Dracula**, in the church in Main Game. He's meant
-to be like Soldier of Godrick in Elden Ring: a first boss that teaches you to roll, punish and
-parry, and that's hard but beatable in a few tries.
+This is the first boss in the game, the Servant of Dracula, who's in the church in Main Game.
+I based the fight on Soldier of Godrick from Elden Ring. He's the first boss so he should teach
+you to roll, punish and parry, and be beatable in a few tries without being a pushover.
 
-Kartik makes the bosses, so this page is mainly so everyone knows how it works and what to
-leave alone.
+## The fight
 
-## How the fight goes
+When you walk into the church he just stands there until you get within about 10 metres (or
+hit him). Then his name and health bar come up at the bottom, the music starts and red mist
+blocks both church doors so you can't leave.
 
-1. You walk into the church. He stands still until you're within 10 metres of him on his
-   floor. Hitting him first also starts the fight.
-2. His name and a big health bar appear at the bottom of the screen, the boss music starts,
-   and **red mist seals both church doors**.
-3. He circles, attacks, and you punish the gaps. Below half health he enters a second phase:
-   a short roar, his claws flare up, and he gets a bit faster.
-4. When he dies, "VANQUISHED" appears with the victory sting, the mist fades and the doors
-   open, and a **Blood Vial** goes straight into your inventory with a little popup.
-5. If you die instead, the scene reloads and everything resets.
+His attacks are a quick claw swipe that often goes into a backhand, a slow overhead that hits
+hard (about 31), a delayed swipe that catches you if you roll too early, and a lunge he can do
+from up to 9 metres away so you can't just run off and heal. When he drops to half health he
+roars, his claws glow brighter and he gets a bit faster.
 
-## His moves
+He doesn't flinch when you hit him, and if you hit him 3 times in a row really fast he'll
+swing back at you, so spamming attacks doesn't work. Parrying him is the best way to do damage:
+he's stunned for a couple of seconds and a riposte does 4.5x.
 
-| Move | Damage | How to deal with it |
-| --- | --- | --- |
-| Claw swipe | 17 | Fast. Often carries straight on into the backhand |
-| Backhand claw | 17 | Also used on its own |
-| Overhead rend | 31 | Slow and lunges in. Roll sideways once he stops turning |
-| Delayed rake | 24 | Holds his claws back. Rolling on reflex gets you hit |
-| Blood lunge | 26 | Rushes you from up to 9 m away, so backing off to heal isn't always safe |
+When he dies you get VANQUISHED with a church organ sound, the mist fades so you can leave, and
+a Blood Vial goes straight into your inventory. If you die, the scene reloads and the fight
+resets.
 
-Damage already includes his boss multiplier (x1.2). He doesn't flinch when you hit him. If you
-land 3 hits within 2.5 seconds, he cuts into your combo with a swipe. Hit two or three times,
-then back off.
+## In the scene
 
-**Parrying him is the big reward.** He's staggered for 2.2 seconds and a riposte does 4.5x
-damage.
+In Main Game's Hierarchy there's **Vampire (Boss)**, which is the boss, and **Boss Barrier** and
+**Boss Barrier (1)**, which are the red mist in the two doorways. The barriers are hidden until
+the fight starts.
 
-## Where things are in the scene
+The vampire comes from `Assets/Prefabs/Combat/Vampire.prefab`. I put the boss settings on the
+one in the church rather than on the prefab, so the prefab can be used as a normal vampire
+enemy later.
 
-In Main Game's Hierarchy:
+## Changing it
 
-- **Vampire (Boss)**: the boss. Its **Boss Encounter** component has all the boss settings.
-- **Boss Barrier** and **Boss Barrier (1)**: the red mist in the two doorways. Each one is an
-  **Arena Barrier** with a Box Collider, which is the actual wall. They're hidden until the
-  fight starts.
+Most of the boss settings are on the **Boss Encounter** component on Vampire (Boss): his name,
+how close you need to get before he wakes up, his damage and poise, how aggressive he is, the
+barriers, the music and the reward. Each one has a tooltip. His health is on the Health
+component (350) and his moves are on Enemy Melee.
 
-The vampire itself is `Assets/Prefabs/Combat/Vampire.prefab`. The boss settings are only on
-the copy in the church, so the prefab can be reused as a normal vampire later.
+If you want the mist in another doorway, make an empty object, add **Arena Barrier** to it and
+resize its Box Collider to fill the doorway (about 2.4 wide, 3.2 tall and 0.3 thick, with the
+centre Y at 1.6 so it sits on the floor). Then add it to the Barriers list on Boss Encounter.
 
-## Changing the fight
+## Credits
 
-Everything is on **Vampire (Boss) → Boss Encounter**:
-
-| Setting | What it does |
-| --- | --- |
-| Boss Name | The name above the bar |
-| Wake Range / Same Floor Height | How close you get before the fight starts |
-| Damage Multiplier | His damage (1.2) |
-| Circle Time Scale / Recovery Scale | How long he waits between attacks, and how long he's open after one |
-| Poise / Poise Break Cooldown | How much damage staggers him (100), and how long before it can happen again (8 s) |
-| Retaliate After Hits | How many hits in a row before he cuts into your combo (3) |
-| Barriers | The doorway barriers it turns on and off |
-| Music / Victory Sound | Leave Victory Sound empty to use the game's shared one |
-| Reward / Reward Amount | What you get for beating him (1 Blood Vial) |
-
-His health is on **Health** (350), and his moves, second phase and riposte bonus are on
-**Enemy Melee**.
-
-## The barriers
-
-To add another doorway: make an empty GameObject, add **Arena Barrier** (it brings a Box
-Collider), and size the box to fill the doorway. Something like X 2.4, Y 3.2, Z 0.3, with
-Center Y at half the height so it sits on the floor. Then add it to the boss's **Barriers**
-list. **Opacity**, **Brightness** and **Swirl Speed** change how it looks.
-
-## Where his model and sounds came from
-
-- Model: "Vampire Rigged 3D" by Zain.2407 on Sketchfab, **CC BY 4.0**, so he needs to be
-  in the game's credits. Details are in `Assets/ThirdParty/Sketchfab/Vampire/README.md`.
-- Sounds and music: all CC0. Details are in `Assets/ThirdParty/Audio/README.md`.
+The vampire model is "Vampire Rigged 3D" by Zain.2407 on Sketchfab. It's CC BY 4.0 so he needs
+to be in the game credits. More details are in `Assets/ThirdParty/Sketchfab/Vampire/README.md`.
+The sounds and music are CC0, see `Assets/ThirdParty/Audio/README.md`.

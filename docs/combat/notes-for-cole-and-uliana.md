@@ -1,75 +1,53 @@
 # Notes for Cole and Uliana
 
-What the combat work changed in your parts of the project, and how to hook into it. Nothing of
-yours was rewritten. The changes below are small, and each one is listed.
+Just so you both know what I changed in your parts and how to link things up with the boss. I
+haven't rewritten anything of yours, the changes are small and they're all listed here.
 
 ## Cole
 
-### What I added to Main Game
+In Main Game I added the combat stuff to the Player (the sword, attacks, blocking, lock-on,
+health bars and sounds), the vampire boss inside the church, and the red mist barriers in the
+two church doorways (Boss Barrier and Boss Barrier (1)). I didn't move or delete anything of
+yours and the player spawn is still where you put it. AttackingDummy and StillDummy are still in
+there too, feel free to delete them if you don't need them.
 
-All of it is new objects or components. Nothing of yours was moved or deleted, and your
-player spawn point is untouched.
+For the blacksmith quest you shouldn't need any extra code on the boss, because the fight only
+starts when the player walks up to him. If you only want him there once the quest starts, keep
+Vampire (Boss) and both Boss Barrier objects turned off in the scene and turn them on with
+`SetActive(true)` when the blacksmith gives the quest.
 
-- **The Player** has the combat components now (sword in the hand, attacks, block and parry,
-  lock-on, health bars, sounds). I added them with Tools → Portaland → Add Combat Player To Open
-  Scene.
-- **Vampire (Boss)** standing inside the church.
-- **Boss Barrier** and **Boss Barrier (1)** in the two church doorways. They're hidden until
-  the fight starts.
+To complete the quest when he dies, there's an On Death event on the vampire's Health
+component. You can add your quest script to it in the Inspector, or do it in code:
 
-`AttackingDummy` and `StillDummy` are still in the scene. I didn't remove them in case you
-wanted them, but they can go.
+```csharp
+vampireHealth.onDeath.AddListener(CompleteChurchQuest);
+```
 
-### Hooking the boss into your blacksmith quest
-
-The fight only starts when the player walks up to the vampire, so the quest doesn't need any
-special code:
-
-- **To only have the boss there once the blacksmith gives the quest:** keep **Vampire (Boss)**
-  and the two **Boss Barrier** objects switched off in the scene, and switch them on (`SetActive(true)`)
-  when the quest starts.
-- **To finish the quest when he dies:** on **Vampire (Boss) → Health**, there's an **On Death**
-  event. Add your quest script there in the Inspector, or listen to it in code:
-
-  ```csharp
-  vampireHealth.onDeath.AddListener(CompleteChurchQuest);
-  ```
-
-The boss also hands over a **Blood Vial** when he dies, through `Inventory.AddItem`, so your
-quests hear about it through `Inventory.ItemAdded` like any other item.
-
-### Stamina
-
-Stamina refills faster now for the whole game: 40 a second instead of 15, after a 0.6 second
-pause instead of 1. Rolls cost 18 instead of 25. These are just numbers on `PlayerStats` and
-`PlayerMovement`. If sprinting or exploring feels off now, tell me and we'll tune them together.
+He also gives the player a Blood Vial when he dies. It goes through `Inventory.AddItem`, so the
+quests will see it through `ItemAdded` like any other item.
 
 ## Uliana
 
-### The Blood Vial (for crafting)
+The Blood Vial is in `Assets/Resources/Items/Crafting/BloodVial.asset` with your other crafting
+items, and its icon is `BloodVial.png` in the same folder. You get one from beating the vampire
+and it goes straight into the inventory. It's just a normal item so you can use it in recipes,
+and you can change the name, description or icon if you want.
 
-- The item is `Assets/Resources/Items/Crafting/BloodVial.asset`, next to your other
-  ingredients, with the icon `BloodVial.png`. It stacks to 10.
-- You get one for beating the vampire boss. It goes straight into the inventory (like a boss
-  reward in Elden Ring), with a small "obtained" popup.
-- It's a normal `Item`, so you can use it in recipes straight away. The name, description and
-  icon are yours to change.
+I changed two numbers in `PlayerStats`: `staminaRegen` from 15 to 40 and `regenDelay` from 1 to
+0.6. Stamina was running out way too fast in fights. I changed them on the Player in Main Game,
+Prototype and the test scenes as well. Nothing else in the file is different, but let me know
+if it messes anything up for you.
 
-### Small changes to your scripts
+I didn't change your `DeathScreen`. Main Game uses my `PlayerDeathHandler` for the YOU DIED
+screen, so if you want yours used there instead, let me know and we can sort it out.
 
-- **`PlayerStats`:** the defaults for `staminaRegen` (15 → 40) and `regenDelay` (1 → 0.6),
-  and the same values on the Player in Main Game, Prototype and our test scenes. Stamina was
-  running out far too quickly in fights, so I changed it for the whole game. Nothing else in
-  the file changed. Shout if it causes you problems.
-- I didn't touch `DeathScreen`. Main Game uses our `PlayerDeathHandler` for the YOU DIED
-  screen. If you'd rather use yours there, tell me and we'll sort out which one shows.
-
-### Fonts
-
-The boss name, VANQUISHED and YOU DIED use your **Cinzel** font from `Assets/Fonts`. I only
-reference it; the files weren't changed.
+I also used your Cinzel font for the boss name, VANQUISHED and YOU DIED. I didn't change the
+font files.
 
 ## Both of you
 
-- If you open Main Game and Unity asks about changes on disk, choose **Reload**.
-- The combat guide is [README.md](README.md), and the boss is explained in [boss-fight.md](boss-fight.md).
+Stamina is faster for the whole game now (rolls cost 18 instead of 25 too), so tell me if
+sprinting or exploring feels weird.
+
+If Unity says Main Game has changed on disk when you open it, click Reload. The main combat
+notes are in [README.md](README.md) and the boss is in [boss-fight.md](boss-fight.md).
