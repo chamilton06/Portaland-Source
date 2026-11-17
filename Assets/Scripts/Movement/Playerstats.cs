@@ -28,8 +28,8 @@ public class PlayerStats : MonoBehaviour
     // stamina
     public float sprintStaminaCost = 20f;  // per sec
     public float jumpStaminaCost = 10f;
-    public float staminaRegen = 15f;       // per sec
-    public float regenDelay = 1f;          // wait before refill
+    public float staminaRegen = 40f;       // per sec
+    public float regenDelay = 0.6f;        // wait before refill
     public float sprintAgainAt = 20f;      // needed to sprint again after running out
 
     // health

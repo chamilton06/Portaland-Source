@@ -10636,8 +10636,8 @@ MonoBehaviour:
   sprintHungerMult: 3
   sprintStaminaCost: 20
   jumpStaminaCost: 10
-  staminaRegen: 15
-  regenDelay: 1
+  staminaRegen: 40
+  regenDelay: 0.6
   sprintAgainAt: 20
   starveDamage: 1
   safeFallSpeed: 14
@@ -10840,7 +10840,7 @@ MonoBehaviour:
   rollKey: 113
   rollDuration: 0.45
   rollSpeed: 8
-  rollStaminaCost: 25
+  rollStaminaCost: 18
   rollCooldown: 0.35
   dodgeWindowStart: 0.08
   dodgeWindowEnd: 0.28

@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode rollKey = KeyCode.Q;
     [Min(0.1f)] public float rollDuration = 0.45f;
     [Min(0f)] public float rollSpeed = 8f;
-    [Min(0f)] public float rollStaminaCost = 25f;
+    [Min(0f)] public float rollStaminaCost = 18f;
     [Min(0f)] public float rollCooldown = 0.35f;
     [Min(0f)] public float dodgeWindowStart = 0.08f;
     [Min(0f)] public float dodgeWindowEnd = 0.28f;
