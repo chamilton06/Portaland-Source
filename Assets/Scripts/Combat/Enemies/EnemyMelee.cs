@@ -56,6 +56,10 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     [Tooltip("Multiplies the model's colours. Dark grey gives a shadowy invader look; white leaves it unchanged.")]
     public Color tint = new Color(0.35f, 0.32f, 0.42f);
 
+    [Header("Boss")]
+    [Tooltip("Stands still and ignores the player until WakeUp() is called. BossEncounter uses this so a boss waits in its arena.")]
+    public bool waitToBeWoken;
+
     public bool logActions = true;
 
     private enum State { Idle, Chase, Circle, Approach, Attack, Recover, Flinch, Staggered, Dead }
@@ -70,6 +74,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     private float lastHitTime = float.NegativeInfinity;
     private float verticalSpeed;
     private Vector3 velocity;
+    private bool asleep;
 
     private CharacterController controller;
     private Health health;
@@ -87,6 +92,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     private static readonly int KnockbackState = Animator.StringToHash("Hit_Knockback");
 
     public bool IsStaggered => state == State.Staggered;
+    public bool IsAsleep => asleep;
     // Open to a backstab unless it's mid-swing, already staggered or dead.
     public bool CanBeBackstabbed => state != State.Attack && state != State.Staggered && state != State.Dead;
 
@@ -109,6 +115,8 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
     private void Start()
     {
+        // Read here rather than in Awake so a BossEncounter's Awake can set it first.
+        asleep = waitToBeWoken;
         if (player == null) player = FindFirstObjectByType<PlayerStats>();
         if (player != null) playerDefence = player.GetComponent<PlayerDefence>();
         HoldWeapon();
@@ -151,7 +159,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         switch (state)
         {
             case State.Idle:
-                if (distance < aggroRange) SetState(State.Chase);
+                if (!asleep && distance < aggroRange) SetState(State.Chase);
                 break;
 
             case State.Chase:
@@ -188,6 +196,15 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
                 if (Time.time >= stateEndsAt) StartCircling();
                 break;
         }
+    }
+
+    // Starts fighting straight away, wherever the player is.
+    public void WakeUp()
+    {
+        if (!asleep || state == State.Dead) return;
+        asleep = false;
+        if (state == State.Idle) SetState(State.Chase);
+        Report("Woken");
     }
 
     private void StartCircling()
@@ -288,6 +305,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
 
     public void OnHit(int damage)
     {
+        WakeUp();
         if (state == State.Dead || state == State.Staggered) return;
         lastHitTime = Time.time;
         poiseDamage += damage;
@@ -326,6 +344,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     // Stabbed in the back: knocked stumbling (whole body) and slow to recover.
     public void OnBackstabbed()
     {
+        WakeUp();
         SetState(State.Recover, backstabDownTime);
         if (characterAnimator != null && deathLayer >= 0 && characterAnimator.HasState(deathLayer, KnockbackState))
             characterAnimator.CrossFadeInFixedTime(KnockbackState, 0.05f, deathLayer, 0f);

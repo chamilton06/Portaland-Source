@@ -5471,6 +5471,36 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 120b628707d512840ac2d40f8aca21ed, type: 3}
+--- !u!1 &482902240 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+  m_PrefabInstance: {fileID: 2142952341}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &482902246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482902240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1f52ed344b994bd38cd0d59b8054ccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Servant of Dracula
+  wakeRange: 10
+  sameFloorHeight: 2.5
+  barrier: {fileID: 0}
+  music: {fileID: 0}
+  musicVolume: 0.6
+  musicFade: 2
+  victorySound: {fileID: 0}
+  victoryText: VANQUISHED
+  bannerTime: 4
+  barWidth: 0.55
+  barHeight: 0.74
+  chipDelay: 0.6
 --- !u!224 &483106859 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2577804284901562355, guid: 8207fc7997f58544a92b0a182b2c7371, type: 3}
@@ -20932,6 +20962,8 @@ MonoBehaviour:
   windUpDuration: 0.6
   recoveryDuration: 1
   showAttackLabel: 1
+  staggerDuration: 0
+  parryPushback: 0.4
 --- !u!114 &1619024567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23464,6 +23496,10 @@ GameObject:
   - component: {fileID: 1913253704}
   - component: {fileID: 1913253703}
   - component: {fileID: 1913253702}
+  - component: {fileID: 1913253717}
+  - component: {fileID: 1913253716}
+  - component: {fileID: 1913253715}
+  - component: {fileID: 1913253714}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -23529,6 +23565,9 @@ MonoBehaviour:
   parryWindow: 0.2
   blockAngle: 120
   parryMessageDuration: 0.75
+  blockStaminaCost: 15
+  guardBreakDuration: 1
+  hitStunDuration: 0.4
 --- !u!114 &1913253706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23548,6 +23587,85 @@ MonoBehaviour:
   guardPositionOffset: {x: -0.25, y: 0.25, z: 0.15}
   guardRotationOffset: {x: -20, y: 0, z: 65}
   guardTransitionTime: 0.12
+  weaponFollowsHand: 0
+  heldWeaponModels:
+  - weapon: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+    model: {fileID: 919132149155446097, guid: 94ff9598bd289445daeb1c3e680088dd, type: 3}
+    length: 1
+    gripPoint: 0.08
+    rotationOffset: {x: 0, y: 0, z: 0}
+  - weapon: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+    model: {fileID: 919132149155446097, guid: 0f73923bda55f4f7f94f29618a13300e, type: 3}
+    length: 0.9
+    gripPoint: 0.12
+    rotationOffset: {x: 0, y: 0, z: 0}
+  handAttackDuration: 0.36833337
+  handHitDelay: 0.18
+  lightAttacks:
+  - name: Sword_Regular_A
+    duration: 0.36833337
+    hitDelay: 0.18200001
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  - name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyAttack:
+    name: Sword_Regular_C
+    duration: 1.7
+    hitDelay: 0.8
+    damageMultiplier: 2
+    staminaCost: 25
+    poise: 25
+    extraHitTimes: []
+  jumpAttack:
+    name: Sword_Attack
+    duration: 1.3033334
+    hitDelay: 0.5366667
+    damageMultiplier: 1.5
+    staminaCost: 15
+    poise: 15
+    extraHitTimes: []
+  sprintAttack:
+    name: Sword_Dash
+    duration: 1.3316667
+    hitDelay: 0.54833335
+    damageMultiplier: 1.25
+    staminaCost: 15
+    poise: 0
+    extraHitTimes: []
+  crouchAttack:
+    name: Sword_Regular_B
+    duration: 0.45333338
+    hitDelay: 0.224
+    damageMultiplier: 1
+    staminaCost: 10
+    poise: 0
+    extraHitTimes: []
+  heavyHoldTime: 0.3
+  comboWindow: 0.6
+  riposteMultiplier: 3
+  weaponArt:
+    name: Sword_Heavy_Combo
+    duration: 3.9
+    hitDelay: 1.0833334
+    damageMultiplier: 1
+    staminaCost: 35
+    poise: 30
+    extraHitTimes:
+    - 2.1666667
+    - 3.1200001
+  weaponArtKey: 103
+  backstabMultiplier: 3
+  backstabRange: 1.8
+  backstabAngle: 90
+  pauseStaminaRegenInCombat: 1
 --- !u!114 &1913253707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23728,6 +23846,82 @@ Transform:
   - {fileID: 1273231270}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1913253714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89d6aa55ade143e983b3a8772156fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showTime: 6
+  comboTime: 2
+  chipDelay: 0.6
+  maxDistance: 30
+  barWidth: 0.11
+  heightAboveHead: 0.35
+--- !u!114 &1913253715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75df9752a32464394aca040f437c7697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockButton: 2
+  lockKey: 99
+  lockRange: 15
+  breakRange: 20
+  turnSpeed: 720
+  switchFlick: 3
+  switchCooldown: 0.35
+  showMarker: 1
+  markerSize: 0.014
+--- !u!114 &1913253716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8265b122e56c4f45b51dfc487768d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 214464222}
+  blendIn: 0.05
+  guardPose: 0.35
+  guardRaiseTime: 0.12
+  parryAnimationTime: 0.5
+  hitAnimationTime: 0.3
+--- !u!114 &1913253717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6fb5f51543ca4e43971a868ce94e1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 214464222}
+  autoGrip: 1
+  autoGripNudge: {x: 0, y: 0, z: 0}
+  autoGripTilt: {x: 0, y: 0, z: 0}
+  gripPosition: {x: 0, y: 0.08, z: 0.03}
+  gripRotation: {x: 90, y: 0, z: 0}
+  showGripMarker: 0
 --- !u!1001 &1914734690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26967,6 +27161,86 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
+--- !u!1001 &2142952341
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -238.4917
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 24.176031
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 511.3346
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.81512773
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5792813
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 101093534858767415, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: poise
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: aggroRange
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: giveUpRange
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514611351217574043, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: waitToBeWoken
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: m_Name
+      value: Vampire (Boss)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4608083503857523093, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      propertyPath: maxHealth
+      value: 500
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3723245638846391472, guid: 496a9f29d971846ef970371f13058894, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 482902246}
+  m_SourcePrefab: {fileID: 100100000, guid: 496a9f29d971846ef970371f13058894, type: 3}
 --- !u!1001 &2143091618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27134,3 +27408,4 @@ SceneRoots:
   - {fileID: 483179085}
   - {fileID: 1787581826}
   - {fileID: 1210565982}
+  - {fileID: 2142952341}

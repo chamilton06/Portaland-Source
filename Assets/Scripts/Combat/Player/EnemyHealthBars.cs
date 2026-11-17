@@ -4,7 +4,8 @@ using UnityEngine;
 // Souls-style health bars over enemies. Goes on the Player. A thin bar appears over any enemy
 // (anything with Health that isn't the player) once it takes damage or is locked onto, and fades
 // a few seconds after the last hit. Recent damage shows as a yellow chunk that drains away,
-// with the combo's total damage as a number beside the bar.
+// with the combo's total damage as a number beside the bar. Bosses are left out: BossEncounter
+// draws theirs along the bottom of the screen.
 public class EnemyHealthBars : MonoBehaviour
 {
     [Tooltip("Seconds a bar stays after the enemy was last hit (it always shows while locked on).")]
@@ -109,6 +110,7 @@ public class EnemyHealthBars : MonoBehaviour
             Health health = pair.Key;
             Bar bar = pair.Value;
             if (health == null || !health.isActiveAndEnabled) continue;
+            if (BossEncounter.IsBoss(health)) continue; // Bosses have their own bar at the bottom.
 
             bool locked = lockOn != null && lockOn.Target == health;
             float sinceHit = Time.time - bar.lastHitTime;
