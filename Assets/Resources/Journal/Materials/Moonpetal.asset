@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d7195565401124b996cb73f6907519, type: 3}
+  m_Name: Moonpetal
+  m_EditorClassIdentifier: 
+  title: Moonpetal
+  tab: 2
+  picture: {fileID: -8626398517072026418, guid: 8ec048f4c4455354fa44d6353040ac55, type: 3}
+  loreText: "Moonpetals open only under moonlight and close the moment dawn touches
+    them. In the dark they give off a soft silver glow, and lost travellers have
+    followed them out of forests they thought they\u2019d never leave.\n\nThe church\u2019s
+    old records mention Moonpetal water being used to \u201Ccalm restless spirits\u201D,
+    and the flower is still left at graves in the village. Alchemists value it above
+    most herbs: it binds other ingredients together, so a potion\u2019s strength
+    doesn\u2019t fade.\n\nGather them at night. A Moonpetal picked by daylight wilts
+    to grey in your hand."
+  startsUnlocked: 1
