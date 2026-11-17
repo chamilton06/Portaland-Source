@@ -26,7 +26,7 @@ public class QuestTaskCollect : MonoBehaviour
 
     void OnItemAdded(Item added, int count)
     {
-        if (added != item || QuestLog.Instance == null) return;
+        if (added != item || QuestLog.Instance == null || !QuestLog.Instance.IsAccepted(quest)) return;
 
         collected += count;
         if (collected >= amount)
