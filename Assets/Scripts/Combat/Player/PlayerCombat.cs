@@ -67,6 +67,7 @@ public class PlayerCombat : MonoBehaviour
     private PlayerStats playerStats;
     private PlayerDefence defence;
     private PlayerMovement movement;
+    private ToolSwing toolSwing;
     private int comboStep;
     private float comboEndTime = -100f;
     private bool holdingAttack;
@@ -82,6 +83,8 @@ public class PlayerCombat : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         movement = GetComponent<PlayerMovement>();
         defence = GetComponent<PlayerDefence>();
+        toolSwing = GetComponent<ToolSwing>();
+
         if (weaponPivot != null)
         {
             restingRotation = weaponPivot.localRotation;
@@ -138,6 +141,7 @@ public class PlayerCombat : MonoBehaviour
 
         equippedWeapon = weapon;
         weaponEquipped = equippedWeapon != null;
+        if (toolSwing != null) toolSwing.currentTool = weapon != null ? weapon.toolType : ToolType.None;
 
         if (!weaponEquipped || weaponPivot == null) return;
 
@@ -260,6 +264,7 @@ public class PlayerCombat : MonoBehaviour
         else if (lightAttacks != null && lightAttacks.Length > 0) comboStep = (comboStep + 1) % lightAttacks.Length;
 
         swingRoutine = StartCoroutine(SwingWeapon());
+        if (toolSwing != null) toolSwing.Swing();
         CombatAudio.Play(CombatSound.Swing, transform.position + Vector3.up);
 
         // With the hand animation, damage waits for the blade (see SwingWeapon).

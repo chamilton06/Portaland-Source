@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cde98aca78a8472a8a807290fd38330, type: 3}
+  m_Name: SwordQuest
+  m_EditorClassIdentifier: 
+  title: A Sword Worth Forging
+  tab: 5
+  picture: {fileID: 0}
+  loreText: "The blacksmith in the village swears he can forge the finest sword in
+    the land, if I bring him the materials. Iron\u2019s scarce, so he trades in wood
+    and stone."
+  startsUnlocked: 1
+  shortGoal: Bring the blacksmith wood and stone
+  tasks:
+  - Collect 10 wood
+  - Collect 5 stone
+  - Bring the materials to the Blacksmith for forging

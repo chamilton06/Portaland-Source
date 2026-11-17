@@ -5,6 +5,7 @@ public class Weapon : Equipment
 {
     public WeaponStats stats;
     public GameObject weaponPrefab;
+    public ToolType toolType = ToolType.None;   // Axe and Pickaxe can gather
 
     public override string GetStatsText()
     {
