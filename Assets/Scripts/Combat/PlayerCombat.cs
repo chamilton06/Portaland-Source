@@ -26,6 +26,7 @@ public class PlayerCombat : MonoBehaviour
     private PlayerStats playerStats;
     private PlayerDefence defence;
     private PlayerMovement movement;
+    private ToolSwing toolSwing;
 
     public bool IsAttacking => swinging;
 
@@ -34,6 +35,8 @@ public class PlayerCombat : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         movement = GetComponent<PlayerMovement>();
         defence = GetComponent<PlayerDefence>();
+        toolSwing = GetComponent<ToolSwing>();
+
         if (weaponPivot != null)
         {
             restingRotation = weaponPivot.localRotation;
@@ -79,6 +82,7 @@ public class PlayerCombat : MonoBehaviour
 
         equippedWeapon = weapon;
         weaponEquipped = equippedWeapon != null;
+        if (toolSwing != null) toolSwing.currentTool = weapon != null ? weapon.toolType : ToolType.None;
 
         if (!weaponEquipped || weaponPivot == null) return;
         if (weapon.weaponPrefab == null)
@@ -114,6 +118,7 @@ public class PlayerCombat : MonoBehaviour
             nextAttackTime = Time.time + equippedWeapon.stats.attackCooldown;
             
             swingRoutine = StartCoroutine(SwingWeapon());
+            if (toolSwing != null) toolSwing.Swing();
             
             RaycastHit hit;
 

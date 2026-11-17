@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 429004}
   - component: {fileID: 3366816}
   - component: {fileID: 2313730}
-  - component: {fileID: 1023910828024902649}
+  - component: {fileID: 2979436551602745455}
   m_Layer: 0
   m_Name: lo_CobbleRock_E_LOD0
   m_TagString: Untagged
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1023910828024902649
-MeshCollider:
+--- !u!136 &2979436551602745455
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -102,10 +102,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300008, guid: febb57be43178314099a670e6907c6b2, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.8335337
+  m_Height: 1.5355875
+  m_Direction: 1
+  m_Center: {x: -0.004283786, y: 0.7358807, z: 0.031069547}
 --- !u!1 &155658
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +118,7 @@ GameObject:
   - component: {fileID: 425014}
   - component: {fileID: 3354374}
   - component: {fileID: 2314948}
-  - component: {fileID: 6607594479674921695}
+  - component: {fileID: 2692405123623817021}
   m_Layer: 0
   m_Name: lo_CobbleRock_E_LOD2
   m_TagString: Untagged
@@ -190,8 +191,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6607594479674921695
-MeshCollider:
+--- !u!136 &2692405123623817021
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -208,10 +209,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300004, guid: febb57be43178314099a670e6907c6b2, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.8312535
+  m_Height: 1.5137497
+  m_Direction: 1
+  m_Center: {x: 0.009291053, y: 0.7478188, z: 0.036629856}
 --- !u!1 &167346
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +287,7 @@ GameObject:
   - component: {fileID: 408174}
   - component: {fileID: 3398124}
   - component: {fileID: 2356498}
-  - component: {fileID: 9216690652458247230}
+  - component: {fileID: 1652165102633984623}
   m_Layer: 0
   m_Name: lo_CobbleRock_E_LOD1
   m_TagString: Untagged
@@ -358,8 +360,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &9216690652458247230
-MeshCollider:
+--- !u!136 &1652165102633984623
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -376,7 +378,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300006, guid: febb57be43178314099a670e6907c6b2, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.8338924
+  m_Height: 1.5355875
+  m_Direction: 1
+  m_Center: {x: -0.0078101456, y: 0.7358807, z: 0.030710816}
