@@ -15,9 +15,11 @@ MonoBehaviour:
   title: Healing Potion
   tab: 3
   picture: {fileID: -5717049752745662821, guid: 961aee62321df4c40b9eaca0050d1354, type: 3}
-  loreText: "The oldest remedy in the land: Wardleaf to close the wound, Emberbloom
-    to wake the blood, all in clean glass. Every traveller who leaves the village
-    carries at least one, and every one who forgets wishes they hadn\u2019t."
+  loreText: "A village healer\u2019s first lesson, scribbled on the back of an old
+    map:\n\n\u201CCrush one Wardleaf until it weeps. Add a single Emberbloom petal
+    and watch the water warm without fire. Pour it into clean glass and seal it quickly,
+    before the warmth escapes.\u201D\n\nSimple enough for any traveller to brew by
+    a campfire, and worth more than gold when the road turns dangerous."
   startsUnlocked: 1
   result: {fileID: 11400000, guid: 74f429f27220ac441a99e97a5ffe761e, type: 2}
   resultAmount: 1

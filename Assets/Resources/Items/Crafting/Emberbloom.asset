@@ -19,6 +19,6 @@ MonoBehaviour:
   shortDescription: Its petals stay warm to the touch, even in frost.
   weight: 0
   maxDurability: 0
-  journalEntry: {fileID: 0}
+  journalEntry: {fileID: 11400000, guid: 0d99282b2db35894e830e212d17217d2, type: 2}
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}

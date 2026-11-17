@@ -19,6 +19,6 @@ MonoBehaviour:
   shortDescription: A warm red draught that mends wounds and steadies the heart.
   weight: 0
   maxDurability: 0
-  journalEntry: {fileID: 0}
+  journalEntry: {fileID: 11400000, guid: de453668a10fa7a4eb59395a8ea8b672, type: 2}
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
