@@ -182,9 +182,7 @@ public class JournalUI : MonoBehaviour
         if (toast != null)
         {
             // separate message for Quests
-            newEntryPopup.text = (entry is Quest ? "New quest: " : "Journal updated: ") + entry.title;
-            newEntryPopup.gameObject.SetActive(true);
-            popupHideTime = Time.unscaledTime + popupTime;
+            toast.Show((entry is Quest ? "New quest: " : "Journal updated: "), entry.title);
         }
     }
 
