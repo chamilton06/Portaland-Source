@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class MapUI : MonoBehaviour
 {
     public KeyCode toggleKey = KeyCode.M;
+    public bool pauseGameWhileOpen = true;
     public GameObject mapRoot;                  // tan paper panel
     public RectTransform mapArea;               // the world area on the paper
     public RectTransform playerIcon;            // child of mapArea
@@ -62,6 +63,9 @@ public class MapUI : MonoBehaviour
             BuildMarkers();
         }
         mapRoot.SetActive(open);
+        MenuState.SetOpen(this, open);   // free the cursor + stop camera turning while the map is open
+        if (pauseGameWhileOpen) Time.timeScale = open ? 0f : 1f;
+
     }
 
     Vector2 WorldToMap(Vector3 worldPos)

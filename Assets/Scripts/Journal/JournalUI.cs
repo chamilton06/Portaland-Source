@@ -26,8 +26,7 @@ public class JournalUI : MonoBehaviour
     
 
     public string newTag = " <color=#B22222>NEW!</color>";
-    public TextMeshProUGUI newEntryPopup;       // optional popup
-    public float popupTime = 3f;
+    public JournalToast toast;                  // slide in card
     public event System.Action<JournalEntry> EntryShown;   // pin button listens
 
     private readonly HashSet<JournalEntry> unlocked = new HashSet<JournalEntry>();
@@ -78,10 +77,7 @@ public class JournalUI : MonoBehaviour
         }
         journalRoot.SetActive(false);
 
-        if (newEntryPopup != null)
-        {
-            newEntryPopup.gameObject.SetActive(false);
-        }
+        
     }
 
     void Update()
@@ -102,11 +98,7 @@ public class JournalUI : MonoBehaviour
             Close();
         }
 
-        // hide the popup after a bit
-        if (newEntryPopup != null && newEntryPopup.gameObject.activeSelf && Time.unscaledTime > popupHideTime)
-        {
-            newEntryPopup.gameObject.SetActive(false);
-        }
+        
     }
 
     public bool IsOpen()
@@ -173,8 +165,13 @@ public class JournalUI : MonoBehaviour
     // on pickup, adds it as NEW!
     public void Discover(Item item)
     {
-        JournalEntry entry = GetEntry(item);
-        if (unlocked.Contains(entry))
+        DiscoverEntry(GetEntry(item));
+    }
+
+    // any entry or quest, adds it as NEW! with the popup
+    public void DiscoverEntry(JournalEntry entry)
+    {
+        if (entry == null || unlocked.Contains(entry))
         {
             return;
         }
@@ -182,11 +179,10 @@ public class JournalUI : MonoBehaviour
         Unlock(entry);
         unread.Add(entry);
 
-        if (newEntryPopup != null)
+        if (toast != null)
         {
-            newEntryPopup.text = "Journal updated: " + entry.title;
-            newEntryPopup.gameObject.SetActive(true);
-            popupHideTime = Time.unscaledTime + popupTime;
+            // separate message for Quests
+            toast.Show((entry is Quest ? "New quest: " : "Journal updated: "), entry.title);
         }
     }
 

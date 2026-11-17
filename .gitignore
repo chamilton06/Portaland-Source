@@ -111,3 +111,7 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 .DS_Store
+
+# farm pack materials unity extracts locally
+/[Aa]ssets/Environment/Meshes/Farm Pack/**/Materials/
+/[Aa]ssets/Environment/Meshes/Farm Pack/**/Materials.meta
