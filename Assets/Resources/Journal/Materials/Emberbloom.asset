@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d7195565401124b996cb73f6907519, type: 3}
+  m_Name: Emberbloom
+  m_EditorClassIdentifier: 
+  title: Emberbloom
+  tab: 2
+  picture: {fileID: 1230072411722605195, guid: 13b5fced25b9bd34799621076e75ef35, type: 3}
+  loreText: "Emberbloom grows where the old monuments once drew their power, as if
+    the ground still remembers the fire that passed through it. Travellers say the
+    petals glow faintly at night, like coals that refuse to go out.\n\nHealers grind
+    the petals into their tinctures to \u201Cwake the blood\u201D. A single bloom
+    is said to keep a wanderer warm through a winter night. Picking one with bare
+    hands leaves the fingers tingling for hours.\n\nNever pick the last bloom of
+    a patch. The old village folk say it carries the warmth for all the others."
+  startsUnlocked: 1
