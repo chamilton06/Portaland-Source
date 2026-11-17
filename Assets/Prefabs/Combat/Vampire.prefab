@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8243734460656215645}
   - component: {fileID: 3514611351217574043}
   - component: {fileID: 3968242843455197196}
+  - component: {fileID: 6530840200672298654}
   m_Layer: 0
   m_Name: Vampire
   m_TagString: Untagged
@@ -187,6 +188,8 @@ MonoBehaviour:
     recovery: 1
     followUp: -1
     followUpChance: 0.5
+  damageMultiplier: 1
+  recoveryScale: 1
   attackAngle: 100
   poise: 45
   poiseRecoverDelay: 3
@@ -225,6 +228,43 @@ MonoBehaviour:
   lightIntensity: 1.2
   lightRange: 1.6
   secondPhaseFlare: 1.8
+--- !u!114 &6530840200672298654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3723245638846391472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40ac41d3a3e34999a430d6646d77ba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wake:
+  - {fileID: 8300000, guid: 44693ba59166d4da2bbf76cc051f9d35, type: 3}
+  - {fileID: 8300000, guid: 1836791431d0546418e3aede668800ad, type: 3}
+  attack:
+  - {fileID: 8300000, guid: 78d85813e516140d28f8e3654cbad84c, type: 3}
+  - {fileID: 8300000, guid: e3fe1b89527b74261a819b93238288c4, type: 3}
+  - {fileID: 8300000, guid: 711166ed3b8ef43e6b2012d8be36bbef, type: 3}
+  - {fileID: 8300000, guid: 862967c1b34be4ac5b8ff9b0a2bbd44c, type: 3}
+  - {fileID: 8300000, guid: ea7fe2b049f1c48578ec4328e1af681e, type: 3}
+  - {fileID: 8300000, guid: 2fcc1798a4b6e4fff91d0683d1c9b84c, type: 3}
+  attackChance: 0.5
+  pain:
+  - {fileID: 8300000, guid: 5dae98cd34fb540e9ab39a9f8bd1c151, type: 3}
+  - {fileID: 8300000, guid: c0a406c1adbe441d3bb39380a4e794e6, type: 3}
+  - {fileID: 8300000, guid: a00def2e306b849a988c28634905225f, type: 3}
+  - {fileID: 8300000, guid: 33f4f975eab4a4ce0b3235e8f7353d93, type: 3}
+  death:
+  - {fileID: 8300000, guid: e328459e331fb42af9cbbf534378fc06, type: 3}
+  - {fileID: 8300000, guid: 4e2c488ea32c64c2fb680664ca4b9b60, type: 3}
+  secondPhase:
+  - {fileID: 8300000, guid: fdd7886cf89f04608a3685578867e38c, type: 3}
+  - {fileID: 8300000, guid: 37b78664400534dc9941676a3aa19168, type: 3}
+  volume: 0.9
+  pitch: 0.9
+  pitchVariation: 0.06
 --- !u!1001 &7147589470358994301
 PrefabInstance:
   m_ObjectHideFlags: 0

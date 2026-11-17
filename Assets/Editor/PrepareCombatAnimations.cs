@@ -118,6 +118,7 @@ public static class PrepareCombatAnimations
             GameObject enemy = GetOrCreateDarkRanger(clips.light[0], clips.light[1], clips.jump, clips.heavy);
             PrepareWeaponHandTest.SetUpScene(scene);
             SetUpPlayer(scene, clips, enemy, false);
+            PrepareCombatAudio.AddToScene(scene); // Sounds, and music for any boss.
             EditorSceneManager.SaveScene(scene);
             Debug.Log("Combat player ready in " + scene.name + ". If there wasn't an enemy already, a Dark Ranger is " + EnemyStartDistance + " m in front of the Player. Move it wherever you like.");
         }

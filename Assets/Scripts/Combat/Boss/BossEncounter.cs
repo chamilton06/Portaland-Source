@@ -21,26 +21,40 @@ public class BossEncounter : MonoBehaviour
 
     [Header("Difficulty")]
     [Tooltip("Multiplies the boss's attack damage.")]
-    [Min(0f)] public float damageMultiplier = 1.5f;
+    [Min(0f)] public float damageMultiplier = 1.2f;
     [Tooltip("Multiplies how long it circles before attacking. Lower = attacks more often.")]
-    [Range(0.1f, 1f)] public float circleTimeScale = 0.35f;
+    [Range(0.1f, 1f)] public float circleTimeScale = 0.6f;
     [Tooltip("Multiplies how long it stands open after attacking. Lower = more relentless, but smaller openings to punish.")]
-    [Range(0.1f, 1f)] public float recoveryScale = 0.7f;
+    [Range(0.1f, 1f)] public float recoveryScale = 1f;
+    [Tooltip("Damage it takes (within a few seconds) before its poise breaks and it staggers. Light sword hits do 20.")]
+    [Min(1f)] public float poise = 100f;
+    [Tooltip("Seconds after a poise break before it can be broken again, so it can't be stun-locked.")]
+    [Min(0f)] public float poiseBreakCooldown = 8f;
+    [Tooltip("Hits in a row (within 2.5 s) before it cuts into the player's combo. 0 = never.")]
+    [Min(0)] public int retaliateAfterHits = 3;
 
     [Header("Arena")]
-    [Tooltip("Optional. Switched on when the fight starts and off when the boss dies, e.g. something blocking the door.")]
-    public GameObject barrier;
+    [Tooltip("Optional. Switched on when the fight starts (when the boss bar appears) and off when the boss dies, e.g. an Arena Barrier in each doorway. Hidden until then.")]
+    public GameObject[] barriers;
 
     [Header("Music")]
     public AudioClip music;
     [Range(0f, 1f)] public float musicVolume = 0.6f;
     [Min(0f)] public float musicFade = 2f;
-    [Tooltip("Played once when the boss dies.")]
+    [Tooltip("Leave empty to use the game's victory sound (Victory on Assets/Audio/CombatSounds). Only set it to give this one boss a different sound.")]
     public AudioClip victorySound;
 
     [Header("Victory")]
     public string victoryText = "VANQUISHED";
     [Min(0.5f)] public float bannerTime = 4f;
+
+    [Header("Reward")]
+    [Tooltip("Given straight to the player when the boss dies, with an 'obtained' popup. No pickup to walk to.")]
+    public Item reward;
+    [Min(1)] public int rewardAmount = 1;
+    [Tooltip("Seconds after the death before the reward is given, so it follows the banner.")]
+    [Min(0f)] public float rewardDelay = 2.5f;
+    [Min(0.5f)] public float rewardPopupTime = 3.5f;
 
     [Header("Health bar")]
     [Tooltip("Width as a share of the screen.")]
@@ -65,7 +79,8 @@ public class BossEncounter : MonoBehaviour
     private float chip = 1f;
     private float lastHealth;
     private float lastHitTime = float.NegativeInfinity;
-    private GUIStyle nameStyle, bannerStyle;
+    private GUIStyle nameStyle, bannerStyle, rewardStyle;
+    private float rewardShownAt = float.NegativeInfinity;
 
     private void Awake()
     {
@@ -77,10 +92,15 @@ public class BossEncounter : MonoBehaviour
             enemy.damageMultiplier = damageMultiplier;
             enemy.recoveryScale = recoveryScale;
             enemy.circleTime *= circleTimeScale;
+            // Bosses have hyper armour: hits don't flinch them, only a poise break staggers them.
+            enemy.flinches = false;
+            enemy.poise = poise;
+            enemy.poiseBreakCooldown = poiseBreakCooldown;
+            enemy.retaliateAfterHits = retaliateAfterHits;
         }
         bosses.Add(health);
         health.onDeath.AddListener(Win);
-        if (barrier != null) barrier.SetActive(false);
+        foreach (GameObject barrier in Barriers()) barrier.SetActive(false);
     }
 
     private void OnDestroy()
@@ -119,6 +139,13 @@ public class BossEncounter : MonoBehaviour
             musicSource.Stop();
     }
 
+    private System.Collections.Generic.IEnumerable<GameObject> Barriers()
+    {
+        if (barriers == null) yield break;
+        foreach (GameObject barrier in barriers)
+            if (barrier != null) yield return barrier;
+    }
+
     private bool PlayerInRange()
     {
         if (player == null || player.IsDead()) return false;
@@ -133,7 +160,7 @@ public class BossEncounter : MonoBehaviour
         phase = Phase.Fighting;
         shownAt = Time.time;
         if (enemy != null) enemy.WakeUp();
-        if (barrier != null) barrier.SetActive(true);
+        foreach (GameObject barrier in Barriers()) barrier.SetActive(true);
         if (music != null)
         {
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -152,9 +179,29 @@ public class BossEncounter : MonoBehaviour
         if (phase == Phase.Waiting) shownAt = Time.time;
         phase = Phase.Won;
         wonAt = Time.time;
-        if (barrier != null) barrier.SetActive(false);
+        foreach (GameObject barrier in Barriers())
+        {
+            ArenaBarrier mist = barrier.GetComponent<ArenaBarrier>();
+            if (mist != null) mist.Clear();       // Fades away; the way out opens straight away.
+            else barrier.SetActive(false);
+        }
         FadeMusicTo(0f);
         if (victorySound != null) AudioSource.PlayClipAtPoint(victorySound, Camera.main != null ? Camera.main.transform.position : transform.position);
+        else CombatAudio.Play(CombatSound.Victory, transform.position);
+        if (reward != null) StartCoroutine(GiveReward());
+    }
+
+    private System.Collections.IEnumerator GiveReward()
+    {
+        yield return new WaitForSeconds(rewardDelay);
+        Inventory inventory = FindFirstObjectByType<Inventory>();
+        if (inventory == null)
+        {
+            Debug.LogWarning(bossName + ": no Inventory in the scene, so the reward (" + reward.itemName + ") couldn't be given.", this);
+            yield break;
+        }
+        inventory.AddItem(reward, rewardAmount);
+        rewardShownAt = Time.time;
     }
 
     private float musicTarget;
@@ -201,6 +248,7 @@ public class BossEncounter : MonoBehaviour
         if (alpha > 0f) DrawBar(alpha);
 
         if (phase == Phase.Won) DrawBanner(Time.time - wonAt);
+        if (reward != null) DrawReward(Time.time - rewardShownAt);
         GUI.color = previous;
     }
 
@@ -240,6 +288,36 @@ public class BossEncounter : MonoBehaviour
         GUI.Label(new Rect(band.x + 2f, band.y + 2f, band.width, band.height), victoryText, bannerStyle);
         GUI.color = new Color(0.92f, 0.76f, 0.38f, alpha);
         GUI.Label(band, victoryText, bannerStyle);
+    }
+
+    // "Item obtained": the reward's icon and name in a dark box, fading in and out.
+    private void DrawReward(float time)
+    {
+        float alpha = Mathf.Clamp01(time / 0.3f) * Mathf.Clamp01(rewardPopupTime - time);
+        if (alpha <= 0f) return;
+        if (rewardStyle == null) rewardStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
+        rewardStyle.fontSize = Mathf.RoundToInt(Screen.height * 0.026f);
+
+        float height = Screen.height * 0.08f;
+        float width = Screen.height * 0.42f;
+        Rect box = new Rect((Screen.width - width) * 0.5f, Screen.height * 0.58f, width, height);
+        Draw(box, new Color(0f, 0f, 0f, 0.7f * alpha));
+        Draw(new Rect(box.x, box.y, box.width, 1f), new Color(0.55f, 0.47f, 0.3f, 0.8f * alpha));
+        Draw(new Rect(box.x, box.yMax - 1f, box.width, 1f), new Color(0.55f, 0.47f, 0.3f, 0.8f * alpha));
+
+        float pad = height * 0.15f;
+        Rect iconRect = new Rect(box.x + pad, box.y + pad, height - pad * 2f, height - pad * 2f);
+        if (reward.icon != null)
+        {
+            Sprite icon = reward.icon;
+            Rect uv = new Rect(icon.textureRect.x / icon.texture.width, icon.textureRect.y / icon.texture.height,
+                icon.textureRect.width / icon.texture.width, icon.textureRect.height / icon.texture.height);
+            GUI.color = new Color(1f, 1f, 1f, alpha);
+            GUI.DrawTextureWithTexCoords(iconRect, icon.texture, uv);
+        }
+        string label = reward.itemName + (rewardAmount > 1 ? "  x" + rewardAmount : "");
+        GUI.color = new Color(0.93f, 0.9f, 0.82f, alpha);
+        GUI.Label(new Rect(iconRect.xMax + pad, box.y, box.width - iconRect.width - pad * 3f, box.height), label, rewardStyle);
     }
 
     private static void Draw(Rect rect, Color color)

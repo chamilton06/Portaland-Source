@@ -5379,6 +5379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleKey: 109
+  pauseGameWhileOpen: 1
   mapRoot: {fileID: 1762709654}
   mapArea: {fileID: 912971111}
   playerIcon: {fileID: 1501807629}
@@ -5421,8 +5422,7 @@ MonoBehaviour:
   entryText: {fileID: 162036115}
   emptyTabText: Nothing written here yet...
   newTag: ' <color=#B22222>NEW!</color>'
-  newEntryPopup: {fileID: 1437442671}
-  popupTime: 3
+  toast: {fileID: 0}
 --- !u!1 &948473025
 GameObject:
   m_ObjectHideFlags: 0
@@ -10610,6 +10610,7 @@ GameObject:
   - component: {fileID: 2005957548}
   - component: {fileID: 2005957549}
   - component: {fileID: 2005957550}
+  - component: {fileID: 2005957551}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -11032,6 +11033,22 @@ MonoBehaviour:
   maxDistance: 30
   barWidth: 0.11
   heightAboveHead: 0.35
+--- !u!114 &2005957551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005957534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90aeeeb3fa3747758bf3730fceaae42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bank: {fileID: 11400000, guid: e964fa47c58514b5bb3a27ceac4c9c49, type: 2}
+  masterVolume: 1
+  pitchVariation: 0.08
+  voices: 8
 --- !u!1 &2020297279
 GameObject:
   m_ObjectHideFlags: 0

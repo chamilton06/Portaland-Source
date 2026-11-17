@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a5d505374e8407999e5d08786342a4, type: 3}
+  m_Name: CombatSounds
+  m_EditorClassIdentifier: 
+  swings:
+  - {fileID: 8300000, guid: 4337139b75142412ab66ec2506d48653, type: 3}
+  - {fileID: 8300000, guid: ab374433b25fb4d43aea04e8e3a0c9b9, type: 3}
+  - {fileID: 8300000, guid: 7bdffb85b88f84aa983af5cf1e24e38a, type: 3}
+  - {fileID: 8300000, guid: f87c11f9eb4334bf0becae97157132cc, type: 3}
+  - {fileID: 8300000, guid: d4d5b9d1078e64e11ac8572bfe48b91f, type: 3}
+  - {fileID: 8300000, guid: 6a9dae44c56a74ff197726c8af1e20eb, type: 3}
+  - {fileID: 8300000, guid: f45f458e429404f2aa427c3f9d7d705f, type: 3}
+  - {fileID: 8300000, guid: b723a7199c49841e88fea6c0600f973b, type: 3}
+  - {fileID: 8300000, guid: c35f4f13f436343f1adaadf058405184, type: 3}
+  - {fileID: 8300000, guid: 87c3fe974745d4e24beb5d623ed37613, type: 3}
+  - {fileID: 8300000, guid: e42b722d10046419997c91842f503984, type: 3}
+  - {fileID: 8300000, guid: d2b74f56d6e69484a91b6f14270b89d8, type: 3}
+  - {fileID: 8300000, guid: bea73e255053e43d78721d36ccc268a2, type: 3}
+  hits:
+  - {fileID: 8300000, guid: b90e39d4e1ec1484192825373feaade1, type: 3}
+  - {fileID: 8300000, guid: d73626b8838f341c38dfa5532b73cf08, type: 3}
+  - {fileID: 8300000, guid: a024e7e07e2e243b9bc4494b4f4a3b3b, type: 3}
+  - {fileID: 8300000, guid: adaa45208f2394614b74f84b1c6f618b, type: 3}
+  - {fileID: 8300000, guid: eff85cb6c9beb4d75a05cb4c9a9d3ba7, type: 3}
+  heavyHits:
+  - {fileID: 8300000, guid: ff83d58c0ed9a47a88856572d9ecae6e, type: 3}
+  - {fileID: 8300000, guid: d2d33604cd814478e8c13c6c6083bbbc, type: 3}
+  - {fileID: 8300000, guid: 0bcc21b5e58d94cd89705cc8394c3e15, type: 3}
+  - {fileID: 8300000, guid: 84a2a7a9bdde34bdda6bf3a3167ea0f7, type: 3}
+  - {fileID: 8300000, guid: fde1d76922adb494aabf2dc4e0ef5d62, type: 3}
+  blocks:
+  - {fileID: 8300000, guid: f418c149f710a4b03b3ebac19beae612, type: 3}
+  - {fileID: 8300000, guid: 85776adcdc4a541f1b91ead6be8c552e, type: 3}
+  - {fileID: 8300000, guid: ebc13150a05f9471ea72da9ab2065676, type: 3}
+  - {fileID: 8300000, guid: 16636aecddc564a2d8bf06967a4a93cd, type: 3}
+  - {fileID: 8300000, guid: b43d58a52d979419d8d4829ba4c848bd, type: 3}
+  parries:
+  - {fileID: 8300000, guid: b6377a6b6b71d48a7afd511c0663bd62, type: 3}
+  - {fileID: 8300000, guid: 64180b913a5654abfb846b99df936312, type: 3}
+  - {fileID: 8300000, guid: 78355e0400dd941dbb0d0b50427eedcd, type: 3}
+  - {fileID: 8300000, guid: f654e2a154bbf4c2fb8bf1cf6c2a410b, type: 3}
+  - {fileID: 8300000, guid: c7f740a8a9af54413a7e424e96e08496, type: 3}
+  rolls:
+  - {fileID: 8300000, guid: 72a7a08e39ec443e7b8ddb66c7d1a422, type: 3}
+  - {fileID: 8300000, guid: 5d8ddc72eb84943d6a33be1304c75783, type: 3}
+  - {fileID: 8300000, guid: 53f43ad2bf7534f81a0697a1076a6ea9, type: 3}
+  - {fileID: 8300000, guid: bbb9752a68c284542a94e3cc27d41276, type: 3}
+  victory: {fileID: 8300000, guid: 4ea69597cda54b4fb65011142c06755e, type: 3}
+  swingVolume: 0.5
+  hitVolume: 0.9
+  heavyHitVolume: 1
+  blockVolume: 0.8
+  parryVolume: 1
+  rollVolume: 0.6
+  victoryVolume: 1

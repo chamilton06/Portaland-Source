@@ -46,8 +46,8 @@ public static class PrepareWeaponHandTest
     // PrepareCombatAnimations.AddCombatPlayerToOpenScene. The caller saves the scene.
     internal static void SetUpScene(Scene scene)
     {
-        Weapon sword = Load<Weapon>("Assets/Items/Sword.asset");
-        Weapon axe = Load<Weapon>("Assets/Items/Axe.asset");
+        Weapon sword = Load<Weapon>("Assets/Resources/Items/Sword.asset");
+        Weapon axe = Load<Weapon>("Assets/Resources/Items/Axe.asset");
         GameObject swordModel = Load<GameObject>(Models + "Sword.fbx");
         GameObject axeModel = Load<GameObject>(Models + "Axe.fbx");
 

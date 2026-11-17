@@ -49,6 +49,15 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     [Min(0f)] public float parryPushback = 0.5f;
     [Tooltip("Seconds a flinch interrupts it when hit outside an attack.")]
     [Min(0f)] public float flinchTime = 0.35f;
+    [Tooltip("Off = hyper armour: hits don't interrupt it at all, only a poise break does. Bosses turn this off.")]
+    public bool flinches = true;
+    [Tooltip("Seconds staggered by a poise break. Parries use Stagger Duration instead, so a parry is the bigger opening.")]
+    [Min(0.1f)] public float poiseBreakDuration = 1.2f;
+    [Tooltip("Seconds after a poise break before its poise can break again, so it can't be stun-locked. 0 = none.")]
+    [Min(0f)] public float poiseBreakCooldown = 0f;
+    [Tooltip("If the player lands this many hits within Retaliate Window, it lashes out with its first attack, even mid-combo. 0 = never.")]
+    [Min(0)] public int retaliateAfterHits = 0;
+    [Min(0.1f)] public float retaliateWindow = 2.5f;
     [Tooltip("Seconds it's knocked down after a backstab.")]
     [Min(0.1f)] public float backstabDownTime = 2f;
 
@@ -88,9 +97,12 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     private float attackTime;      // Animation seconds into the current attack.
     private float holdEndsAt;
     private bool struck;
+    private bool swooshed;   // The swing sound plays just before the hit, not at the wind-up.
     private float circleSide = 1f;
     private float poiseDamage;
     private float lastHitTime = float.NegativeInfinity;
+    private float poiseBreakableAt;
+    private readonly System.Collections.Generic.Queue<float> recentHits = new System.Collections.Generic.Queue<float>();
     private float verticalSpeed;
     private Vector3 velocity;
     private bool asleep;
@@ -121,6 +133,9 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
     public float RiposteBonus => riposteBonus;
     // Fired once when it enters its second phase, e.g. so effects can flare up.
     public event System.Action EnteredSecondPhase;
+    // For sounds and effects (see EnemyVoice).
+    // WasStaggered also fires for ripostes and backstabs: anything that knocks it off balance.
+    public event System.Action Woke, AttackStarted, WasStaggered, Died;
     // Open to a backstab unless it's mid-swing, already staggered or dead.
     public bool CanBeBackstabbed => state != State.Attack && state != State.Staggered && state != State.Dead;
 
@@ -235,6 +250,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         asleep = false;
         if (state == State.Idle) SetState(State.Chase);
         Report("Woken");
+        Woke?.Invoke();
     }
 
     private float Speedup => secondPhase ? secondPhaseSpeed : 1f;
@@ -297,6 +313,8 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         SetState(State.Attack);
         PlayCombatState(Animator.StringToHash(attack.state), 0.1f);
         Report(attack.label);
+        swooshed = false;
+        AttackStarted?.Invoke();
     }
 
     private void UpdateAttack(Vector3 toPlayer, float distance)
@@ -316,6 +334,12 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         // Lunge in during the wind-up, but don't walk through the player.
         if (!struck && !holding && attack.hitTime > 0f && distance > 1.2f)
             velocity = transform.forward * (lunge / attack.hitTime) * attackSpeed;
+
+        if (!swooshed && attackTime >= attack.hitTime - 0.15f)
+        {
+            swooshed = true;
+            CombatAudio.Play(CombatSound.Swing, transform.position + Vector3.up);
+        }
 
         if (!struck && attackTime >= attack.hitTime)
         {
@@ -374,15 +398,20 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         WakeUp();
         if (state == State.Dead || state == State.Staggered) return;
         lastHitTime = Time.time;
-        poiseDamage += damage;
+        if (Time.time >= poiseBreakableAt) poiseDamage += damage;
 
         if (poiseDamage >= poise)
         {
             poiseDamage = 0f;
+            poiseBreakableAt = Time.time + poiseBreakDuration + poiseBreakCooldown;
             Report("Poise broken");
             Stagger(false);
         }
-        else if (state != State.Attack)
+        else if (Retaliate())
+        {
+            // Punished a greedy combo.
+        }
+        else if (flinches && state != State.Attack)
         {
             // Outside an attack every hit makes it flinch; mid-attack it swings on through.
             SetState(State.Flinch, flinchTime);
@@ -390,13 +419,27 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         }
     }
 
+    // Too many hits too quickly and it cuts into the player's combo with its first attack.
+    private bool Retaliate()
+    {
+        if (retaliateAfterHits <= 0 || attacks == null || attacks.Length == 0) return false;
+        recentHits.Enqueue(Time.time);
+        while (recentHits.Count > 0 && Time.time - recentHits.Peek() > retaliateWindow) recentHits.Dequeue();
+        if (recentHits.Count < retaliateAfterHits || state == State.Attack) return false;
+        recentHits.Clear();
+        Report("Retaliates");
+        StartAttack(attacks[0]);
+        return true;
+    }
+
     // Knocked off balance by a parry or poise break: open to a riposte.
     private void Stagger(bool parried)
     {
-        SetState(State.Staggered, staggerDuration);
+        SetState(State.Staggered, parried ? staggerDuration : poiseBreakDuration);
         if (parried && parryPushback > 0f) controller.Move(-transform.forward * parryPushback);
         PlayCombatState(StaggerState, 0.05f);
         Report("Staggered");
+        WasStaggered?.Invoke();
     }
 
     // A riposte landed: knocked down hard (whole body), like a backstab.
@@ -409,6 +452,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         else
             PlayCombatState(HitState, 0.05f);
         Report("Riposted");
+        WasStaggered?.Invoke();
     }
 
     // Stabbed in the back: knocked stumbling (whole body) and slow to recover.
@@ -421,6 +465,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         else
             PlayCombatState(HitState, 0.05f);
         Report("Backstabbed");
+        WasStaggered?.Invoke();
     }
 
     private void Die()
@@ -431,6 +476,7 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         if (characterAnimator != null && deathLayer >= 0 && characterAnimator.HasState(deathLayer, DeathState))
             characterAnimator.CrossFadeInFixedTime(DeathState, 0.1f, deathLayer, 0f);
         Report("Died");
+        Died?.Invoke();
     }
 
     // ------------------------------------------------------------------------

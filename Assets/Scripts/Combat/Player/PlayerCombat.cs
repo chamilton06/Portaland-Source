@@ -260,6 +260,7 @@ public class PlayerCombat : MonoBehaviour
         else if (lightAttacks != null && lightAttacks.Length > 0) comboStep = (comboStep + 1) % lightAttacks.Length;
 
         swingRoutine = StartCoroutine(SwingWeapon());
+        CombatAudio.Play(CombatSound.Swing, transform.position + Vector3.up);
 
         // With the hand animation, damage waits for the blade (see SwingWeapon).
         if (!weaponFollowsHand) DealDamage(1f);
@@ -307,6 +308,7 @@ public class PlayerCombat : MonoBehaviour
 
                 int damage = Mathf.RoundToInt(equippedWeapon.stats.damage * multiplier);
                 targetHealth.TakeDamage(damage);
+                CombatAudio.Play(riposte || backstab ? CombatSound.HeavyHit : CombatSound.Hit, hit.point);
 
                 // Lets enemies flinch or lose poise. Ripostes and backstabs already have their own reaction.
                 IHitReceiver receiver = hit.collider.GetComponentInParent<IHitReceiver>();
