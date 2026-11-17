@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Emberbloom
   m_EditorClassIdentifier: 
   itemName: Emberbloom
-  icon: {fileID: 0}
-  maxStackSize: 0
-  inventorySize: {x: 0, y: 0}
-  shortDescription: Emberbloom
+  icon: {fileID: 1230072411722605195, guid: 71a428e89d5644043bb26e706bccc009, type: 3}
+  maxStackSize: 10
+  inventorySize: {x: 1, y: 1}
+  shortDescription: Its petals stay warm to the touch, even in frost.
   weight: 0
   maxDurability: 0
   journalEntry: {fileID: 0}

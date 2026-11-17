@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0b573701a5436641904040f647b8250, type: 3}
   m_Name: Starsilver
   m_EditorClassIdentifier: 
-  itemName: 
-  icon: {fileID: 0}
-  maxStackSize: 0
-  inventorySize: {x: 0, y: 0}
-  shortDescription: 
+  itemName: Starsilver
+  icon: {fileID: 2259757888489389221, guid: 8ef0ab03c9b20874fb23e94b6a004a85, type: 3}
+  maxStackSize: 25
+  inventorySize: {x: 1, y: 1}
+  shortDescription: A cold, shimmering ore that hums when held near a monument.
   weight: 0
   maxDurability: 0
   journalEntry: {fileID: 0}

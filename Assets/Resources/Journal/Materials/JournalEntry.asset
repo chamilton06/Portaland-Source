@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d7195565401124b996cb73f6907519, type: 3}
   m_Name: JournalEntry
   m_EditorClassIdentifier: 
-  title: 
-  tab: 0
-  picture: {fileID: 0}
-  loreText: 
+  title: Healing Potion
+  tab: 3
+  picture: {fileID: -5717049752745662821, guid: 961aee62321df4c40b9eaca0050d1354, type: 3}
+  loreText: "The oldest remedy in the land: Wardleaf to close the wound, Emberbloom
+    to wake the blood, all in clean glass. Every traveller who leaves the village
+    carries at least one, and every one who forgets wishes they hadn\u2019t."
   startsUnlocked: 1

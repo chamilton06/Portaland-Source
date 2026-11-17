@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0b573701a5436641904040f647b8250, type: 3}
   m_Name: Ironstone
   m_EditorClassIdentifier: 
-  itemName: 
-  icon: {fileID: 0}
-  maxStackSize: 0
-  inventorySize: {x: 0, y: 0}
-  shortDescription: 
+  itemName: Ironstone
+  icon: {fileID: -6613490888911143467, guid: d206b979a3ea7804f885c3ec89a8d7b3, type: 3}
+  maxStackSize: 25
+  inventorySize: {x: 1, y: 1}
+  shortDescription: Heavy grey ore streaked with rust. The backbone of any good blade.
   weight: 0
   maxDurability: 0
   journalEntry: {fileID: 0}
