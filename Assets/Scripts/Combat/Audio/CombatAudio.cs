@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum CombatSound { Swing, Hit, HeavyHit, Block, Parry, Roll, Victory }
+public enum CombatSound { Swing, Hit, HeavyHit, Block, Parry, Roll, Victory, Death }
 
 // Plays combat sounds. Goes on the Player, with a CombatSoundBank. It hears the player's own
 // blocks, parries, hits taken and rolls by itself; the player's attacks and enemies call
@@ -80,9 +80,13 @@ public class CombatAudio : MonoBehaviour
     public static void Play(CombatSound sound, Vector3 position)
     {
         if (instance == null || instance.bank == null) return;
-        if (sound == CombatSound.Victory)
+        // Screen-wide moments, not placed in the world.
+        if (sound == CombatSound.Victory || sound == CombatSound.Death)
         {
-            if (instance.bank.victory != null) instance.flat.PlayOneShot(instance.bank.victory, instance.bank.victoryVolume * instance.masterVolume);
+            bool victory = sound == CombatSound.Victory;
+            AudioClip clip = victory ? instance.bank.victory : instance.bank.death;
+            float level = victory ? instance.bank.victoryVolume : instance.bank.deathVolume;
+            if (clip != null) instance.flat.PlayOneShot(clip, level * instance.masterVolume);
             return;
         }
         instance.PlayClip(instance.Pick(sound, out float volume), position, volume);

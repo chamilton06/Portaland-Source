@@ -148,6 +148,9 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         if (characterAnimator != null)
         {
             characterAnimator.applyRootMotion = false;
+            // Keep animating even if Unity thinks the model is off screen. Some imported models
+            // (like the vampire) confuse that check and would otherwise freeze in their bind pose.
+            characterAnimator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             combatLayer = characterAnimator.GetLayerIndex("Combat");
             deathLayer = characterAnimator.GetLayerIndex("Death");
             ApplyTint();

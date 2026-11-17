@@ -12,6 +12,8 @@ public class BossEncounter : MonoBehaviour
 {
     [Tooltip("Shown above the health bar.")]
     public string bossName = "Servant of Dracula";
+    [Tooltip("Font for the boss name, VANQUISHED and the reward popup. A classical serif such as Cinzel looks right.")]
+    public Font font;
 
     [Header("Waking up")]
     [Tooltip("The fight starts when the player is this close.")]
@@ -237,8 +239,8 @@ public class BossEncounter : MonoBehaviour
         if (phase == Phase.Waiting) return;
         if (nameStyle == null)
         {
-            nameStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Normal, alignment = TextAnchor.LowerLeft };
-            bannerStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
+            nameStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Normal, alignment = TextAnchor.LowerLeft, font = font };
+            bannerStyle = new GUIStyle(GUI.skin.label) { fontStyle = font != null ? FontStyle.Normal : FontStyle.Bold, alignment = TextAnchor.MiddleCenter, font = font };
         }
         Color previous = GUI.color;
 
@@ -295,7 +297,7 @@ public class BossEncounter : MonoBehaviour
     {
         float alpha = Mathf.Clamp01(time / 0.3f) * Mathf.Clamp01(rewardPopupTime - time);
         if (alpha <= 0f) return;
-        if (rewardStyle == null) rewardStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
+        if (rewardStyle == null) rewardStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, font = font };
         rewardStyle.fontSize = Mathf.RoundToInt(Screen.height * 0.026f);
 
         float height = Screen.height * 0.08f;

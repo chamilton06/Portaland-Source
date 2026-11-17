@@ -18,8 +18,18 @@ optional. We credit them anyway, so they should go in the game's credits too. Do
 - Renamed the monster files so they all start with a capital letter.
 - Converted the boss music from a 21 MB WAV to a 3 MB OGG.
 
+## Our own sounds made from these
+
+`Assets/Audio/VictorySting.ogg` (the VANQUISHED sound) and `Assets/Audio/DeathSting.ogg` (the
+YOU DIED sound) were made by us in ffmpeg. They mix the Kenney bell and punch impacts above
+(pitched down, with a long echo added) with a simple organ chord or drone we generated
+ourselves, so they're free to use too.
+
 ## Where they're used
 
-The sounds are picked in `Assets/Audio/CombatSounds.asset` (player and general combat) and on
-the vampire prefab's **Enemy Voice** component. To swap a sound, drag a different clip into the
-list there. Don't edit the files in this folder.
+The sounds are picked in `Assets/Audio/CombatSounds.asset` (combat sounds plus the victory and
+death stings) and on the vampire prefab's **Enemy Voice** component. To swap a sound, drag a
+different clip into the list there. Don't edit the files in this folder.
+
+The boss music is set to stream (Load Type: Streaming). Keep it that way for long tracks, or
+the game freezes for a moment when the music starts.

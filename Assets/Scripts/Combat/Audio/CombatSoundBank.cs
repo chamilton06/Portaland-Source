@@ -19,6 +19,8 @@ public class CombatSoundBank : ScriptableObject
     public AudioClip[] rolls;
     [Tooltip("Played when a boss is defeated, with the banner. The same sound for every boss in the game.")]
     public AudioClip victory;
+    [Tooltip("Played with the YOU DIED screen.")]
+    public AudioClip death;
 
     [Header("Volumes")]
     [Range(0f, 1f)] public float swingVolume = 0.5f;
@@ -28,4 +30,5 @@ public class CombatSoundBank : ScriptableObject
     [Range(0f, 1f)] public float parryVolume = 1f;
     [Range(0f, 1f)] public float rollVolume = 0.6f;
     [Range(0f, 1f)] public float victoryVolume = 1f;
+    [Range(0f, 1f)] public float deathVolume = 1f;
 }

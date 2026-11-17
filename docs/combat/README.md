@@ -1,22 +1,27 @@
 # Combat
 
-This is the combat system. We're aiming for something that feels like Elden Ring: attacks cost
+This is our combat system. We're going for something that feels like Elden Ring: attacks cost
 stamina, you have to read the enemy, and parrying or getting behind someone pays off.
 
-Kartik (`kartikeyapro1`) looks after combat. The work lives on `feature/combat-animation-weapons`
-and hasn't been merged into main yet.
+Kartik (`kartikeyapro1`) looks after combat and makes the bosses. The work is on the
+`feature/combat-animation-weapons` branch (PR #37).
 
-If you want to add an enemy, skip ahead to [Adding enemies](adding-enemies.md).
+**Other pages:**
+
+- [The vampire boss](boss-fight.md): how the church fight works and how to change it
+- [Notes for Cole and Uliana](notes-for-cole-and-uliana.md): what changed in your bits, and how to hook into it
+- [Adding enemies](adding-enemies.md): putting enemies in a level, or making new ones
 
 ## Trying it out
 
-Open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` (or `RangerMovementTestFemale.unity` for the
-female Ranger) and press Play. There's a Dark Ranger enemy about 14 metres in front of you and
-the two training dummies off to the side.
+- **The real thing:** open `Assets/Scenes/Main Game.unity`, press Play and walk into the
+  church. The vampire boss is waiting inside.
+- **Quick testing:** open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` (or
+  `RangerMovementTestFemale.unity`). There's a Dark Ranger about 14 metres in front of you and
+  two training dummies off to the side.
 
-Everything below is switched on in those two test scenes only. **Prototype hasn't changed**: the
-new features all default to off, so the shared scene plays exactly as it did before. When we're
-happy with it we'll turn things on in Prototype as a group.
+Prototype hasn't been given the new combat, so it plays like it used to. The one thing that
+changed everywhere is stamina (see below).
 
 ## Controls
 
@@ -30,102 +35,86 @@ happy with it we'll turn things on in Prototype as a group.
 | Right click (tap just before a hit) | Parry |
 | Q | Roll. You can't be hit during part of it |
 | Middle click or C | Lock on, or let go. Flick the mouse sideways to switch target |
+| E / R | Give yourself the axe / sword (test keys from the inventory) |
 
 ## How a fight works
 
-**Stamina.** Every attack and every blocked hit costs stamina, and it doesn't refill while you're
-attacking or blocking. If you block with no stamina left your guard breaks: you take the hit and
-stagger for a second.
+**Stamina.** Every attack, roll and blocked hit costs stamina. It refills at 40 a second after
+a 0.6 second pause, but not while you're attacking or blocking. A roll costs 18, a light attack
+10 and a heavy 25. If you block with no stamina left, your guard breaks.
 
 **Parry and riposte.** Tap block within 0.2 seconds of a hit landing and you parry it. The
-attacker is knocked off balance for 1.5 seconds. Hit them in that time for a riposte, which does
-three times the damage.
+attacker is knocked off balance. Hit them while they're staggered for a riposte: three times
+the damage (more on bosses). The game freezes for a split second when it lands.
 
-**Backstab.** Hit an enemy from close behind while it isn't mid-swing and you get the same 3x
-critical. Sneaking up on one, or rolling behind it after it whiffs, are the easy ways in.
+**Backstab.** Hit an enemy from close behind while it isn't mid-swing for the same critical.
 
-**Poise.** Some attacks carry poise, which lets you keep swinging through hits instead of
-flinching. The heavy attack can take 25 damage, the jump attack 15 and the weapon art 30. Light
-attacks have none, so getting hit interrupts them. Enemies have poise too: hit the Dark Ranger
-for 45 damage within a few seconds and it staggers, open to a riposte.
+**Poise.** Some of your attacks carry poise, so you can swing through hits instead of
+flinching: the heavy attack 25, the jump attack 15 and the weapon art 30. Enemies have poise
+too. Do enough damage to one quickly and it staggers, open to a riposte.
 
-**Lock-on.** Locking on keeps you facing the target, so A and D circle around it and the camera
-keeps it in view. Rolling and sprinting still go wherever you point.
+**Lock-on.** Keeps you facing the target, so A and D circle around it. Rolling and sprinting
+still go wherever you point.
 
-**Health bars.** An enemy's health bar appears over its head once you hit it or lock on, and
-fades a few seconds after. The yellow part is the damage you just did, and the number next to it
-adds up your combo.
+**Health bars.** A small bar appears over an enemy once you hit it or lock on. Bosses get a big
+bar at the bottom of the screen instead.
 
-## The Dark Ranger
+**Dying.** You get a Souls-style YOU DIED screen, and the scene reloads after 5 seconds. That
+resets everything, including enemies and bosses.
 
-The Dark Ranger is our first proper enemy, styled after the invaders in the Souls games. It runs
-at you when you get within 12 metres. At about 3.5 metres it circles you for a second or two,
-then commits to an attack.
+## Sounds
 
-| Attack | Damage | Tip |
-| --- | --- | --- |
-| Quick slash | 12 | Fast. Half the time it carries straight on into a backhand |
-| Backhand slash | 12 | Also used on its own |
-| Overhead smash | 22 | Slow and lunges in. Roll to the side once it stops turning |
-| Delayed slash | 18 | Holds its sword up for a moment. Rolling on reflex gets you hit |
+Swings, hits, blocks, parries (a bell), rolls, enemy voices, boss music, and the victory and
+death stings. All of it is CC0, so we can use it freely. Credits are in
+`Assets/ThirdParty/Audio/README.md`.
 
-After every attack it stands still for a moment, which is your chance to punish it. It flinches
-if you hit it between attacks but swings through your hits while attacking. It has 250 health.
+Most sounds are picked in **`Assets/Audio/CombatSounds.asset`**. To swap one, drag a different
+clip into its list. The victory and death stings are in there too, so every boss and every
+death sounds the same across the game.
+
+A scene only plays these sounds if its Player has the **Combat Audio** component. Main Game and
+the test scenes have it. Prototype doesn't.
 
 ## Where the code is
 
-Combat scripts are in `Assets/Scripts/Combat`: player scripts in `Player/`, enemy scripts in
-`Enemies/`, and the shared ones at the top. The animation side is in `Assets/Scripts/Animation`.
+Everything is in `Assets/Scripts/Combat`:
 
-| Script | What it does |
+| Folder | What's in it |
 | --- | --- |
-| `PlayerCombat` | Picks and times the player's attacks, deals damage, ripostes, backstabs |
-| `PlayerDefence` | Blocking, parrying, guard breaks and getting hit |
-| `PlayerLockOn` | Lock-on and the lock-on dot |
-| `EnemyHealthBars` | The health bars over enemies. Goes on the Player |
-| `HandAttack` | The settings for one player attack (timing, damage, stamina, poise) |
-| `EnemyMelee` | The Dark Ranger's AI. Works for any sword-fighting humanoid |
-| `EnemyAttack` | The settings for one enemy attack |
-| `Health` | Hit points for anything that can be damaged |
-| `IStaggerable`, `IBackstabbable`, `IHitReceiver` | Small interfaces so the player's hits can talk to any enemy |
-| `DummyAttacker` | The stationary training dummy that swings at you |
-| `PlayerCombatAnimation` | Plays the attack, guard, parry, hit and death animations |
-| `WeaponHandSocket`, `FistGrip` | Put the sword in the character's hand |
+| `Player/` | `PlayerCombat` (attacks, ripostes, backstabs), `PlayerDefence` (block, parry, getting hit), `PlayerLockOn`, `EnemyHealthBars`, `PlayerDeathHandler` (YOU DIED), `HandAttack` |
+| `Enemies/` | `EnemyMelee` (the AI for the Dark Ranger and vampire), `EnemyAttack` (one move), `BloodClaws` (the vampire's glowing claws), `DummyAttacker` |
+| `Boss/` | `BossEncounter` (turns an enemy into a boss fight) and `ArenaBarrier` (the red mist that seals the doors) |
+| `Audio/` | `CombatAudio`, `CombatSoundBank` and `EnemyVoice` |
+| top level | `Health`, `DamageFlash`, `HeldWeaponModel`, and the small interfaces enemies use |
 
-All the attack animations come from the free Quaternius Universal Animation Library and play on
-a "Combat" layer of `Assets/Animations/Player/RangerDirectional.controller`. That layer only
-covers the upper body, so your legs keep walking while you swing. A separate full-body "Death"
-layer handles dying and the backstab stumble.
+The animation side is in `Assets/Scripts/Animation`. The attack animations play on the
+"Combat" layer of `Assets/Animations/Player/RangerDirectional.controller`, which only covers
+the upper body, so your legs keep walking while you swing.
 
-## The setup tool
+## The one tool you might need
 
-**Tools → Portaland → Prepare Combat Animations** builds all of this. It adds the animation
-states, fills in the attacks on the test scene Players, builds the Dark Ranger prefab and places
-one in each test scene.
+**Tools → Portaland → Add Combat Player To Open Scene** gives the Player in whatever scene you
+have open everything above: the sword in the hand, the combat animations, lock-on, health bars
+and sounds. The Player needs the Ranger character already (Main Game's does). Save the scene
+afterwards.
 
-You don't need to run it after pulling, because everything it makes is already committed. Run
-it if you've reset something or after we change the tool. Stop Play mode first.
-
-It only ever fills in things that are missing or still zero, so anything you've tuned in the
-Inspector is left alone. To get the defaults back, clear the field (or delete
-`Assets/Prefabs/Combat/DarkRanger.prefab`) and run it again.
+The other Tools → Portaland items built the character and animations at the start. Everything
+they made is committed, so you don't need them.
 
 ## Tuning
 
-Almost every number is on a component in the Inspector, with a tooltip explaining it. The
-useful ones:
+Almost every number has a tooltip in the Inspector. The useful places:
 
-- **Player → Player Combat:** each attack's damage, timing, stamina cost and poise. Also the
-  riposte and backstab multipliers.
-- **Player → Player Defence:** parry window, block stamina cost, how long a hit stuns you.
-- **Player → Player Lock On:** lock range, how hard you flick to switch, dot size.
-- **DarkRanger → Enemy Melee:** speeds, circling distance, poise, stagger length and the moveset.
+- **Player → Player Combat:** each attack's damage, timing, stamina and poise
+- **Player → Player Defence:** parry window, block cost, how long a hit stuns you
+- **Player → Player Stats / Player Movement:** stamina, refill speed, roll cost
+- **An enemy → Enemy Melee:** speed, poise, moveset
+- **The boss → Boss Encounter:** everything about the boss fight (see [boss-fight.md](boss-fight.md))
 
-If you change something in Play mode, Unity throws it away when you stop. Write the numbers
-down and put them back in afterwards.
+Changes made in Play mode are thrown away when you stop, so write the numbers down first.
 
-## Still to do
+## Known issues and still to do
 
-- A boss enemy, once Cole has built the combat environment.
-- Turning all of this on in Prototype.
+- The vampire sometimes slides around instead of walking while he chases you. Being looked into.
 - Riposte and backstab animations for the player. At the moment they reuse the normal attacks.
+- Turning the new combat on in Prototype, if we still need Prototype.

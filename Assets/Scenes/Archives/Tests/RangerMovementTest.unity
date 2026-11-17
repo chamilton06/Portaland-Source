@@ -10663,7 +10663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e175147cf64b40919c3e66d04b519a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnDelay: 3
+  respawnDelay: 5
+  font: {fileID: 12800000, guid: dee6ca9dc411a4ad68b919ef3b1779dc, type: 3}
 --- !u!114 &2005957537
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,13 +4,16 @@ The full guide is in [`docs/combat`](../../../docs/combat/README.md): controls, 
 work, the setup tool and tuning. If you're adding enemies to a level, read
 [Adding enemies](../../../docs/combat/adding-enemies.md).
 
-To try it, open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` and press Play.
+To try it, open `Assets/Scenes/Main Game.unity` and walk into the church for the vampire boss,
+or open `Assets/Scenes/Archives/Tests/RangerMovementTest.unity` for the Dark Ranger.
 
 ## What's in this folder
 
 - **`Player/`:** everything that goes on the Player. `PlayerCombat`, `PlayerDefence`,
   `PlayerLockOn`, `PlayerDeathHandler`, `EnemyHealthBars` and `HandAttack`
-- **`Enemies/`:** `EnemyMelee`, `EnemyAttack` and the training `DummyAttacker`
+- **`Enemies/`:** `EnemyMelee`, `EnemyAttack`, `BloodClaws` and the training `DummyAttacker`
+- **`Boss/`:** `BossEncounter` and `ArenaBarrier`. See [the boss page](../../../docs/combat/boss-fight.md)
+- **`Audio/`:** `CombatAudio`, `CombatSoundBank` and `EnemyVoice`
 - **This folder:** things both sides use. `Health`, `DamageFlash`, `HeldWeaponModel`, and the
   `IStaggerable`, `IBackstabbable` and `IHitReceiver` interfaces
 - **`Item Drops/`:** food and item pickups that enemies can drop when they die
@@ -28,6 +31,6 @@ The player and enemies flash red when they take damage. Blocked, parried and dod
 flash. Health regenerates while hunger is above 90, so if you want to see damage stick, press P
 to drop your hunger or set Health Regen to 0 on PlayerStats while you test.
 
-When the player dies, "You died" shows and the scene reloads after 3 seconds. In the editor
+When the player dies, a Souls-style YOU DIED screen shows and the scene reloads after 5 seconds. In the editor
 this works in any scene, so test scenes don't need to be in Build Settings. In a built game it
 only works for scenes listed in **File → Build Settings**, so any real level needs adding there.

@@ -1,11 +1,19 @@
 # Adding enemies
 
-This is for anyone putting enemies into a level. Cole, this one's mostly for you.
+This is for anyone putting enemies into a level. Cole, this one's mostly for you. Bosses are
+different: Kartik makes those, and they're explained in [boss-fight.md](boss-fight.md).
 
 ## The quick way
 
-Drag `Assets/Prefabs/Combat/DarkRanger.prefab` into your scene and put it somewhere on the
-ground. That's it: it finds the Player by itself and starts fighting when you get close.
+Drag one of these into your scene and put it on the ground:
+
+- `Assets/Prefabs/Combat/DarkRanger.prefab`: a dark knight with a sword
+- `Assets/Prefabs/Combat/Vampire.prefab`: a vampire with glowing blood claws, and a growl and
+  scream
+
+That's it. It finds the Player by itself and starts fighting when you get close. Drag it into
+the **Scene view** rather than the Hierarchy, so it lands where your mouse is and not at the
+middle of the map.
 
 Your scene needs a few things for it to work properly:
 
@@ -13,8 +21,9 @@ Your scene needs a few things for it to work properly:
   hurts you, but you can't block, parry or dodge it.
 - **Colliders on the ground and walls.** The enemy uses a CharacterController and gravity, so
   it'll fall through anything without a collider.
-- **`PlayerLockOn` and `EnemyHealthBars` on the Player,** if you want lock-on and health bars.
-  The test scenes have them already. Prototype doesn't yet.
+- **The combat setup on the Player,** for lock-on, health bars and sounds. Main Game and the
+  test scenes have it. For any other scene, use **Tools → Portaland → Add Combat Player To Open
+  Scene**.
 
 It goes around small obstacles but it doesn't do proper pathfinding. It'll get stuck behind a
 long wall or a building. Keep that in mind when you're laying out arenas, or let me know if you
@@ -35,6 +44,9 @@ On the variant's **Enemy Melee** component you can change:
   before attacking. Shorter circle times make it more aggressive.
 - **Poise** for how much damage it takes before it staggers.
 - **Weapon Model** for what it's holding. Any model whose blade points along its Y axis works.
+  Leave it empty for a bare-handed enemy, like the vampire.
+- **Second Phase Below** to make it faster below some share of its health (0.5 = half).
+- **Flinches**: untick it for hyper armour, so hits don't interrupt it.
 
 Health is on the **Health** component, and **Drop Prefab** there lets it drop an item when it
 dies, the same as the old dummies.
@@ -58,6 +70,7 @@ attacks. Each attack has:
 | Recovery | How long it stands open afterwards. This is the player's window to punish it |
 | Follow Up | The number of another attack in the list to chain into (-1 for none) |
 | Follow Up Chance | How often it does the chain |
+| Closes From | Makes it a gap closer: it can open with this from up to this far away, rushing in. 0 for a normal attack |
 
 Hit Time is the one most worth getting right. Play the game, watch when the sword actually
 reaches you, and nudge the number until the damage lines up with the swing.

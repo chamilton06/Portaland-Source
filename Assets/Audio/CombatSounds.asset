@@ -56,6 +56,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 53f43ad2bf7534f81a0697a1076a6ea9, type: 3}
   - {fileID: 8300000, guid: bbb9752a68c284542a94e3cc27d41276, type: 3}
   victory: {fileID: 8300000, guid: 4ea69597cda54b4fb65011142c06755e, type: 3}
+  death: {fileID: 8300000, guid: f60fc4829ce84efd9dd20bd4bdbffab3, type: 3}
   swingVolume: 0.5
   hitVolume: 0.9
   heavyHitVolume: 1
@@ -63,3 +64,4 @@ MonoBehaviour:
   parryVolume: 1
   rollVolume: 0.6
   victoryVolume: 1
+  deathVolume: 1
