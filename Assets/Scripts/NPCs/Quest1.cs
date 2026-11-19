@@ -33,8 +33,13 @@ public class OfferPopup : MonoBehaviour
         rejectButton.onClick.AddListener(() => Close(onReject));
     }
 
-    public void Show(string message, Action accept = null, Action reject = null, Action closed = null)
+    public void Show(string message, Action accept = null, Action reject = null, Action closed = null,
+                 string acceptLabel = "Accept", string rejectLabel = "Reject")
     {
+        acceptButton.GetComponentInChildren<TMP_Text>().text = acceptLabel;
+        rejectButton.gameObject.SetActive(rejectLabel != null);
+        if (rejectLabel != null) rejectButton.GetComponentInChildren<TMP_Text>().text = rejectLabel;
+        
         messageText.text = message;
         onAccept = accept;
         onReject = reject;

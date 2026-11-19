@@ -29365,7 +29365,7 @@ MonoBehaviour:
   infoPanel: {fileID: 1452135254}
   journal: {fileID: 1313025765}
   testItem: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
-  testItem2: {fileID: 11400000, guid: 4b7d0dd679ad8b84f83e5b65ba77b46d, type: 2}
+  testItem2: {fileID: 11400000, guid: b4004c7275fbf43b19fdceecc58bd812, type: 2}
   testItem3: {fileID: 11400000, guid: 6d3f966569f8ba942875ba2ef119eadb, type: 2}
 --- !u!114 &1452135254
 MonoBehaviour:
@@ -41337,6 +41337,11 @@ MonoBehaviour:
   quest: {fileID: 11400000, guid: efd162fd034454537963bb1898e92108, type: 2}
   tracker: {fileID: 1313025767}
   journal: {fileID: 1313025765}
+  inventory: {fileID: 1452135253}
+  reward: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+  returnTaskIndex: 2
+  waitingText: Still waiting on those materials.
+  readyText: That's everything. Give me a moment at the forge... Here, your sword.
 --- !u!136 &2075389294
 CapsuleCollider:
   m_ObjectHideFlags: 0
