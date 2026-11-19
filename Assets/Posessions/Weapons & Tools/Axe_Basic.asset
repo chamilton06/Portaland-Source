@@ -10,22 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da379e7c80a433548b56893699dd39ff, type: 3}
-  m_Name: Pickaxe
+  m_Name: Axe_Basic
   m_EditorClassIdentifier: 
-  itemName: Pickaxe
-  icon: {fileID: 21300000, guid: b54b94da5cee5c046bf327246ac181e6, type: 3}
+  itemName: Axe
+  icon: {fileID: 21300000, guid: 2cc137b4e1d4ab14c8debe2497ee02b2, type: 3}
   maxStackSize: 1
-  inventorySize: {x: 2, y: 2}
-  shortDescription: "A sturdy iron pickaxe. Breaks stone and ore that an axe can\u2019t
-    touch."
-  weight: 3
-  maxDurability: 0
-  journalEntry: {fileID: 0}
+  inventorySize: {x: 2, y: 3}
+  shortDescription: Cool big axe!
+  weight: 3.2
+  maxDurability: 100
+  journalEntry: {fileID: 11400000, guid: 6d620c664d27fdb4ca27420ee127b4eb, type: 2}
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
   stats:
     damage: 10
     attackRange: 2.5
     attackCooldown: 0.5
-  weaponPrefab: {fileID: 0}
-  toolType: 2
+  weaponPrefab: {fileID: 2999748106215116, guid: a9de5a98f016a334c9a1113e07b1a12f, type: 3}
+  toolType: 1
