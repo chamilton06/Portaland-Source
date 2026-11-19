@@ -11,6 +11,7 @@ public class QuestTracker : MonoBehaviour
     public TextMeshProUGUI goalText;
 
     public Quest PinnedQuest { get; private set; }
+    public float hideAfterComplete = 3f;   // seconds "Completed!" stays on screen
 
     void Awake()
     {
@@ -24,7 +25,15 @@ public class QuestTracker : MonoBehaviour
 
     void OnQuestChanged(Quest quest)
     {
-        if (quest == PinnedQuest) Refresh();
+        if (quest != PinnedQuest) return;
+        Refresh();
+        if (quest.IsComplete) StartCoroutine(HideAfterDelay(quest));    // update when quest completed
+    }
+
+    IEnumerator HideAfterDelay(Quest quest)
+    {
+        yield return new WaitForSecondsRealtime(hideAfterComplete);
+        if (PinnedQuest == quest) Unpin();
     }
 
     public void Pin(Quest quest)

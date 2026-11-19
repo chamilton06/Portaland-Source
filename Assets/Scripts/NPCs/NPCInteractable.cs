@@ -32,7 +32,7 @@ public class NPCInteractable : MonoBehaviour
         if (!QuestAccepted)
             OfferPopup.Instance.Show(offerText, OnAccept, OnReject, OnClosed);
         else if (HasMaterials())
-            OfferPopup.Instance.Show(readyText, OnComplete, null, OnClosed, "Complete Quest", "Not yet");
+            OfferPopup.Instance.Show(readyText, OnComplete, null, OnClosed, "Finish", "Not yet");
         else
             OfferPopup.Instance.Show(waitingText, null, null, OnClosed, "Okay", null);
     }
