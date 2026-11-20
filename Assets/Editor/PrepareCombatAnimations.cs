@@ -119,12 +119,29 @@ public static class PrepareCombatAnimations
             PrepareWeaponHandTest.SetUpScene(scene);
             SetUpPlayer(scene, clips, enemy, false);
             PrepareCombatAudio.AddToScene(scene); // Sounds, and music for any boss.
+            AddCharacterLook(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log("Combat player ready in " + scene.name + ". If there wasn't an enemy already, a Dark Ranger is " + EnemyStartDistance + " m in front of the Player. Move it wherever you like.");
         }
         catch (Exception error)
         {
             Debug.LogError("Adding the combat player stopped: " + error.Message);
+        }
+    }
+
+    // Lets the Player be built from the look saved in the character creator.
+    private static void AddCharacterLook(Scene scene)
+    {
+        GameObject male = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Characters/Player/PlayerCharacterMale.prefab");
+        GameObject female = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Characters/Player/PlayerCharacterFemale.prefab");
+        if (male == null || female == null) return;
+        foreach (PlayerCombat player in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<PlayerCombat>(true)))
+        {
+            PlayerCharacterLook look = player.GetComponent<PlayerCharacterLook>();
+            if (look == null) look = player.gameObject.AddComponent<PlayerCharacterLook>();
+            if (look.malePrefab == null) look.malePrefab = male;
+            if (look.femalePrefab == null) look.femalePrefab = female;
+            EditorUtility.SetDirty(look);
         }
     }
 
