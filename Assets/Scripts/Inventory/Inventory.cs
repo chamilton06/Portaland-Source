@@ -422,4 +422,24 @@ public class Inventory : MonoBehaviour
         }
         return !cell.HasItem() && coveredBy[index] == null;
     }
+
+    public int CountItem(Item item)
+    {
+        int total = 0;
+        foreach (Slot slot in inventorySlots)
+            if (slot.HasItem() && slot.GetItem() == item) total += slot.GetAmount();
+        return total;
+    }
+
+    public void RemoveItem(Item item, int amount)
+    {
+        foreach (Slot slot in inventorySlots)
+        {
+            if (amount <= 0) return;
+            if (!slot.HasItem() || slot.GetItem() != item) continue;
+            int take = Mathf.Min(amount, slot.GetAmount());
+            RemoveFromSlot(slot, take);
+            amount -= take;
+        }
+    }
 }
