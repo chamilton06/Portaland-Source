@@ -82,4 +82,5 @@ These were written while building each part. They go into more detail, but some 
 - [Animation test](animation-test.md): the standalone animation preview
 - [Movement integration](movement-integration.md): getting the character onto the gameplay Player
 - [Airborne](airborne-animation.md), [crouch](crouch-animation.md), [directional movement](directional-movement.md) and [roll](roll-and-female-test.md)
+- [Character creator](character-creator.md): picking your class and look before the game starts
 - [Guide for combat animations in scenes](guide-for-combat-animations-in-scenes.md): how to put the character and its combat animations into another scene, and what to watch out for when merging

@@ -40604,6 +40604,7 @@ GameObject:
   - component: {fileID: 1913253716}
   - component: {fileID: 1913253715}
   - component: {fileID: 1913253719}
+  - component: {fileID: 1913253720}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -41062,6 +41063,27 @@ MonoBehaviour:
   masterVolume: 1
   pitchVariation: 0.08
   voices: 8
+--- !u!114 &1913253720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913253701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79c5787200d8440aa9adf493636ac71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  malePrefab: {fileID: 8297783472017945369, guid: 08cfa5b423744474694cf5d4b68e3daf, type: 3}
+  femalePrefab: {fileID: 6009425297432674444, guid: 693170066d49245cca2bd471e30b7ffa, type: 3}
+  sword: {fileID: 11400000, guid: 58a5350011127374587b1082d2c31e48, type: 2}
+  axe: {fileID: 11400000, guid: 546ec4cb451a8294a899facb99725251, type: 2}
+  healingPotion: {fileID: 11400000, guid: 74f429f27220ac441a99e97a5ffe761e, type: 2}
+  apple: {fileID: 11400000, guid: 198940768c4d6d24186dcc12b187cd42, type: 2}
+  duskroot: {fileID: 11400000, guid: 3e1789c9451872c45a73332d3338cd21, type: 2}
+  moonpetal: {fileID: 11400000, guid: dfe32c07396ee0348bb912913ce4bb9c, type: 2}
+  wardleaf: {fileID: 11400000, guid: 6d3f966569f8ba942875ba2ef119eadb, type: 2}
 --- !u!1 &1916000725
 GameObject:
   m_ObjectHideFlags: 0

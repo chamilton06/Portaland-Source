@@ -26,10 +26,14 @@ vampireHealth.onDeath.AddListener(CompleteChurchQuest);
 He also gives the player a Blood Vial when he dies. It goes through `Inventory.AddItem`, so the
 quests will see it through `ItemAdded` like any other item.
 
+The Player in Main Game also has a new component, Player Character Look, which swaps the
+default Ranger for the character the player made in the creator. If you ever rebuild the
+Player, keep that on it.
+
 ## Uliana
 
-The Blood Vial is in `Assets/Resources/Items/Crafting/BloodVial.asset` with your other crafting
-items, and its icon is `BloodVial.png` in the same folder. You get one from beating the vampire
+The Blood Vial is in `Assets/Posessions/Items/Crafting/BloodVial.asset` with your other
+crafting items (Cole moved them all there), and its icon is `BloodVial.png` in the same folder. You get one from beating the vampire
 and it goes straight into the inventory. It's just a normal item so you can use it in recipes,
 and you can change the name, description or icon if you want.
 
@@ -38,11 +42,16 @@ I changed two numbers in `PlayerStats`: `staminaRegen` from 15 to 40 and `regenD
 Prototype and the test scenes as well. Nothing else in the file is different, but let me know
 if it messes anything up for you.
 
+As we talked about, the New button on your main menu now opens the character creator instead
+of going straight to Main Game. I only changed Game Scene on the menu object to "Character
+Creator", your script is the same. The creator then loads Main Game when you press Begin.
+There's more about it in `docs/character-animation/character-creator.md`.
+
 I didn't change your `DeathScreen`. Main Game uses my `PlayerDeathHandler` for the YOU DIED
 screen, so if you want yours used there instead, let me know and we can sort it out.
 
-I also used your Cinzel font for the boss name, VANQUISHED and YOU DIED. I didn't change the
-font files.
+I also used the Cinzel font (in `Assets/UI Assets/Fonts`) for the boss name, VANQUISHED and
+YOU DIED. I didn't change the font files.
 
 ## Both of you
 

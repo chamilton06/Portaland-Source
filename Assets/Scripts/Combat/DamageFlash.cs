@@ -31,14 +31,15 @@ public class DamageFlash : MonoBehaviour
     {
         if (!isActiveAndEnabled) return;
 
+        // Mid-flash, put the real colours back first so the red isn't cached as normal.
         if (flashRoutine != null)
         {
             StopCoroutine(flashRoutine);
+            RestoreAppearance();
         }
 
-        RestoreAppearance();
-        // Rolling creates a visual child and equipping creates weapon models at
-        // runtime. Include the current renderers without caching a red flash.
+        // Cache what's showing right now: rolling and equipping add renderers at runtime, and
+        // character customisation colours renderers, so an old cache would undo those.
         CacheRenderers();
         flashRoutine = StartCoroutine(FlashRoutine());
     }
