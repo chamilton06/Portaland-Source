@@ -32,8 +32,8 @@ Player, keep that on it.
 
 ## Uliana
 
-The Blood Vial is in `Assets/Resources/Items/Crafting/BloodVial.asset` with your other crafting
-items, and its icon is `BloodVial.png` in the same folder. You get one from beating the vampire
+The Blood Vial is in `Assets/Posessions/Items/Crafting/BloodVial.asset` with your other
+crafting items (Cole moved them all there), and its icon is `BloodVial.png` in the same folder. You get one from beating the vampire
 and it goes straight into the inventory. It's just a normal item so you can use it in recipes,
 and you can change the name, description or icon if you want.
 

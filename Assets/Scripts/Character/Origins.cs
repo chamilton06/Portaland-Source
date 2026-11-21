@@ -1,7 +1,8 @@
 using UnityEngine;
 
-// What each starting class and keepsake gives you. The items are loaded from Resources/Items,
-// so they don't need setting up in a scene.
+public enum StartingItem { Sword, Axe, HealingPotion, Apple, Duskroot, Moonpetal, Wardleaf }
+
+// What each starting class and keepsake gives you.
 public static class Origins
 {
     public struct Stats
@@ -23,25 +24,25 @@ public static class Origins
         }
     }
 
-    // Items the class starts with, as (path in Resources, amount).
-    public static (string item, int amount)[] ClassItems(StartingClass origin)
+    // Items the class starts with. PlayerCharacterLook has the actual item for each of these.
+    public static (StartingItem item, int amount)[] ClassItems(StartingClass origin)
     {
         switch (origin)
         {
-            case StartingClass.Knight: return new[] { ("Items/Sword", 1) };
-            case StartingClass.Ranger: return new[] { ("Items/Axe", 1) };
-            default: return new[] { ("Items/Crafting/HealingPotion", 2) };
+            case StartingClass.Knight: return new[] { (StartingItem.Sword, 1) };
+            case StartingClass.Ranger: return new[] { (StartingItem.Axe, 1) };
+            default: return new[] { (StartingItem.HealingPotion, 2) };
         }
     }
 
-    public static (string item, int amount)[] KeepsakeItems(Keepsake keepsake)
+    public static (StartingItem item, int amount)[] KeepsakeItems(Keepsake keepsake)
     {
         switch (keepsake)
         {
-            case Keepsake.HealingPotions: return new[] { ("Items/Crafting/HealingPotion", 2) };
-            case Keepsake.Apples: return new[] { ("Items/Apple", 5) };
-            case Keepsake.Herbs: return new[] { ("Items/Crafting/Duskroot", 1), ("Items/Crafting/Moonpetal", 1), ("Items/Crafting/Wardleaf", 1) };
-            default: return new (string, int)[0];
+            case Keepsake.HealingPotions: return new[] { (StartingItem.HealingPotion, 2) };
+            case Keepsake.Apples: return new[] { (StartingItem.Apple, 5) };
+            case Keepsake.Herbs: return new[] { (StartingItem.Duskroot, 1), (StartingItem.Moonpetal, 1), (StartingItem.Wardleaf, 1) };
+            default: return new (StartingItem, int)[0];
         }
     }
 

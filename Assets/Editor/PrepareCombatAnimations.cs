@@ -141,9 +141,19 @@ public static class PrepareCombatAnimations
             if (look == null) look = player.gameObject.AddComponent<PlayerCharacterLook>();
             if (look.malePrefab == null) look.malePrefab = male;
             if (look.femalePrefab == null) look.femalePrefab = female;
+            // Starting items, found by asset ID so moving the item files doesn't break them.
+            if (look.sword == null) look.sword = ItemById("58a5350011127374587b1082d2c31e48");
+            if (look.axe == null) look.axe = ItemById("546ec4cb451a8294a899facb99725251");
+            if (look.healingPotion == null) look.healingPotion = ItemById("74f429f27220ac441a99e97a5ffe761e");
+            if (look.apple == null) look.apple = ItemById("198940768c4d6d24186dcc12b187cd42");
+            if (look.duskroot == null) look.duskroot = ItemById("3e1789c9451872c45a73332d3338cd21");
+            if (look.moonpetal == null) look.moonpetal = ItemById("dfe32c07396ee0348bb912913ce4bb9c");
+            if (look.wardleaf == null) look.wardleaf = ItemById("6d3f966569f8ba942875ba2ef119eadb");
             EditorUtility.SetDirty(look);
         }
     }
+
+    private static Item ItemById(string guid) => AssetDatabase.LoadAssetAtPath<Item>(AssetDatabase.GUIDToAssetPath(guid));
 
     private class Clips
     {

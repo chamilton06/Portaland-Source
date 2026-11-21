@@ -2,8 +2,8 @@ using UnityEngine;
 
 // Builds the player's character from the look saved in the character creator. Goes on the
 // Player. When the scene starts it swaps the default character model for the chosen body, shows
-// the chosen look, points the animation scripts at the new model and sets health and stamina
-// for the chosen class. On a new game it also gives the class and keepsake items, once. If
+// the chosen look, points the animation scripts at the new model, sets health and stamina for
+// the chosen class and puts the class weapon in the player's hand. On a new game it also gives the class and keepsake items, once. If
 // nothing has been saved yet, the default character is left as it is.
 // Runs before the other Player scripts so they pick up the new model in their own Awake.
 [DefaultExecutionOrder(-200)]
@@ -11,6 +11,15 @@ public class PlayerCharacterLook : MonoBehaviour
 {
     public GameObject malePrefab;
     public GameObject femalePrefab;
+
+    [Header("Starting items (from the class and keepsake)")]
+    public Item sword;
+    public Item axe;
+    public Item healingPotion;
+    public Item apple;
+    public Item duskroot;
+    public Item moonpetal;
+    public Item wardleaf;
 
     private CharacterLook look;
 
@@ -27,6 +36,13 @@ public class PlayerCharacterLook : MonoBehaviour
             stats.maxHealth = origin.health;
             stats.maxStamina = origin.stamina;
         }
+
+        // Start holding the class weapon. PlayerCombat equips this in its Start. The Wanderer
+        // keeps whatever the scene gives the player.
+        PlayerCombat combat = GetComponent<PlayerCombat>();
+        Weapon classWeapon = look.startingClass == StartingClass.Knight ? sword as Weapon
+            : look.startingClass == StartingClass.Ranger ? axe as Weapon : null;
+        if (combat != null && classWeapon != null) combat.equippedWeapon = classWeapon;
 
         PlayerLocomotionAnimation locomotion = GetComponent<PlayerLocomotionAnimation>();
         Animator old = locomotion != null ? locomotion.characterAnimator : GetComponentInChildren<Animator>();
@@ -66,18 +82,42 @@ public class PlayerCharacterLook : MonoBehaviour
         yield return null;
         Inventory inventory = FindFirstObjectByType<Inventory>();
         if (inventory == null) yield break;
-        foreach (var (path, amount) in Origins.ClassItems(look.startingClass))
-            Give(inventory, path, amount);
-        foreach (var (path, amount) in Origins.KeepsakeItems(look.keepsake))
-            Give(inventory, path, amount);
-        look.startingItemsGiven = true;
-        look.Save();
+        bool allGiven = true;
+        foreach (var (item, amount) in Origins.ClassItems(look.startingClass))
+            allGiven &= Give(inventory, item, amount);
+        foreach (var (item, amount) in Origins.KeepsakeItems(look.keepsake))
+            allGiven &= Give(inventory, item, amount);
+        // Only remember they were given if they all were, so a missing item gets another go.
+        if (allGiven)
+        {
+            look.startingItemsGiven = true;
+            look.Save();
+        }
     }
 
-    private void Give(Inventory inventory, string path, int amount)
+    private bool Give(Inventory inventory, StartingItem which, int amount)
     {
-        Item item = Resources.Load<Item>(path);
-        if (item != null) inventory.AddItem(item, amount);
-        else Debug.LogWarning("Starting item not found: Resources/" + path, this);
+        Item item = Find(which);
+        if (item == null)
+        {
+            Debug.LogWarning("Player Character Look has no " + which + " set, so it couldn't be given.", this);
+            return false;
+        }
+        inventory.AddItem(item, amount);
+        return true;
+    }
+
+    private Item Find(StartingItem which)
+    {
+        switch (which)
+        {
+            case StartingItem.Sword: return sword;
+            case StartingItem.Axe: return axe;
+            case StartingItem.HealingPotion: return healingPotion;
+            case StartingItem.Apple: return apple;
+            case StartingItem.Duskroot: return duskroot;
+            case StartingItem.Moonpetal: return moonpetal;
+            default: return wardleaf;
+        }
     }
 }

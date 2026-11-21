@@ -8,7 +8,8 @@ Begin takes you into Main Game as that character.
 
 On the Origin page you type a name and pick a class, a keepsake, and your height and build.
 
-The class sets your health and stamina and gives you a starting item. The Knight has 120
+The class sets your health and stamina and gives you a starting item. The Knight and Ranger
+also start holding their weapon, and the Wanderer keeps the normal sword. The Knight has 120
 health and 90 stamina and starts with a sword, the Ranger has 95 health and 120 stamina and
 starts with an axe, and the Wanderer has 105 of both and starts with two healing potions. The
 keepsake is one extra thing to start with: two healing potions, five apples or three crafting
@@ -34,8 +35,9 @@ The characters are `PlayerCharacterMale` and `PlayerCharacterFemale` in
 and `CharacterAppearance` turns the right ones on and sets the colours. If you drag one into a
 scene you can change its Look in the Inspector and see it update without pressing Play.
 
-The scripts are in `Assets/Scripts/Character`. The class stats and starting items are in
-`Origins.cs` if you want to change them.
+The scripts are in `Assets/Scripts/Character`. The class stats and what each class and
+keepsake gives are in `Origins.cs`. The actual items (sword, axe, potion, apple and the herbs)
+are linked on the Player Character Look component, so moving the item files doesn't break it.
 
 ## Adding it to another scene
 
