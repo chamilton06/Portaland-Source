@@ -65,6 +65,7 @@ GameObject:
   - component: {fileID: 5560377117690854962}
   - component: {fileID: 8483245215636774914}
   - component: {fileID: -4674514165613541963}
+  - component: {fileID: 8608594132327893129}
   m_Layer: 0
   m_Name: Rabbit
   m_TagString: Untagged
@@ -150,6 +151,7 @@ MonoBehaviour:
   walkState: 
   runState: Run
   deathState: Dead
+  hitState: 
   slowRunAnimSpeed: 2
   walkAnimSpeed: 2
   runAnimSpeed: 2.8
@@ -162,6 +164,48 @@ MonoBehaviour:
   safeRange: 14
   gravity: 20
   corpseTime: 10
+  aggressive: 0
+  attackStates: []
+  attackDamage: 15
+  damageMultiplier: 1
+  chaseRange: 12
+  giveUpRange: 25
+  attackRange: 1.8
+  attackHitTime: 0.4
+  attackDuration: 1.2
+  attackCooldown: 0.8
+  parryStun: 1.5
+--- !u!114 &8608594132327893129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4190772963398530052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06eaa2e90e2fb7c478779bf15bc6c737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drops:
+  - item: {fileID: 11400000, guid: 28b3b20a9a29abb4c83087df6d6dc1fa, type: 2}
+    min: 1
+    max: 1
+    chance: 1
+  - item: {fileID: 11400000, guid: 5401b32077238f24f8dacf7919668d5b, type: 2}
+    min: 1
+    max: 1
+    chance: 0.6
+  - item: {fileID: 11400000, guid: 1db72892d380c074a85dbc1c275015cb, type: 2}
+    min: 1
+    max: 1
+    chance: 0.3
+  - item: {fileID: 11400000, guid: b49ee9465f5502f4483f8bb9d23b38c2, type: 2}
+    min: 1
+    max: 1
+    chance: 0.15
+  lootMultiplier: 1
+  rareBoost: 1
 --- !u!1001 &5805062666093904665
 PrefabInstance:
   m_ObjectHideFlags: 0

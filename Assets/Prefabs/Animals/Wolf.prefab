@@ -897,6 +897,7 @@ GameObject:
   - component: {fileID: 5102956817146711006}
   - component: {fileID: 8765069497907521831}
   - component: {fileID: 2973916260765468585}
+  - component: {fileID: -7442015444019000976}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -1008,6 +1009,45 @@ MonoBehaviour:
   attackDuration: 1
   attackCooldown: 1
   parryStun: 1.5
+--- !u!114 &-7442015444019000976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4175216607237364254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06eaa2e90e2fb7c478779bf15bc6c737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drops:
+  - item: {fileID: 11400000, guid: 28b3b20a9a29abb4c83087df6d6dc1fa, type: 2}
+    min: 1
+    max: 2
+    chance: 1
+  - item: {fileID: 11400000, guid: b9277f8dbf31cc940bb88bbdbcae2425, type: 2}
+    min: 1
+    max: 1
+    chance: 0.7
+  - item: {fileID: 11400000, guid: 1db72892d380c074a85dbc1c275015cb, type: 2}
+    min: 1
+    max: 2
+    chance: 0.6
+  - item: {fileID: 11400000, guid: 41923bad78ac5744481f49643dfde290, type: 2}
+    min: 1
+    max: 1
+    chance: 0.5
+  - item: {fileID: 11400000, guid: 34944462c1da39a48863d81c4e79b5b6, type: 2}
+    min: 1
+    max: 2
+    chance: 0.3
+  - item: {fileID: 11400000, guid: 7a5d1d1bc5af3cd4e98498b6af67ab67, type: 2}
+    min: 1
+    max: 1
+    chance: 0.08
+  lootMultiplier: 1
+  rareBoost: 1
 --- !u!1 &4190825160345672931
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8573425981279264309}
   - component: {fileID: 6152170023783512483}
   - component: {fileID: -6332339257036374978}
+  - component: {fileID: -7334427508380026795}
   m_Layer: 0
   m_Name: Bear
   m_TagString: Untagged
@@ -123,6 +124,49 @@ MonoBehaviour:
   attackDuration: 1.5
   attackCooldown: 1.5
   parryStun: 1.5
+--- !u!114 &-7334427508380026795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8442762898095694337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06eaa2e90e2fb7c478779bf15bc6c737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drops:
+  - item: {fileID: 11400000, guid: 28b3b20a9a29abb4c83087df6d6dc1fa, type: 2}
+    min: 2
+    max: 4
+    chance: 1
+  - item: {fileID: 11400000, guid: 2862090166dfcec4aa91361275828e5d, type: 2}
+    min: 2
+    max: 3
+    chance: 1
+  - item: {fileID: 11400000, guid: 41923bad78ac5744481f49643dfde290, type: 2}
+    min: 1
+    max: 2
+    chance: 0.8
+  - item: {fileID: 11400000, guid: 1db72892d380c074a85dbc1c275015cb, type: 2}
+    min: 2
+    max: 3
+    chance: 0.7
+  - item: {fileID: 11400000, guid: 34944462c1da39a48863d81c4e79b5b6, type: 2}
+    min: 1
+    max: 2
+    chance: 0.35
+  - item: {fileID: 11400000, guid: e45567d4430dda74f821240ed7198091, type: 2}
+    min: 1
+    max: 1
+    chance: 0.25
+  - item: {fileID: 11400000, guid: 24253233c3d87eb4a973a1b6a2b93bb3, type: 2}
+    min: 1
+    max: 0
+    chance: 0.1
+  lootMultiplier: 1
+  rareBoost: 1
 --- !u!1001 &249883746436343191
 PrefabInstance:
   m_ObjectHideFlags: 0

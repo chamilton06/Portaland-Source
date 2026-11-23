@@ -647,6 +647,7 @@ GameObject:
   - component: {fileID: 8843216793921417537}
   - component: {fileID: 2619709788855802961}
   - component: {fileID: 8309000915136781817}
+  - component: {fileID: 8592564607001153633}
   m_Layer: 0
   m_Name: Squirrel
   m_TagString: Untagged
@@ -732,7 +733,10 @@ MonoBehaviour:
   walkState: 
   runState: Squirrel_Armature|Running
   deathState: Squirrel_Armature|Dying
+  hitState: 
   slowRunAnimSpeed: 1
+  walkAnimSpeed: 1
+  runAnimSpeed: 1
   walkSpeed: 0.7
   runSpeed: 1.8
   turnSpeed: 360
@@ -742,6 +746,44 @@ MonoBehaviour:
   safeRange: 12
   gravity: 20
   corpseTime: 10
+  aggressive: 0
+  attackStates: []
+  attackDamage: 15
+  damageMultiplier: 1
+  chaseRange: 12
+  giveUpRange: 25
+  attackRange: 1.8
+  attackHitTime: 0.4
+  attackDuration: 1.2
+  attackCooldown: 0.8
+  parryStun: 1.5
+--- !u!114 &8592564607001153633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3473462143330634366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06eaa2e90e2fb7c478779bf15bc6c737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drops:
+  - item: {fileID: 11400000, guid: 28b3b20a9a29abb4c83087df6d6dc1fa, type: 2}
+    min: 1
+    max: 1
+    chance: 0.8
+  - item: {fileID: 11400000, guid: cf88b9ad9da5f1245a9812143e120155, type: 2}
+    min: 1
+    max: 1
+    chance: 0.4
+  - item: {fileID: 11400000, guid: 1db72892d380c074a85dbc1c275015cb, type: 2}
+    min: 1
+    max: 1
+    chance: 0.15
+  lootMultiplier: 1
+  rareBoost: 1
 --- !u!1 &4099534299118120738
 GameObject:
   m_ObjectHideFlags: 0
