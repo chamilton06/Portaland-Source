@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 2a9979b14acae404f8d4cd863daf1b34
+AssetOrigin:
+  serializedVersion: 1
+  productId: 311465
+  packageName: Realistic Furry Wolf
+  packageVersion: 1.0
+  assetPath: Assets/Wolf/Models/Wolf.fbx
+  uploadId: 733725
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,22 +15,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: EyeGlass
-    second: {fileID: 2100000, guid: 65e433432ad6b8742a1f4a9f0e84071d, type: 2}
+    second: {fileID: 2100000, guid: 9de485e3d49d87546a6f98c5a1a3dc8c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Fur_2
-    second: {fileID: 2100000, guid: ba0bc912addff5a42b6c5b282afd0cfa, type: 2}
+    second: {fileID: 2100000, guid: 0f6b06a7ed707d541abc6831839dd255, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Hair
-    second: {fileID: 2100000, guid: 13dba4dc157eeb54f97e984dc3cb2add, type: 2}
+    second: {fileID: 2100000, guid: 0b1f7445fb5eb20468e9ffd9200b0ce4, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: wolf
-    second: {fileID: 2100000, guid: 8a97de759a77c7247980d66682d18c19, type: 2}
+    second: {fileID: 2100000, guid: 2477fa28dea7e3040b285b38df0c5423, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -36,8 +43,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -209,7 +214,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -267,7 +272,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -296,7 +301,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -354,7 +359,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -478,10 +483,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 311465
-  packageName: Realistic Furry Wolf
-  packageVersion: 1.0
-  assetPath: Assets/Wolf/Models/Wolf.fbx
-  uploadId: 733725
