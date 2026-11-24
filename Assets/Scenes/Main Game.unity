@@ -8926,6 +8926,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417942786}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &418523435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 418523437}
+  - component: {fileID: 418523436}
+  m_Layer: 0
+  m_Name: DayNight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &418523436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418523435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a8839a6e09150468b26fc4594bd13c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sun: {fileID: 1151906664}
+  moon: {fileID: 0}
+  dayLengthMinutes: 12
+  timeOfDay: 8
+  sunYaw: 30
+  skipHourKey: 289
+  sunIntensity: 1.1
+  dayColor: {r: 1, g: 0.96, b: 0.86, a: 1}
+  sunsetColor: {r: 1, g: 0.55, b: 0.3, a: 1}
+  moonIntensity: 1
+  moonColor: {r: 0.55, g: 0.65, b: 1, a: 1}
+  daySky: {r: 0.55, g: 0.62, b: 0.72, a: 1}
+  dayEquator: {r: 0.4, g: 0.42, b: 0.4, a: 1}
+  dayGround: {r: 0.2, g: 0.18, b: 0.15, a: 1}
+  nightSky: {r: 0.06, g: 0.08, b: 0.16, a: 1}
+  nightEquator: {r: 0.04, g: 0.05, b: 0.09, a: 1}
+  nightGround: {r: 0.02, g: 0.02, b: 0.03, a: 1}
+--- !u!4 &418523437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418523435}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -52.892273, y: -165.29883, z: -61.00037}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &418549646 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 6d6ac053cadd6244a8507e11fccaab56, type: 3}
@@ -18465,6 +18526,65 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5115856311888761736, guid: 884860f7cb1e4c845aaed518cb0f3ae5, type: 3}
   m_PrefabInstance: {fileID: 866166912}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &866363862
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 866363863}
+  - component: {fileID: 866363864}
+  m_Layer: 0
+  m_Name: Forest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &866363863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866363862}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -119, y: -10, z: 314}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1027602917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &866363864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866363862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5177405b1a3202d458135ddfcd678c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animals:
+  - prefab: {fileID: 4175216607237364254, guid: a11e566005a7c494eaafd4361728803a, type: 3}
+    weight: 3
+  - prefab: {fileID: 3473462143330634366, guid: c42e48a8ea08f9448994b6436df9218a, type: 3}
+    weight: 2
+  - prefab: {fileID: 4190772963398530052, guid: a4f9aa7a2a167c943bba4ad7de81da0d, type: 3}
+    weight: 4
+  radius: 200
+  maxAlive: 30
+  fillInterval: 5
+  respawnDelay: 120
+  minPlayerDistance: 15
+  activeRange: 120
+  onlyOnTerrain: 1
+  fillOnStart: 0
 --- !u!1 &867864258
 GameObject:
   m_ObjectHideFlags: 0
@@ -20819,6 +20939,61 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 979574599}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &982607070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 982607071}
+  - component: {fileID: 982607072}
+  m_Layer: 0
+  m_Name: Bears
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &982607071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982607070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -536.9, y: 20, z: 319}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1027602917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &982607072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982607070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5177405b1a3202d458135ddfcd678c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animals:
+  - prefab: {fileID: 8442762898095694337, guid: 4f15c75cec9ce0340b3afafcca0d470a, type: 3}
+    weight: 1
+  radius: 100
+  maxAlive: 3
+  fillInterval: 3
+  respawnDelay: 200
+  minPlayerDistance: 15
+  activeRange: 120
+  onlyOnTerrain: 1
+  fillOnStart: 1
 --- !u!1001 &999547890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21176,6 +21351,41 @@ Transform:
   - {fileID: 2095674031}
   - {fileID: 2080742624}
   m_Father: {fileID: 1210565982}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1027602916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1027602917}
+  m_Layer: 0
+  m_Name: Spawners
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1027602917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027602916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1905366688}
+  - {fileID: 866363863}
+  - {fileID: 982607071}
+  - {fileID: 1371161158}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1042831090
 PrefabInstance:
@@ -28691,6 +28901,65 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 120b628707d512840ac2d40f8aca21ed, type: 3}
+--- !u!1 &1371161157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371161158}
+  - component: {fileID: 1371161159}
+  m_Layer: 0
+  m_Name: Fireflies Lake
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1371161158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371161157}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -272, y: 2, z: 415}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1027602917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1371161159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371161157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d74b3cb12700146ae25080578fea1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireflyPrefab: {fileID: 6010372642926797364, guid: 00c966b17b27a6b4180f74d52e0b3c6d, type: 3}
+  fireflyItem: {fileID: 11400000, guid: 66f77117273b8d347a372bf6a7eed9c6, type: 2}
+  count: 15
+  radius: 80
+  minHeight: 0.5
+  maxHeight: 4
+  bob: 0.25
+  driftSpeed: 0.07
+  catchRadius: 1
+  respawnTime: 60
+  lightDistance: 20
+  alwaysOn: 0
+  blinkSpeed: 1.2
+  dimGlow: 0.15
+  haloOnAbove: 0.45
 --- !u!1001 &1372213994
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40578,6 +40847,63 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7606021603123054448, guid: abec16d0c3ccdc9418fa1619f3e99f92, type: 3}
   m_PrefabInstance: {fileID: 1905077969}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1905366687
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1905366688}
+  - component: {fileID: 1905366689}
+  m_Layer: 0
+  m_Name: Lake
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1905366688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905366687}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -344, y: 4, z: -277}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1027602917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1905366689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905366687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5177405b1a3202d458135ddfcd678c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animals:
+  - prefab: {fileID: 4190772963398530052, guid: a4f9aa7a2a167c943bba4ad7de81da0d, type: 3}
+    weight: 2
+  - prefab: {fileID: 3473462143330634366, guid: c42e48a8ea08f9448994b6436df9218a, type: 3}
+    weight: 3
+  radius: 150
+  maxAlive: 15
+  fillInterval: 5
+  respawnDelay: 60
+  minPlayerDistance: 15
+  activeRange: 120
+  onlyOnTerrain: 1
+  fillOnStart: 0
 --- !u!1 &1913253701
 GameObject:
   m_ObjectHideFlags: 0
@@ -44918,3 +45244,5 @@ SceneRoots:
   - {fileID: 2145589800}
   - {fileID: 1769700159}
   - {fileID: 713060717}
+  - {fileID: 1027602917}
+  - {fileID: 418523437}
