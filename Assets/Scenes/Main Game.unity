@@ -41160,7 +41160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 5
-  sprintSpeed: 100
+  sprintSpeed: 15
   crouchSpeed: 2.5
   groundAccel: 60
   groundDecel: 80
