@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,14 +14,16 @@ public class AnimalSpawner : MonoBehaviour
     public List<Entry> animals = new List<Entry>();
     public float radius = 25f;              // area size
     public int maxAlive = 5;                // never more than this at once
-    public float respawnDelay = 30f;        // secs before a dead one gets replaced
+    public float fillInterval = 3f;         // secs between spawns while filling up
+    public float respawnDelay = 30f;        // extra wait after one dies
     public float minPlayerDistance = 15f;   // dont pop in right next to the player
-    public float activeRange = 120f;        // only spawns when player is this close, 0 = always
+    public float activeRange = 120f;        // only spawns when player is this close to the edge, 0 = always
     public bool onlyOnTerrain = true;       // no animals on roofs
-    public bool fillOnStart = true;         // area starts full
+    public bool fillOnStart = false;        // spawn everything instantly at start
 
     readonly List<GameObject> alive = new List<GameObject>();
     float nextSpawnAt;
+    int lastCount;
     Transform player;
 
     void Start()
@@ -34,22 +35,25 @@ public class AnimalSpawner : MonoBehaviour
         {
             for (int i = 0; i < maxAlive; i++) TrySpawn();
         }
-        nextSpawnAt = Time.time + respawnDelay;
+        lastCount = alive.Count;
+        nextSpawnAt = Time.time;   // start filling straight away
     }
 
     void Update()
     {
         alive.RemoveAll(a => a == null);   // dead ones get destroyed by AnimalAI
 
-        if (alive.Count >= maxAlive)
-        {
-            nextSpawnAt = Time.time + respawnDelay;   // timer starts once something dies
-            return;
-        }
+        // something died, wait a bit before replacing it
+        if (alive.Count < lastCount) nextSpawnAt = Mathf.Max(nextSpawnAt, Time.time + respawnDelay);
+        lastCount = alive.Count;
+
+        if (alive.Count >= maxAlive) return;
         if (Time.time < nextSpawnAt) return;
         if (activeRange > 0f && player != null && Vector3.Distance(player.position, transform.position) > activeRange + radius) return;
 
-        if (TrySpawn()) nextSpawnAt = Time.time + respawnDelay;
+        TrySpawn();
+        lastCount = alive.Count;
+        nextSpawnAt = Time.time + fillInterval;
     }
 
     bool TrySpawn()
