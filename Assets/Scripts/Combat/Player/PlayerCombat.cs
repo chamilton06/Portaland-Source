@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+// Picks the attack, spends stamina and deals damage when the hit should land.
+// Inventory sets the weapon and PlayerDefence deals with hits coming in.
+// PlayerCombatAnimation plays the attack; WeaponHandSocket keeps the weapon in the hand.
 public class PlayerCombat : MonoBehaviour
 {
     public Weapon equippedWeapon;

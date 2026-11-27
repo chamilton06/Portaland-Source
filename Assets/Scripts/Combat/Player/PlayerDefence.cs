@@ -2,6 +2,8 @@ using UnityEngine;
 
 // Only incoming combat hits pass through this component. Fall damage and
 // starvation continue to use PlayerStats directly.
+// Resolves combat hits as blocks, parries, dodges or damage.
+// Animation and audio use the result rather than working out the defence rules again.
 [RequireComponent(typeof(PlayerStats), typeof(PlayerCombat))]
 public class PlayerDefence : MonoBehaviour
 {

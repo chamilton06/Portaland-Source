@@ -2,6 +2,8 @@ using UnityEngine;
 
 // Stationary combat test opponent. Turns toward the player during preparation,
 // then locks its direction for the strike so movement can make it miss.
+// The visible swing is for feedback. TryStrike checks the actual hit and passes
+// it through PlayerDefence, so the dummy can test blocking and parry timing.
 [RequireComponent(typeof(Health))]
 public class DummyAttacker : MonoBehaviour, IStaggerable
 {

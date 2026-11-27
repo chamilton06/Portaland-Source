@@ -7,6 +7,8 @@ using UnityEngine;
 // The boss waits until the player comes close on the same floor (or hits it). Then its name and
 // a big health bar appear at the bottom of the screen and the music starts. When it dies a
 // banner shows and the music fades. If the player dies the scene reloads, which resets the fight.
+// EnemyMelee handles fighting. This adds activation, boss settings, barriers,
+// music, the boss display and rewards so an enemy can also be used outside a boss fight.
 [RequireComponent(typeof(Health))]
 public class BossEncounter : MonoBehaviour
 {

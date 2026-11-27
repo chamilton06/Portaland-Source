@@ -44,6 +44,7 @@ public static class PrepareWeaponHandTest
 
     // Puts the weapon in the Player's hand in one open scene. Also used by
     // PrepareCombatAnimations.AddCombatPlayerToOpenScene. The caller saves the scene.
+    // WeaponHandSocket then keeps it in the hand while the animations play.
     internal static void SetUpScene(Scene scene)
     {
         // Found by asset ID, so it keeps working when the item files are moved.

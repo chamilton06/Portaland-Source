@@ -6,8 +6,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Sets up the sword attack animation for the two Ranger test scenes.
-// Prototype, RangerLocomotion and the preview controller aren't changed.
+// Editor setup for the Ranger combat controller, attacks and test scenes.
+// It can also add the combat components to the open scene. The runtime scripts
+// use the generated controller and scene references; this tool doesn't run in a build.
 public static class PrepareCombatAnimations
 {
     private const string LibraryPath = "Assets/ThirdParty/Quaternius/AnimationLibrary2/Models/UAL2_Standard.fbx";

@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 // Keep the first gameplay test in its own scene so the group's Prototype stays intact.
+// Connects the animated Ranger to a copy of the movement test scene.
+// PlayerMovement still controls physics; the Animator only displays the movement.
 public static class PrepareRangerMovementTest
 {
     private const string ScenePath = "Assets/Scenes/Archives/Tests/RangerMovementTest.unity";

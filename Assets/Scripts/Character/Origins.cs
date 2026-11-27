@@ -3,6 +3,7 @@ using UnityEngine;
 public enum StartingItem { Sword, Axe, HealingPotion, Apple, Duskroot, Moonpetal, Wardleaf }
 
 // What each starting class and keepsake gives you.
+// The creator shows these values and PlayerCharacterLook applies them in the game.
 public static class Origins
 {
     public struct Stats

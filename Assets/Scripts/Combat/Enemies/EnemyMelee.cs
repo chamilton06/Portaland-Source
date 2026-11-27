@@ -197,6 +197,8 @@ public class EnemyMelee : MonoBehaviour, IStaggerable, IHitReceiver, IBackstabba
         Animate();
     }
 
+    // Pick an action while the enemy is free to act. Attack timing and recovery
+    // are handled separately so it doesn't choose a new move halfway through a swing.
     private void Think()
     {
         Vector3 toPlayer = player.transform.position - transform.position;

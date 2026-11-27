@@ -9,6 +9,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+// Other scripts listen for death and handle things like ending the fight.
+// The player's health is handled separately by PlayerStats.
 public class Health : MonoBehaviour
 {
     // ------------------------------------------------------------------------

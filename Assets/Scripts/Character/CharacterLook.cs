@@ -54,6 +54,8 @@ public class CharacterLook
 
     public static bool HasSaved => PlayerPrefs.HasKey(SaveKey);
 
+    // Save character choices only, not the player position or the whole world.
+    // PlayerCharacterLook reads this JSON when the gameplay scene starts.
     public void Save()
     {
         PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(this));
@@ -68,5 +70,6 @@ public class CharacterLook
         catch (ArgumentException) { return null; }
     }
 
+    // Copy the choices so changing one look doesn't also change the other.
     public CharacterLook Copy() => JsonUtility.FromJson<CharacterLook>(JsonUtility.ToJson(this));
 }

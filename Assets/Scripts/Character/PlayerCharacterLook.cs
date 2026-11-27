@@ -1,3 +1,8 @@
+// AI-generated snippets in this file were copied and integrated by Kartik (kartikeyapro1).
+// Tool used: Claude Code in VS Code. Model used: Claude Opus 5.5, medium.
+// The comments beside each snippet explain why I needed help and what it does.
+// See README.md under Character creation > AI assistance for the declaration.
+
 using UnityEngine;
 
 // Builds the player's character from the look saved in the character creator. Goes on the
@@ -5,7 +10,11 @@ using UnityEngine;
 // the chosen look, points the animation scripts at the new model, sets health and stamina for
 // the chosen class and puts the class weapon in the player's hand. On a new game it also gives the class and keepsake items, once. If
 // nothing has been saved yet, the default character is left as it is.
-// Runs before the other Player scripts so they pick up the new model in their own Awake.
+// AI-generated snippet. I needed help getting the loading order right.
+// Run this first so the other player scripts find the new model in Awake.
+// Prompt used:
+// Help me load the selected character before the other player components
+// initialise so they use the new model
 [DefaultExecutionOrder(-200)]
 public class PlayerCharacterLook : MonoBehaviour
 {
@@ -53,7 +62,12 @@ public class PlayerCharacterLook : MonoBehaviour
             return;
         }
 
-        // Same place, size and controller as the model it replaces.
+        // AI-generated model replacement snippet.
+        // I needed help putting the selected model into gameplay without replacing Player.
+        // Keep the old placement and controller then apply the saved size and appearance.
+        // Prompt used:
+        // Help me replace the default model with the selected character while keeping
+        // the player controller animations and weapon attachment working
         Transform slot = old.transform;
         GameObject model = Instantiate(prefab, slot.parent, false);
         model.transform.localPosition = slot.localPosition;
@@ -68,6 +82,9 @@ public class PlayerCharacterLook : MonoBehaviour
         old.gameObject.SetActive(false);
         Destroy(old.gameObject);
 
+        // Part of the same AI-generated model replacement solution.
+        // Point movement, combat and the weapon at the new Animator.
+        // Otherwise they'd still be using the old model.
         if (locomotion != null) locomotion.characterAnimator = animator;
         PlayerCombatAnimation combatAnimation = GetComponent<PlayerCombatAnimation>();
         if (combatAnimation != null) combatAnimation.characterAnimator = animator;
@@ -75,7 +92,12 @@ public class PlayerCharacterLook : MonoBehaviour
         if (socket != null) socket.characterAnimator = animator;
     }
 
-    // The inventory sets itself up in Start, so wait a frame before adding to it.
+    // AI-generated snippet. I needed help waiting for the inventory to be ready.
+    // Wait a frame for its Start, then give the class and keepsake items.
+    // Remember they've been given so respawning doesn't give them again.
+    // Prompt used:
+    // Help me give the class and keepsake items after inventory initialisation
+    // without giving them again every time the player respawns
     private System.Collections.IEnumerator Start()
     {
         if (look == null || look.startingItemsGiven) yield break;
@@ -87,7 +109,8 @@ public class PlayerCharacterLook : MonoBehaviour
             allGiven &= Give(inventory, item, amount);
         foreach (var (item, amount) in Origins.KeepsakeItems(look.keepsake))
             allGiven &= Give(inventory, item, amount);
-        // Only remember they were given if they all were, so a missing item gets another go.
+        // A missing item reference leaves the flag unset so it can retry.
+        // Earlier grants aren't rolled back so a partial failure can duplicate items.
         if (allGiven)
         {
             look.startingItemsGiven = true;

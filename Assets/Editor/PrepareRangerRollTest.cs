@@ -61,6 +61,9 @@ public static class PrepareRangerRollTest
         return animations[0];
     }
 
+    // Connect the roll to the movement controller's existing states.
+    // Rolling controls entry and exit, while RollRate matches the gameplay duration.
+    // The animation shows the roll; PlayerMovement moves the character.
     private static void AddRollState(AnimatorController controller, AnimationClip clip)
     {
         AnimatorStateMachine machine = controller.layers[0].stateMachine;

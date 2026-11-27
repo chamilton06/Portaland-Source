@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // Only builds when real directional clips have been supplied. No changes on script reload.
+// Builds the controller from the chosen directional clips.
+// PlayerLocomotionAnimation updates its movement values when the game runs.
 public class RangerDirectionalSetup : EditorWindow
 {
     private const string Source = "Assets/Animations/Player/RangerLocomotion.controller";
@@ -200,6 +202,7 @@ public class RangerDirectionalSetup : EditorWindow
         AssetDatabase.SaveAssets();
     }
 
+    // Check the clips before building so a missing or wrongly imported one stops the setup.
     private static void Validate(AnimationClip clip, string label)
     {
         if (clip == null) throw new InvalidOperationException("Assign " + label + " first. No controller was changed.");

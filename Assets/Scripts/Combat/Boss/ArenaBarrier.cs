@@ -55,6 +55,8 @@ public class ArenaBarrier : MonoBehaviour
     }
 
     // A dark fog that covers the doorway, with two bright swirling layers over it on each side.
+    // Match the mist to the doorway collider. The collider blocks the player;
+    // the generated layers only make that barrier visible.
     private void BuildMist(BoxCollider wall)
     {
         if (mistTexture == null) mistTexture = MakeMistTexture();

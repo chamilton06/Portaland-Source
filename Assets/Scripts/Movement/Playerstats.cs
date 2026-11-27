@@ -3,6 +3,8 @@
 // Tracks the player's hunger, stamina, and health. Drains hunger over time
 // (faster when sprinting), spends and regenerates stamina, applies starvation
 // and fall damage, regenerates health while well fed, and fires onDeath.
+// Movement and combat request stamina here, and the UI reads the same values.
+// This keeps the rules shared instead of each action tracking its own stamina.
 // Exposes 0-1 percentages for the UI bars.
 // ============================================================================
 
