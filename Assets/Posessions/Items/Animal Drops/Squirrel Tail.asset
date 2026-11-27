@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6fce2978b3544e4f98babc7eb19ef56, type: 3}
+  m_Name: Squirrel Tail
+  m_EditorClassIdentifier: 
+  itemName: Squirrel Tail
+  icon: {fileID: 21300000, guid: 205b6299011308749af39c9dff73097e, type: 3}
+  maxStackSize: 20
+  inventorySize: {x: 1, y: 1}
+  shortDescription: A bushy tail. Fletchers love these.
+  weight: 0.1
+  maxDurability: 0
+  journalEntry: {fileID: 0}
+  itemPrefab: {fileID: 0}
+  handItemPrefab: {fileID: 0}
