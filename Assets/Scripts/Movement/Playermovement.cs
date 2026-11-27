@@ -1,9 +1,11 @@
 // ============================================================================
 // PlayerMovement.cs
-// First-person-style character movement: WASD move, Shift sprint, Space jump,
+// Character movement: WASD move, Shift sprint, Space jump,
 // Ctrl crouch. Handles ground and air acceleration, sprint jumps, fall damage,
 // and crouching with a ceiling check. Sprint and jump are limited by stamina
 // via PlayerStats.
+// Movement stays on the gameplay root, separate from the animated model.
+// Animation and combat read its state, so changing appearance doesn't replace the controller.
 // ============================================================================
 
 using System.Collections;

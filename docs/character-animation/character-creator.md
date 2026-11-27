@@ -50,3 +50,14 @@ The free Quaternius packs only have one face and two outfits, so that's what we'
 now. Colour tints can only make things darker or more coloured, not lighter, so you can't get
 really pale hair. With light skin, bare arms on the Peasant top use the pack's own skin
 texture because there isn't a light version of the body texture.
+
+## Sources and AI assistance
+
+The models, hair and outfit textures come from Quaternius; see the
+[asset credits](../../Assets/ThirdParty/Quaternius/README.md).
+Kartik used Claude Code in VS Code with Claude Opus 5.5 on medium for the marked
+mesh preparation and gameplay-loading snippets. These cover head extraction,
+clothing bone mapping and bind poses in `PrepareRangerCharacters.cs`, and early
+initialisation, model/Animator replacement and inventory timing in `PlayerCharacterLook.cs`.
+Comments beside the snippets record the prompts used and explain their purpose.
+See the [README disclosure](../../README.md#ai-assistance) for ownership and scope.

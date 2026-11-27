@@ -22,6 +22,8 @@ public static class PrepareCombatAudio
         "Assets/Scenes/Archives/Tests/RangerMovementTestFemale.unity",
     };
 
+    // Prepare the sound assets and references here. CombatAudio handles playback
+    // during the game, keeping audio setup out of the attack logic.
     public static void Prepare()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;

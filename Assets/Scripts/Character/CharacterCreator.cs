@@ -121,6 +121,8 @@ public class CharacterCreator : MonoBehaviour
                 model.GetComponent<Animator>().SetBool("Grounded", true);
     }
 
+    // Keep the menu and preview in sync after a choice changes.
+    // Buttons change the look data; CharacterAppearance shows it on the model.
     private void Refresh()
     {
         if (male != null) male.gameObject.SetActive(look.body == BodyType.Male);
@@ -225,6 +227,8 @@ public class CharacterCreator : MonoBehaviour
     }
 
     // A row with "< value >". Either arrow calls change with -1 or +1.
+    // Reuse one row for different options. The callbacks read or change that option.
+    // Store a refresher so the text also updates after randomising the appearance.
     private GameObject Choice(string name, Func<string> value, Action<int> change)
     {
         RectTransform row = Row(34f);

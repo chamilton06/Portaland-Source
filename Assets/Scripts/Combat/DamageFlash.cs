@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+// Shows a brief damage flash, then restores the renderer appearance.
+// The stored colours must be refreshed for customised characters and new equipment.
 public class DamageFlash : MonoBehaviour
 {
     [SerializeField] private Color flashColor = Color.red;

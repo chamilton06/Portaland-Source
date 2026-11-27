@@ -32,6 +32,8 @@ public class EnemyVoice : MonoBehaviour
         source.minDistance = 4f;
         source.maxDistance = 40f;
 
+        // Listen for combat events instead of checking the enemy state every frame.
+        // EnemyMelee decides what happened; this component chooses a voice clip.
         enemy.Woke += OnWoke;
         enemy.AttackStarted += OnAttack;
         enemy.WasStaggered += OnPain;

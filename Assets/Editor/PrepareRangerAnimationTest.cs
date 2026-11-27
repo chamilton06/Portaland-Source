@@ -67,6 +67,8 @@ public static class PrepareRangerAnimationTest
         return new[] { "Idle_Loop", "Walk_Loop", "Jog_Fwd_Loop", "Sprint_Loop" }.Contains(shortName);
     }
 
+    // Use a small preview controller to check the imported clips before gameplay.
+    // Its Speed parameter selects idle, walk, jog and sprint.
     private static AnimatorController CreateController()
     {
         string[] names = { "Idle_Loop", "Walk_Loop", "Jog_Fwd_Loop", "Sprint_Loop" };

@@ -57,6 +57,8 @@ public class PlayerDeathHandler : MonoBehaviour
         StartCoroutine(Respawn());
     }
 
+    // Respawn by reloading the scene rather than restoring a saved world state.
+    // Scene objects are recreated, but character choices in PlayerPrefs remain.
     private IEnumerator Respawn()
     {
         yield return new WaitForSecondsRealtime(respawnDelay);

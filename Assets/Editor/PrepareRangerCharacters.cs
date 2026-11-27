@@ -1,3 +1,8 @@
+// AI-generated snippets in this file were copied and integrated by Kartik (kartikeyapro1).
+// Tool used: Claude Code in VS Code. Model used: Claude Opus 5.5, medium.
+// The comments beside each snippet explain why I needed help and what it does.
+// See README.md under Character creation > AI assistance for the declaration.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +65,13 @@ public static class PrepareRangerCharacters
             {
                 Mesh original = renderer.sharedMesh;
                 if (original == null) continue;
+                // AI-generated head extraction snippet.
+                // I needed help separating the head from the full-body character mesh.
+                // Check the head/neck bone weights and keep triangles whose three vertices
+                // pass the check. Work on a copy so the downloaded mesh stays unchanged.
+                // Prompt used:
+                // Help me keep the head from the base character mesh so I can use it with
+                // the separate outfit while keeping the head attached to the skeleton
                 BoneWeight[] weights = original.boneWeights;
                 if (weights.Length != original.vertexCount) throw new InvalidOperationException("Unexpected skin weights on " + renderer.name);
                 bool[] keep = weights.Select(w => HeadWeight(w, renderer.bones, cutRoot) >= 0.5f).ToArray();
@@ -90,6 +102,13 @@ public static class PrepareRangerCharacters
             foreach (Animator extra in outfit.GetComponentsInChildren<Animator>(true)) Object.DestroyImmediate(extra);
             foreach (SkinnedMeshRenderer renderer in outfit.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
+                // AI-generated clothing skeleton snippet.
+                // I struggled with making the outfit use the base character's skeleton.
+                // Match its bones by name and rebuild the bind poses for those bones.
+                // A missing bone stops preparation instead of saving a broken mapping.
+                // Prompt used:
+                // Help me attach the outfit to the base character skeleton and calculate
+                // the bind poses needed for the clothing to follow its animations
                 Transform[] mapped = renderer.bones.Select(b => b != null && bones.TryGetValue(b.name, out Transform target)
                     ? target : throw new InvalidOperationException("Cannot match outfit bone " + (b == null ? "null" : b.name))).ToArray();
                 Mesh mesh = Object.Instantiate(renderer.sharedMesh);
@@ -113,6 +132,9 @@ public static class PrepareRangerCharacters
         finally { Object.DestroyImmediate(root); }
     }
 
+    // Part of the AI-generated head extraction solution above.
+    // Add the weights for the chosen bone and its children to get the value used
+    // by the triangle filter. Each vertex can have up to four bone influences here.
     private static float HeadWeight(BoneWeight weight, Transform[] bones, Transform head)
     {
         return Part(weight.boneIndex0, weight.weight0) + Part(weight.boneIndex1, weight.weight1)
